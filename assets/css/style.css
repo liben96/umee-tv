@@ -1,0 +1,101 @@
+
+@font-face {
+    font-family: "Gotham Book";
+    src: url("../fonts/ufonts.com_gotham-book-webfont.ttf") format("truetype");
+}
+  
+@font-face {
+    font-family: "Gotham Thin";
+    src: url("../fonts/ufonts.com_gotham-thin-webfont.ttf") format("truetype");
+}
+
+body
+	{
+		background-color:		#f7f7f7;
+		background-image:		-moz-linear-gradient(top, rgba(0,0,0,0.05), rgba(0,0,0,0)),		url('./assets/images/bg01.png');
+		background-image:		-webkit-linear-gradient(top, rgba(0,0,0,0.05), rgba(0,0,0,0)),	url('./assets/images/bg01.png');
+		background-image:		-o-linear-gradient(top, rgba(0,0,0,0.05), rgba(0,0,0,0)),		url('./assets/images/bg01.png');
+		background-image:		-ms-linear-gradient(top, rgba(0,0,0,0.05), rgba(0,0,0,0)),		url('./assets/images/bg01.png');
+		background-image:		linear-gradient(top, rgba(0,0,0,0.05), rgba(0,0,0,0)),			url('./assets/images/bg01.png');
+		background-position:	top left,														top left;
+		background-repeat:		repeat-x,														repeat;
+		background-size:		100% 30em,														auto;
+	}
+
+		body.is-loading *
+		{
+			-moz-transition: none !important;
+			-webkit-transition: none !important;
+			-o-transition: none !important;
+			-ms-transition: none !important;
+			transition: none !important;
+			-moz-animation: none !important;
+			-webkit-animation: none !important;
+			-o-animation: none !important;
+			-ms-animation: none !important;
+			animation: none !important;
+		}
+
+body,input,select,textarea {
+    font-family: Gotham Book;
+    font-size: 11pt;
+    color: #696969;
+    font-weight: 300;
+}
+
+a {
+    color: #0090c5;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.box
+{
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.015);
+    box-shadow: 0px 3px 0px 0px rgba(0,0,0,0.05);
+}
+
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.button
+{
+    padding: 0.3rem 0.8rem;
+    -webkit-appearance: none;
+    /* position: relative;
+    display: inline-block; */
+    background: #FF00FF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 800;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    -moz-transition: background-color .25s ease-in-out;
+    -webkit-transition: background-color .25s ease-in-out;
+    -o-transition: background-color .25s ease-in-out;
+    -ms-transition: background-color .25s ease-in-out;
+    transition: background-color .25s ease-in-out;
+}
+
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+.button:hover
+{
+    background: #FF00FF;
+}
+
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active,
+.button:active
+{
+    background: #FF00FF;
+}
