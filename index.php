@@ -20,25 +20,59 @@
 </head>
 
 <body>
-    <div class="container my-5">
-        <div class="row mb-5">
-            <div class="col">
-                <img src="./assets/images/umee.png" class="img-fluid" alt="umee-logo">
-            </div>
-            <div class="col d-flex justify-content-end align-items-center">
-                <a class="button" href="javascript:void(0)">Admin</a>
+    <!-- Vertically centered modal -->
+    <div id="edit-modal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Channel</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="edit-form">
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <label for="channel_name" class="col-sm-2 col-form-label">Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="channel_name" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="channel_ip" class="col-sm-2 col-form-label">IP</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="channel_ip">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" onclick="submitEditForm()">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="row box p-5">
-            <div class="col">
-                <table class="table" id="tv-list">
-                </table>
+    </div>
+    <div class="container-fluid">
+        <div class="m-5">
+            <div class="row mb-5">
+                <div class="col">
+                    <img src="./assets/images/umee.png" class="img-fluid" alt="umee-logo">
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a class="button" href="javascript:void(0)">Admin</a>
+                </div>
+            </div>
+            <div class="row box p-5">
+                <div class="col">
+                    <table class="table" id="tv-list">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- scripts start -->
     <script src="./assets/js/jquery-3.7.0.min.js"></script>
+    <script src="./assets/js/jquery.validate.min.js"></script>
     <script src="./assets/js/datatables.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"></script>
