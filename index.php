@@ -61,7 +61,7 @@
                     <a class="button" href="javascript:void(0)">Admin</a>
                 </div>
             </div>
-            <div class="row box p-5">
+            <div class="row box">
                 <div class="col">
                     <table class="table" id="tv-list">
                     </table>

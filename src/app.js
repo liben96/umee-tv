@@ -20,9 +20,19 @@ const initTable = (data) => {
   if ($('#tv-list').destroy) $('#tv-list').destroy();
   $('#tv-list').dataTable({
     data,
+    responsive: true,
     columns: [
+      {
+        data: 'logo',
+        title: '',
+        orderable: false,
+        className: 'align-middle text-center',
+        render: (data, type, row) => `<div><img src="./assets/images/logos/${row.logo}" class="channel-logo" /><div>`,
+      },
       {data: 'name', title: 'Number', className: 'align-middle'},
       {data: 'channelName', title: 'Name', className: 'align-middle'},
+      {data: 'sourceType', title: 'Source', className: 'align-middle'},
+      {data: 'typeOTT', title: 'OTT', className: 'align-middle'},
       {data: 'ip', title: 'IP', className: 'align-middle'},
       {
         data: 'typePVI',
@@ -33,12 +43,21 @@ const initTable = (data) => {
           }<div>`,
         className: 'align-middle',
       },
-      {data: 'sourceType', title: 'Source', className: 'align-middle'},
-      {data: 'cardNumber', title: 'Card Number', className: 'align-middle'},
-      {data: 'typeOTT', title: 'OTT', className: 'align-middle'},
+      {
+        data: 'typePDU',
+        title: 'PDU',
+        render: (data, type, row) =>
+          `<div><div> ${row.typePDU}</div>${
+            row.pduPort ? `<div class="text-secondary" style="font-size:0.8rem">Port: ${row.pduPort}</div>` : ''
+          }<div>`,
+        className: 'align-middle',
+      },
       {data: 'box', title: 'Box', className: 'align-middle'},
       {data: 'rack', title: 'Rack', className: 'align-middle'},
+      {data: 'cardNumber', title: 'Card Number', className: 'align-middle'},
       {data: 'typeEscalation', title: 'Escalation', className: 'align-middle'},
+      {data: 'priority', title: 'Priority', className: 'align-middle'},
+      {data: 'enabled', title: 'Enabled', className: 'align-middle'},
       {
         data: 'disabled',
         title: 'Status',

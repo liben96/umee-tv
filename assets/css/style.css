@@ -11,10 +11,10 @@
 
 body
 	{
-		background-color:		#f7f7f7;
-		background-position:	top left, top left;
+		/* background-color:		#f7f7f7; */
+		/* background-position:	top left, top left;
 		background-repeat:		repeat-x, repeat;
-		background-size:		100% 30em, auto;
+		background-size:		100% 30em, auto; */
 	}
 
 		body.is-loading *
@@ -93,4 +93,9 @@ input[type="reset"]:active,
 .button:active
 {
     background: #FF00FF;
+}
+
+.channel-logo {
+    height: 30px;
+    width: auto;
 }
