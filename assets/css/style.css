@@ -99,3 +99,62 @@ input[type="reset"]:active,
     height: 30px;
     width: auto;
 }
+
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+  }
+
+  .header nav{
+    display: flex;
+    flex: 1 auto;
+    justify-content: flex-end;
+    align-content: center;
+    flex-wrap: wrap-reverse;
+  }
+  
+  .header h1 {
+    margin: 0;
+  }
+  
+  .header nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .header nav ul li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  .header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .header nav ul li a:hover {
+    text-decoration: underline;
+  }
+
+  .umee-logo{
+    height: 30px;
+  }
+
+.table.col-details .text-center {
+    text-align: left !important;
+}
+
+.table.col-details>:not(caption)>*>*{
+    padding: 0;
+}
+
+.table.col-details tr td{
+    padding:3px 0px;
+}
+
+.table.col-details tr.hide-in-details{
+    display: none;
+}

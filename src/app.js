@@ -1,6 +1,7 @@
 /// <reference path="../assets/js/jquery-3.7.0.min.js" />
 
-let channelList = [];
+let channelList = [],
+  formValidator;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -20,16 +21,27 @@ const initTable = (data) => {
   if ($('#tv-list').destroy) $('#tv-list').destroy();
   $('#tv-list').dataTable({
     data,
-    responsive: true,
+    responsive: {
+      details: {
+        display: $.fn.dataTable.Responsive.display.modal({
+          header: function (row) {
+            var data = row.data();
+            return 'Details for ' + data.channelName;
+          },
+        }),
+        renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+          tableClass: 'table col-details',
+        }),
+      },
+    },
     columns: [
       {
-        data: 'logo',
-        title: '',
-        orderable: false,
-        className: 'align-middle text-center',
-        render: (data, type, row) => `<div><img src="./assets/images/logos/${row.logo}" class="channel-logo" /><div>`,
+        data: 'name',
+        title: 'Channel',
+        className: 'align-middle',
+        render: (data, type, row) =>
+          `<div class="d-inline-flex align-items-center"><div class="me-3">${row.name}</div><img src="./assets/images/logos/${row.logo}" class="channel-logo" /><div>`,
       },
-      {data: 'name', title: 'Number', className: 'align-middle'},
       {data: 'channelName', title: 'Name', className: 'align-middle'},
       {data: 'sourceType', title: 'Source', className: 'align-middle'},
       {data: 'typeOTT', title: 'OTT', className: 'align-middle'},
@@ -38,9 +50,11 @@ const initTable = (data) => {
         data: 'typePVI',
         title: 'PVI',
         render: (data, type, row) =>
-          `<div><div> ${row.typePVI}</div>${
-            row.pviPort ? `<div class="text-secondary" style="font-size:0.8rem">Port: ${row.pviPort}</div>` : ''
-          }<div>`,
+          row.typePVI
+            ? `<div><div> ${row.typePVI}</div>${
+                row.pviPort ? `<div class="text-secondary" style="font-size:0.8rem">Port: ${row.pviPort}</div>` : ''
+              }<div>`
+            : '',
         className: 'align-middle',
       },
       {
@@ -52,16 +66,46 @@ const initTable = (data) => {
           }<div>`,
         className: 'align-middle',
       },
-      {data: 'box', title: 'Box', className: 'align-middle'},
-      {data: 'rack', title: 'Rack', className: 'align-middle'},
-      {data: 'cardNumber', title: 'Card Number', className: 'align-middle'},
-      {data: 'typeEscalation', title: 'Escalation', className: 'align-middle'},
-      {data: 'priority', title: 'Priority', className: 'align-middle'},
-      {data: 'enabled', title: 'Enabled', className: 'align-middle'},
       {
-        data: 'disabled',
-        title: 'Status',
+        data: 'cardNumber',
+        title: 'Info',
+        render: (data, type, row) =>
+          `<div>${row.cardNumber ? `<div class="text-secondary" style="font-size:0.8rem">Card Number: ${row.cardNumber}</div>` : ''}${
+            row.cardNumberExpiry
+              ? `<div class="text-secondary" style="font-size:0.8rem">Expiry: ${moment(row.cardNumberExpiry).format(
+                  'DD MMMM YYYY HH:mm',
+                )}</div>`
+              : ''
+          }${row.box ? `<div class="text-secondary" style="font-size:0.8rem">Box: ${row.box} Rack: ${row.rack}</div>` : ''}<div>`,
+        className: 'align-middle',
+      },
+      {data: 'typeEscalation', title: 'Escalation', className: 'text-center align-middle'},
+      {
+        data: 'priority',
+        title: 'Priority',
         className: 'text-center align-middle',
+        render: (data, type, row) =>
+          `<div class="text-center">${
+            parseInt(row.priority)
+              ? `<i class="fa-solid fa-circle-check text-success"></i>`
+              : `<i class="fa-solid fa-circle-xmark text-danger"></i>`
+          }<div>`,
+      },
+      {
+        data: 'enabled',
+        title: 'Enabled',
+        className: 'text-center align-middle',
+        render: (data, type, row) =>
+          `<div class="text-center">${
+            parseInt(row.enabled)
+              ? `<i class="fa-solid fa-circle-check text-success"></i>`
+              : `<i class="fa-solid fa-circle-xmark text-danger"></i>`
+          }<div>`,
+      },
+      {
+        data: null,
+        title: 'Status',
+        className: 'text-center align-middle all',
         render: (data, type, row) =>
           `<div class="text-center"><div class="${!row.disabled ? 'text-success' : 'text-secondary'}"><i class="fa-solid fa-circle"></i> ${
             row.disabled ? 'Disabled' : 'Online'
@@ -72,14 +116,14 @@ const initTable = (data) => {
         title: 'Actions',
         orderable: false,
         searchable: false,
-        className: 'text-center align-middle',
+        className: 'text-center align-middle hide-in-details all',
         render: (data, type, row) =>
           `<div class="text-center">${
             !row.disabled ? `<a class="me-2" href="javascript:void(0)"><i class="fa-solid fa-arrows-rotate"></i></a>` : ''
           }<a href="javascript:void(0)" onclick="openEditModal(${row.name})"><i class="fa-solid fa-pen"></i></a><div>`,
       },
     ],
-    order: [[1, 'asc']],
+    order: [[0, 'asc']],
     pageLength: 10,
   });
 };
@@ -133,28 +177,33 @@ const fetchChannelList = async () => {
 
 const openEditModal = (channelName) => {
   let selectedChannel = channelList.find((item) => channelName.toString() === item.name);
-  console.log(selectedChannel);
+  Object.keys(selectedChannel).forEach((key) => {
+    // Setting all text inputs
+    $(`#input_${key}[type=text]`).val(selectedChannel[key]);
+    // Setting other inputs menually
+  });
+  formValidator.resetForm();
   const myModalAlternative = new bootstrap.Modal('#edit-modal');
   myModalAlternative.toggle();
 };
 
-// const submitEditForm = () => {
-//   console.log(
-//     $('#edit-form').validate({
-//       errorClass: 'd-none',
-//       highlight: function (element) {
-//         $(element).addClass('border border-danger');
-//       },
-//       unhighlight: function (element) {
-//         $(element).removeClass('border border-danger');
-//       },
-//     }),
-//   );
-// };
+const submitEditForm = (e) => {
+  console.log(formValidator.valid());
+};
 
 $(() => {
   fetchChannelList();
-  // $('#edit-form').on('submit', () => {
-  //   submitEditForm();
-  // });
+  $('#edit-form').on('submit', (e) => {
+    e.preventDefault();
+    submitEditForm();
+  });
+  formValidator = $('#edit-form').validate({
+    errorClass: 'd-none',
+    highlight: function (element) {
+      $(element).addClass('border border-danger');
+    },
+    unhighlight: function (element) {
+      $(element).removeClass('border border-danger');
+    },
+  });
 });

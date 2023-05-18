@@ -20,7 +20,34 @@
 </head>
 
 <body>
-    <!-- Vertically centered modal -->
+    <div class="header">
+        <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
+        <nav>
+            <ul>
+                <li><a class="button" href="javascript:void(0)">Admin</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <div class="m-4">
+            <!-- <div class="row mb-5">
+                <div class="col">
+                    <img src="./assets/images/umee.png" class="img-fluid" alt="umee-logo">
+                </div>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <a class="button" href="javascript:void(0)">Admin</a>
+                </div>
+            </div> -->
+            <div class="row box">
+                <div class="col">
+                    <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for channel edit -->
     <div id="edit-modal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -31,15 +58,15 @@
                 <form id="edit-form">
                     <div class="modal-body">
                         <div class="row mb-3">
-                            <label for="channel_name" class="col-sm-2 col-form-label">Name*</label>
+                            <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="channel_name" required>
+                                <input type="text" class="form-control" id="input_channelName" required>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="channel_ip" class="col-sm-2 col-form-label">IP</label>
+                            <label for="input_ip" class="col-sm-2 col-form-label">IP</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="channel_ip">
+                                <input type="text" class="form-control" id="input_ip">
                             </div>
                         </div>
                     </div>
@@ -51,31 +78,14 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="m-5">
-            <div class="row mb-5">
-                <div class="col">
-                    <img src="./assets/images/umee.png" class="img-fluid" alt="umee-logo">
-                </div>
-                <div class="col d-flex justify-content-end align-items-center">
-                    <a class="button" href="javascript:void(0)">Admin</a>
-                </div>
-            </div>
-            <div class="row box">
-                <div class="col">
-                    <table class="table" id="tv-list">
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- scripts start -->
     <script src="./assets/js/jquery-3.7.0.min.js"></script>
     <script src="./assets/js/jquery.validate.min.js"></script>
-    <script src="./assets/js/datatables.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"></script>
+    <script src="./assets/js/datatables.min.js"></script>
+    <script src="./assets/js/moment.min.js"></script>
     <script src="./src/app.js"></script>
     <!-- scripts end -->
 </body>
