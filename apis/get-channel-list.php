@@ -4,7 +4,7 @@
 require_once 'common/db_connection.php';
 
 // Your SQL query
-$query = "SELECT c.id, `sourceTypeId`, ts.description as sourceType, `sourceId`, `name`, `channelName`, `typeOTTId`, tot.description as typeOTT, `typeSourceId`, `ip`, `typePVIId`, tp.description as typePVI, `pviPort`, `typePDUId`, tpdu.description as typePDU, `pduPort`, `box`, `rack`, `cardNumber`, `typeEscalationId`, te.description as typeEscalation, `priority`, `logo`, `enabled`, `updatedBy`, `updatedDate` FROM channel c LEFT JOIN typesSource ts ON c.sourceTypeId = ts.id LEFT JOIN typesPVI tp ON c.typePVIId = tp.id LEFT JOIN typesEscalation te ON c.typeEscalationId = te.id LEFT JOIN typesOTT tot ON c.typeEscalationId = tot.id LEFT JOIN typesPDU tpdu ON c.typeEscalationId = tpdu.id where enabled = 1";
+$query = "SELECT c.id, `sourceTypeId`, ts.description as sourceType, `sourceId`, `name`, `channelName`, `typeOTTId`, tot.description as typeOTT, `typeSourceId`, c.ip, `typePVIId`, tp.description as typePVI, `pviPort`, `typePDUId`, tpdu.description as typePDU, `pduPort`, `box`, `rack`, `cardNumber`, `typeEscalationId`, te.description as typeEscalation, `priority`, `logo`, `enabled`, `updatedBy`, `updatedDate` FROM channel c LEFT JOIN typesSource ts ON c.sourceTypeId = ts.id LEFT JOIN typesPVI tp ON c.typePVIId = tp.id LEFT JOIN typesEscalation te ON c.typeEscalationId = te.id LEFT JOIN typesOTT tot ON c.typeEscalationId = tot.id LEFT JOIN typesPDU tpdu ON c.typeEscalationId = tpdu.id where enabled = 1";
 
 // Execute the query
 $result = $conn->query($query);
