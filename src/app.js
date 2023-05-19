@@ -43,16 +43,16 @@ const initTable = (data) => {
           `<div class="d-inline-flex align-items-center"><div class="me-3">${row.name}</div><img src="./assets/images/logos/${row.logo}" class="channel-logo" /><div>`,
       },
       {data: 'channelName', title: 'Name', className: 'align-middle'},
-      {data: 'sourceType', title: 'Source', className: 'align-middle'},
-      {data: 'typeOTT', title: 'OTT', className: 'align-middle'},
-      {data: 'ip', title: 'IP', className: 'align-middle'},
+      {data: 'sourceType', title: 'Source', className: 'text-center align-middle'},
+      {data: 'typeOTT', title: 'OTT', className: 'text-center align-middle'},
+      {data: 'ip', title: 'IP', className: 'text-center align-middle'},
       {
         data: 'typePVI',
         title: 'PVI',
         render: (data, type, row) =>
           row.typePVI
             ? `<div><div> ${row.typePVI}</div>${
-                row.pviPort ? `<div class="text-secondary" style="font-size:0.8rem">Port: ${row.pviPort}</div>` : ''
+                row.pviPort ? `<div class="text-secondary" style="font-size:0.8rem"><u>Port</u>: ${row.pviPort}</div>` : ''
               }<div>`
             : '',
         className: 'align-middle',
@@ -70,13 +70,15 @@ const initTable = (data) => {
         data: 'cardNumber',
         title: 'Info',
         render: (data, type, row) =>
-          `<div>${row.cardNumber ? `<div class="text-secondary" style="font-size:0.8rem">Card Number: ${row.cardNumber}</div>` : ''}${
+          `<div>${row.box ? `<div class="text-secondary" style="font-size:0.8rem"><u>Box</u>: ${row.box} Rack: ${row.rack}</div>` : ''}${
+            row.cardNumber ? `<div class="text-secondary" style="font-size:0.8rem"><u>Card Number</u>: ${row.cardNumber}</div>` : ''
+          }${
             row.cardNumberExpiry
-              ? `<div class="text-secondary" style="font-size:0.8rem">Expiry: ${moment(row.cardNumberExpiry).format(
+              ? `<div class="text-secondary" style="font-size:0.8rem"><u>Expiry</u>: ${moment(row.cardNumberExpiry).format(
                   'DD MMMM YYYY HH:mm',
                 )}</div>`
               : ''
-          }${row.box ? `<div class="text-secondary" style="font-size:0.8rem">Box: ${row.box} Rack: ${row.rack}</div>` : ''}<div>`,
+          }<div>`,
         className: 'align-middle',
       },
       {data: 'typeEscalation', title: 'Escalation', className: 'text-center align-middle'},
@@ -86,9 +88,7 @@ const initTable = (data) => {
         className: 'text-center align-middle',
         render: (data, type, row) =>
           `<div class="text-center">${
-            parseInt(row.priority)
-              ? `<i class="fa-solid fa-circle-check text-success"></i>`
-              : `<i class="fa-solid fa-circle-xmark text-danger"></i>`
+            parseInt(row.priority) ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`
           }<div>`,
       },
       {
@@ -97,9 +97,7 @@ const initTable = (data) => {
         className: 'text-center align-middle',
         render: (data, type, row) =>
           `<div class="text-center">${
-            parseInt(row.enabled)
-              ? `<i class="fa-solid fa-circle-check text-success"></i>`
-              : `<i class="fa-solid fa-circle-xmark text-danger"></i>`
+            parseInt(row.enabled) ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`
           }<div>`,
       },
       {
@@ -179,7 +177,7 @@ const openEditModal = (channelName) => {
   let selectedChannel = channelList.find((item) => channelName.toString() === item.name);
   Object.keys(selectedChannel).forEach((key) => {
     // Setting all text inputs
-    $(`#input_${key}[type=text]`).val(selectedChannel[key]);
+    $(`#edit-form #input_${key}[type=text]`).val(selectedChannel[key]);
     // Setting other inputs menually
   });
   formValidator.resetForm();
