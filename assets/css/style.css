@@ -96,7 +96,7 @@ input[type="reset"]:active,
 }
 
 .channel-logo {
-    height: 30px;
+    height: 25px;
     width: auto;
 }
 
@@ -162,3 +162,7 @@ input[type="reset"]:active,
 .dataTables_wrapper, .dataTables_paginate .page-link{
   font-size:12px;
 }
+
+#edit-modal .form-check-input{
+  margin-top: 11px;;
+} 

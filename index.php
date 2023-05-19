@@ -49,7 +49,7 @@
 
     <!-- Modal for channel edit -->
     <div id="edit-modal" class="modal fade">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Channel</h1>
@@ -57,22 +57,112 @@
                 </div>
                 <form id="edit-form">
                     <div class="modal-body">
+                        <div class="row mb-3 d-none">
+                            <label for="input_id" class="col-sm-3 col-form-label">ID</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_id" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3 d-none">
+                            <label for="input_name" class="col-sm-3 col-form-label">Channel Number*</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_name" readonly>
+                            </div>
+                        </div>
                         <div class="row mb-3">
-                            <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
-                            <div class="col-sm-10">
+                            <label for="input_channelName" class="col-sm-3 col-form-label">Name*</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" id="input_channelName" required>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="input_ip" class="col-sm-2 col-form-label">IP</label>
-                            <div class="col-sm-10">
+                            <label for="input_sourceType" class="col-sm-3 col-form-label">Source</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_sourceType">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_typeOTT" class="col-sm-3 col-form-label">OTT</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_typeOTT">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_ip" class="col-sm-3 col-form-label">IP</label>
+                            <div class="col-sm-9">
                                 <input type="text" class="form-control" id="input_ip">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_typePVI" class="col-sm-3 col-form-label">PVI</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_typePVI">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_pviPort" class="col-sm-3 col-form-label">PVI Port</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_pviPort">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_typePDU" class="col-sm-3 col-form-label">PDU</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_typePDU">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_pduPort" class="col-sm-3 col-form-label">PDU Port</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_pduPort">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_box" class="col-sm-3 col-form-label">Box</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_box">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_rack" class="col-sm-3 col-form-label">Rack</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_rack">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_cardNumber" class="col-sm-3 col-form-label">Card Number</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_cardNumber">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_cardNumberExpiry" class="col-sm-3 col-form-label">Card Expiry</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_cardNumberExpiry">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_typeEscalation" class="col-sm-3 col-form-label">Escalation</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="input_typeEscalation">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_priority" class="col-sm-3 col-form-label">Priority</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" class="form-check-input" id="input_priority">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="input_enabled" class="col-sm-3 col-form-label">Enabled</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" class="form-check-input" id="input_enabled">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" onclick="submitEditForm()">Save</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

@@ -1,10 +1,10 @@
 <?php
 
-$servername = "sn-db.sapphire-int.gi";
-$username = "egalvez";
-$password = "f2YOS72D8DHikacYkODy";
+$servername = "localhost";
+$username = "root";
+$password = "root";
 $database = "xmltv";
-$port = 23306;
+$port = 8889;
 
 // Create the database connection
 $conn = new mysqli($servername, $username, $password, $database, $port);

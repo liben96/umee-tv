@@ -1,7 +1,8 @@
 /// <reference path="../assets/js/jquery-3.7.0.min.js" />
 
 let channelList = [],
-  formValidator;
+  formValidator,
+  selectedChannel;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -26,7 +27,7 @@ const initTable = (data) => {
         display: $.fn.dataTable.Responsive.display.modal({
           header: function (row) {
             var data = row.data();
-            return 'Details for ' + data.channelName;
+            return data.channelName;
           },
         }),
         renderer: $.fn.dataTable.Responsive.renderer.tableAll({
@@ -35,57 +36,53 @@ const initTable = (data) => {
       },
     },
     columns: [
+      {data: 'id', title: 'ID', className: 'align-middle', visible: false},
       {
         data: 'name',
+        title: '',
+        className: 'align-middle',
+        orderable: false,
+        render: (data, type, row) =>
+          `<div class="text-center">${row.logo ? `<img src="./assets/images/logos/${row.logo}" class="channel-logo" />` : ''}<div>`,
+      },
+      {
+        data: 'channelName',
         title: 'Channel',
         className: 'align-middle',
-        render: (data, type, row) =>
-          `<div class="d-inline-flex align-items-center"><div class="me-3">${row.name}</div><img src="./assets/images/logos/${row.logo}" class="channel-logo" /><div>`,
+        render: (data, type, row) => `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}<div>`,
       },
-      {data: 'channelName', title: 'Name', className: 'align-middle'},
-      {data: 'sourceType', title: 'Source', className: 'text-center align-middle'},
+      {data: 'sourceType', title: 'Source', className: 'text-center align-middle', width: '42px'},
       {data: 'typeOTT', title: 'OTT', className: 'text-center align-middle'},
-      {data: 'ip', title: 'IP', className: 'text-center align-middle'},
+      {data: 'ip', title: 'IP', className: 'text-center align-middle', width: '46px'},
       {
         data: 'typePVI',
         title: 'PVI',
         render: (data, type, row) =>
-          row.typePVI
-            ? `<div><div> ${row.typePVI}</div>${
-                row.pviPort ? `<div class="text-secondary" style="font-size:0.8rem"><u>Port</u>: ${row.pviPort}</div>` : ''
-              }<div>`
-            : '',
+          row.typePVI ? `<div><div> ${row.typePVI}</div>${row.pviPort ? `<div><u>Port</u>: ${row.pviPort}</div>` : ''}<div>` : '',
         className: 'align-middle',
       },
       {
         data: 'typePDU',
         title: 'PDU',
-        render: (data, type, row) =>
-          `<div><div> ${row.typePDU}</div>${
-            row.pduPort ? `<div class="text-secondary" style="font-size:0.8rem">Port: ${row.pduPort}</div>` : ''
-          }<div>`,
+        width: '35px',
+        render: (data, type, row) => `<div><div> ${row.typePDU}</div>${row.pduPort ? `<div><u>Port</u>: ${row.pduPort}</div>` : ''}<div>`,
         className: 'align-middle',
       },
       {
         data: 'cardNumber',
         title: 'Info',
         render: (data, type, row) =>
-          `<div>${row.box ? `<div class="text-secondary" style="font-size:0.8rem"><u>Box</u>: ${row.box} Rack: ${row.rack}</div>` : ''}${
-            row.cardNumber ? `<div class="text-secondary" style="font-size:0.8rem"><u>Card Number</u>: ${row.cardNumber}</div>` : ''
-          }${
-            row.cardNumberExpiry
-              ? `<div class="text-secondary" style="font-size:0.8rem"><u>Expiry</u>: ${moment(row.cardNumberExpiry).format(
-                  'DD MMMM YYYY HH:mm',
-                )}</div>`
-              : ''
-          }<div>`,
+          `<div>${row.box ? `<div><u>Box</u>: ${row.box} <u>Rack</u>: ${row.rack}</div>` : ''}${
+            row.cardNumber ? `<div><u>Card Number</u>: ${row.cardNumber}</div>` : ''
+          }${row.cardNumberExpiry ? `<div><u>Expiry</u>: ${moment(row.cardNumberExpiry).format('DD MMMM YYYY')}</div>` : ''}<div>`,
         className: 'align-middle',
       },
-      {data: 'typeEscalation', title: 'Escalation', className: 'text-center align-middle'},
+      {data: 'typeEscalation', title: 'Escalation', className: 'text-center align-middle', width: '62px'},
       {
         data: 'priority',
         title: 'Priority',
         className: 'text-center align-middle',
+        width: '44px',
         render: (data, type, row) =>
           `<div class="text-center">${
             parseInt(row.priority) ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`
@@ -95,6 +92,7 @@ const initTable = (data) => {
         data: 'enabled',
         title: 'Enabled',
         className: 'text-center align-middle',
+        width: '49px',
         render: (data, type, row) =>
           `<div class="text-center">${
             parseInt(row.enabled) ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`
@@ -115,13 +113,14 @@ const initTable = (data) => {
         orderable: false,
         searchable: false,
         className: 'text-center align-middle hide-in-details all',
+        width: '46px',
         render: (data, type, row) =>
           `<div class="text-center">${
             !row.disabled ? `<a class="me-2" href="javascript:void(0)"><i class="fa-solid fa-arrows-rotate"></i></a>` : ''
-          }<a href="javascript:void(0)" onclick="openEditModal(${row.name})"><i class="fa-solid fa-pen"></i></a><div>`,
+          }<a href="javascript:void(0)" onclick="openEditModal(${row.id})"><i class="fa-solid fa-pen"></i></a><div>`,
       },
     ],
-    order: [[0, 'asc']],
+    order: [[2, 'asc']],
     pageLength: 10,
   });
 };
@@ -173,11 +172,16 @@ const fetchChannelList = async () => {
   }
 };
 
-const openEditModal = (channelName) => {
-  let selectedChannel = channelList.find((item) => channelName.toString() === item.name);
+const openEditModal = (id) => {
+  selectedChannel = channelList.find((item) => id === parseFloat(item.id));
   Object.keys(selectedChannel).forEach((key) => {
-    // Setting all text inputs
-    $(`#edit-form #input_${key}[type=text]`).val(selectedChannel[key]);
+    if (key === 'enabled' || key === 'priority') {
+      // Setting all text inputs
+      $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);
+    } else {
+      // Setting all text inputs
+      $(`#edit-form #input_${key}`).val(selectedChannel[key]);
+    }
     // Setting other inputs menually
   });
   formValidator.resetForm();
@@ -186,7 +190,41 @@ const openEditModal = (channelName) => {
 };
 
 const submitEditForm = (e) => {
-  console.log(formValidator.valid());
+  if (formValidator.valid()) {
+    let body = {
+      id: null,
+      name: null,
+      channelName: null,
+      sourceType: null,
+      typeOTT: null,
+      ip: null,
+      typePVI: null,
+      pviPort: null,
+      typePDU: null,
+      pduPort: null,
+      box: null,
+      rack: null,
+      cardNumber: null,
+      cardNumberExpiry: null,
+      typeEscalation: null,
+      priority: null,
+      enabled: null,
+    };
+
+    //Getting new values from form
+    Object.keys(body).forEach((key) => {
+      if (key === 'enabled' || key === 'priority') {
+        body[key] = $(`#edit-form #input_${key}`).is(':checked');
+      } else {
+        body[key] = $(`#edit-form #input_${key}`).val();
+      }
+    });
+
+    console.log('body', body);
+    if (body.id && body.name) {
+      // Call API
+    }
+  }
 };
 
 $(() => {
@@ -195,6 +233,7 @@ $(() => {
     e.preventDefault();
     submitEditForm();
   });
+
   formValidator = $('#edit-form').validate({
     errorClass: 'd-none',
     highlight: function (element) {
