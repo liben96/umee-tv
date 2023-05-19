@@ -165,4 +165,10 @@ input[type="reset"]:active,
 
 #edit-modal .form-check-input{
   margin-top: 11px;;
-} 
+}
+
+#notification-container {
+  z-index: 1056;
+  top: 90px;
+  right: 20px;
+}

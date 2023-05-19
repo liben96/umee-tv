@@ -47,6 +47,18 @@
         </div>
     </div>
 
+    <!-- notification -->
+    <div id="notification-container" class="position-fixed">
+        <div id="notification" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for channel edit -->
     <div id="edit-modal" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-md">
@@ -76,15 +88,15 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="input_sourceType" class="col-sm-3 col-form-label">Source</label>
+                            <label for="input_typeSourceId" class="col-sm-3 col-form-label">Source</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="input_sourceType">
+                                <input type="text" class="form-control" id="input_typeSourceId">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="input_typeOTT" class="col-sm-3 col-form-label">OTT</label>
+                            <label for="input_typeOTTId" class="col-sm-3 col-form-label">OTT</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="input_typeOTT">
+                                <input type="text" class="form-control" id="input_typeOTTId">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -94,9 +106,9 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="input_typePVI" class="col-sm-3 col-form-label">PVI</label>
+                            <label for="input_typePVIId" class="col-sm-3 col-form-label">PVI</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="input_typePVI">
+                                <input type="text" class="form-control" id="input_typePVIId">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -106,9 +118,9 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="input_typePDU" class="col-sm-3 col-form-label">PDU</label>
+                            <label for="input_typePDUId" class="col-sm-3 col-form-label">PDU</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="input_typePDU">
+                                <input type="text" class="form-control" id="input_typePDUId">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -142,9 +154,9 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="input_typeEscalation" class="col-sm-3 col-form-label">Escalation</label>
+                            <label for="input_typeEscalationId" class="col-sm-3 col-form-label">Escalation</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="input_typeEscalation">
+                                <input type="text" class="form-control" id="input_typeEscalationId">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -161,8 +173,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
