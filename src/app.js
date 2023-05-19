@@ -3,7 +3,8 @@
 let channelList = [],
   formValidator,
   selectedChannel,
-  dataTable;
+  dataTable,
+  typesLists;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -78,7 +79,7 @@ const initTable = (data) => {
           className: 'align-middle',
           render: (data, type, row) => `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}<div>`,
         },
-        {data: 'sourceType', title: 'Source', className: 'text-center align-middle', width: '42px'},
+        {data: 'typeSource', title: 'Source', className: 'text-center align-middle', width: '42px'},
         {data: 'typeOTT', title: 'OTT', className: 'text-center align-middle'},
         {data: 'ip', title: 'IP', className: 'text-center align-middle', width: '46px'},
         {
@@ -201,29 +202,54 @@ const calculateUptime = (startDate) => {
   return uptimeString;
 };
 
+const initChannelForm = () => {
+  Object.keys(typesLists).forEach((key) => {
+    let inputKey = '';
+    if (key === 'typesSource') inputKey = 'typeSourceId';
+    if (key === 'typesOTT') inputKey = 'typeOTTId';
+    if (key === 'typesPVI') inputKey = 'typePVIId';
+    if (key === 'typesPDU') inputKey = 'typePDUId';
+    if (key === 'typesEscalation') inputKey = 'typeEscalationId';
+    $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', '').text('Select an option'));
+    typesLists[key].forEach((item) => {
+      $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', item.id).text(item.description));
+    });
+  });
+};
+
 const fetchChannelList = async () => {
   const res = await callAPI('GET', './apis/get-channel-list.php');
   if (res.success) {
-    // Get data from flusonic
-    const resFluSonic = await callAPI('GET', './apis/flusonic_response.json');
-    if (resFluSonic.success) {
-      let finalArray = res.data.map((item) => {
-        // Find and get disabled and uptime by comparing name field
-        let foundSonicChannel = resFluSonic.data.streams.find((itemFluSonic) => itemFluSonic.name === item.name);
-        if (foundSonicChannel) {
-          let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
-          return {
-            ...item,
-            flusonicDisabled: foundSonicChannel.disabled,
-            flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
-            flusonicInputs: foundSonicChannel.config_on_disk.inputs,
-            flusonicBlackoutFound: blackoutFound,
-            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
-          };
-        } else return item;
-      });
-      channelList = finalArray;
-      initTable(finalArray);
+    let resChannelTypes;
+    // Only load types first time no need load again on next refresh
+    if (!typesLists) {
+      // Get channel types arrays
+      resChannelTypes = await callAPI('GET', './apis/get-channel-types.php');
+    }
+    if (typesLists || (resChannelTypes && resChannelTypes.success)) {
+      if (!typesLists) typesLists = resChannelTypes.data;
+      // Get data from flusonic
+      const resFluSonic = await callAPI('GET', './apis/flusonic_response.json');
+      if (resFluSonic.success) {
+        let finalArray = res.data.map((item) => {
+          // Find and get disabled and uptime by comparing name field
+          let foundSonicChannel = resFluSonic.data.streams.find((itemFluSonic) => itemFluSonic.name === item.name);
+          if (foundSonicChannel) {
+            let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
+            return {
+              ...item,
+              flusonicDisabled: foundSonicChannel.disabled,
+              flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
+              flusonicInputs: foundSonicChannel.config_on_disk.inputs,
+              flusonicBlackoutFound: blackoutFound,
+              flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
+            };
+          } else return item;
+        });
+        channelList = finalArray;
+        initTable(finalArray);
+        initChannelForm();
+      }
     }
   }
 };
@@ -246,6 +272,15 @@ const toggleEditModal = (id) => {
   if (id) {
     selectedChannel = channelList.find((item) => id === parseFloat(item.id));
     Object.keys(selectedChannel).forEach((key) => {
+      if (
+        key === 'typeSourceId' ||
+        key === 'input_typeOTTId' ||
+        key === 'input_typePVIId' ||
+        key === 'input_typePDUId' ||
+        key === 'input_typeEscalationId'
+      ) {
+        $(`#edit-form #input_${key}`).val(selectedChannel[key]);
+      }
       if (key === 'enabled' || key === 'priority') {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);

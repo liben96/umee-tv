@@ -97,13 +97,15 @@
                         <div class="row mb-1">
                             <label for="input_typeSourceId" class="col-sm-2 col-form-label">Source</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="input_typeSourceId">
+                                <select id="input_typeSourceId" class="form-select" aria-label="Source">
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <label for="input_typeOTTId" class="col-sm-2 col-form-label">OTT</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="input_typeOTTId">
+                                <select id="input_typeOTTId" class="form-select" aria-label="OTT">
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -117,7 +119,8 @@
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="input_typePVIId">
+                                        <select id="input_typePVIId" class="form-select" aria-label="PVI">
+                                        </select>
                                     </div>
                                     <div class="col-sm-7">
                                         <div class="row">
@@ -135,7 +138,8 @@
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="input_typePDUId">
+                                        <select id="input_typePDUId" class="form-select" aria-label="PDU">
+                                        </select>
                                     </div>
                                     <div class="col-sm-7">
                                         <div class="row">
@@ -188,7 +192,8 @@
                         <div class="row mb-1">
                             <label for="input_typeEscalationId" class="col-sm-2 col-form-label">Escalation</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="input_typeEscalationId">
+                                <select id="input_typeEscalationId" class="form-select" aria-label="Escalation">
+                                </select>
                             </div>
                         </div>
                         <div class="row">
