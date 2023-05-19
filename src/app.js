@@ -39,9 +39,6 @@ const initTable = (data) => {
               return data.channelName;
             },
           }),
-          // renderer: $.fn.dataTable.Responsive.renderer.tableAll({
-          //   tableClass: 'table col-details',
-          // }),
           renderer: function (api, rowIdx, columns) {
             var data = $.map(columns, function (col, i) {
               return col.columnIndex !== 0
@@ -133,11 +130,13 @@ const initTable = (data) => {
           title: 'Status',
           className: 'text-center align-middle all',
           render: (data, type, row) =>
-            `<div class="text-center"><div class="${
-              !row.disabled ? 'text-success' : 'text-secondary'
-            }"><i class="fa-solid fa-circle"></i> ${row.disabled ? 'Disabled' : 'Online'}</div>${
-              row.uptime ? `<div class="text-secondary text-right" style="font-size:0.8rem">${row.uptime}</div>` : ''
-            }<div>`,
+            row.flusonicDisabled !== undefined
+              ? `<div class="text-center"><div class="${
+                  !row.flusonicDisabled ? 'text-success' : 'text-secondary'
+                }"><i class="fa-solid fa-circle"></i> ${row.flusonicDisabled ? 'Disabled' : 'Online'}</div>${
+                  row.flusonicUptime ? `<div class="text-secondary text-right" style="font-size:0.8rem">${row.flusonicUptime}</div>` : ''
+                }<div>`
+              : '',
         },
         {
           data: 'typeEscalation',
@@ -145,17 +144,31 @@ const initTable = (data) => {
           orderable: false,
           searchable: false,
           className: 'text-center align-middle hide-in-details all',
-          width: '46px',
+          width: '63px',
           render: (data, type, row) =>
-            `<div class="text-center">${
-              !row.disabled ? `<a class="me-2" href="javascript:void(0)"><i class="fa-solid fa-arrows-rotate"></i></a>` : ''
-            }<a href="javascript:void(0)" onclick="toggleEditModal(${row.id})"><i class="fa-solid fa-pen"></i></a><div>`,
+            `<div class="text-center">
+            ${
+              row.flusonicBlackout !== undefined && row.flusonicBlackout
+                ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Enable blackout"><i class="fa-solid fa-tv"></i></a>`
+                : ''
+            }
+            ${
+              !row.disabled
+                ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Restart"><i class="fa-solid fa-arrows-rotate"></i></a>`
+                : ''
+            }
+            <a href="javascript:void(0)" onclick="toggleEditModal(${
+              row.id
+            })" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit"><i class="fa-solid fa-pen"></i></a>
+            <div>`,
         },
       ],
       order: [[2, 'asc']],
       pageLength: 10,
     });
   }
+  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
 };
 
 const calculateUptime = (startDate) => {
@@ -196,7 +209,13 @@ const fetchChannelList = async () => {
         // Find and get disabled and uptime by comparing name field
         let foundSonicChannel = resFluSonic.data.streams.find((itemFluSonic) => itemFluSonic.name === item.name);
         if (foundSonicChannel)
-          return {...item, disabled: foundSonicChannel.disabled, uptime: calculateUptime(foundSonicChannel.stats.opened_at)};
+          return {
+            ...item,
+            flusonicDisabled: foundSonicChannel.disabled,
+            flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
+            flusonicInputs: foundSonicChannel.config_on_disk.inputs,
+            flusonicBlackout: foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/')) ? true : false,
+          };
         else return item;
       });
       channelList = finalArray;
@@ -226,6 +245,9 @@ const toggleEditModal = (id) => {
       if (key === 'enabled' || key === 'priority') {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);
+      } else if (key === 'logo') {
+        // Setting all text inputs
+        $(`#edit-form #input_${key}`).attr('src', `./assets/images/logos/${selectedChannel[key]}`);
       } else {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).val(selectedChannel[key]);
@@ -284,12 +306,16 @@ const submitEditForm = async (e) => {
 };
 
 $(() => {
+  // Loading channel list on init
   fetchChannelList();
+
+  // Form submit of add/edit channel
   $('#edit-form').on('submit', (e) => {
     e.preventDefault();
     submitEditForm();
   });
 
+  // form validation init
   formValidator = $('#edit-form').validate({
     errorClass: 'd-none',
     highlight: function (element) {
@@ -299,9 +325,4 @@ $(() => {
       $(element).removeClass('border border-danger');
     },
   });
-
-  // var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-  // var toastList = toastElList.map(function (toastEl) {
-  //   return new bootstrap.Toast(toastEl, {});
-  // });
 });
