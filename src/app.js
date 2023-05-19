@@ -143,13 +143,15 @@ const initTable = (data) => {
           title: 'Actions',
           orderable: false,
           searchable: false,
-          className: 'text-center align-middle hide-in-details all',
+          className: 'text-center align-middle hide-in-details actions-col all',
           width: '63px',
           render: (data, type, row) =>
             `<div class="text-center">
             ${
-              row.flusonicBlackout !== undefined && row.flusonicBlackout
-                ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Enable blackout"><i class="fa-solid fa-tv"></i></a>`
+              row.flusonicBlackoutFound
+                ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${
+                    row.flusonicBlackoutEnabled ? 'Disable' : 'Enable'
+                  } blackout"><i class="fa-solid fa-tv"></i></a>`
                 : ''
             }
             ${
@@ -208,15 +210,17 @@ const fetchChannelList = async () => {
       let finalArray = res.data.map((item) => {
         // Find and get disabled and uptime by comparing name field
         let foundSonicChannel = resFluSonic.data.streams.find((itemFluSonic) => itemFluSonic.name === item.name);
-        if (foundSonicChannel)
+        if (foundSonicChannel) {
+          let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
           return {
             ...item,
             flusonicDisabled: foundSonicChannel.disabled,
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
             flusonicInputs: foundSonicChannel.config_on_disk.inputs,
-            flusonicBlackout: foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/')) ? true : false,
+            flusonicBlackoutFound: blackoutFound,
+            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
           };
-        else return item;
+        } else return item;
       });
       channelList = finalArray;
       initTable(finalArray);

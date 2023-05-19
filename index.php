@@ -69,50 +69,50 @@
                 </div>
                 <form id="edit-form">
                     <div class="modal-body">
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_logo" class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-10">
                                 <img id="input_logo" src="./assets/images/umee_smile_allwhite.png" class="channel-logo"
                                     alt="channel-logo">
                             </div>
                         </div>
-                        <div class="row mb-3 d-none">
+                        <div class="row mb-1 d-none">
                             <label for="input_id" class="col-sm-2 col-form-label text-end">ID</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_id" readonly>
                             </div>
                         </div>
-                        <div class="row mb-3 d-none">
+                        <div class="row mb-1 d-none">
                             <label for="input_name" class="col-sm-2 col-form-label text-end">Channel Number*</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_name" readonly>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_channelName" required>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_typeSourceId" class="col-sm-2 col-form-label">Source</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_typeSourceId">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_typeOTTId" class="col-sm-2 col-form-label">OTT</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_typeOTTId">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_ip" class="col-sm-2 col-form-label">IP</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_ip">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_typePVIId" class="col-sm-2 col-form-label">PVI</label>
                             <div class="col-sm-10">
                                 <div class="row">
@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_typePDUId" class="col-sm-2 col-form-label">PDU</label>
                             <div class="col-sm-10">
                                 <div class="row">
@@ -148,7 +148,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_box" class="col-sm-2 col-form-label">Box</label>
                             <div class="col-sm-10">
                                 <div class="row">
@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_cardNumber" class="col-sm-2 col-form-label">Card Number</label>
                             <div class="col-sm-10">
                                 <div class="row">
@@ -185,28 +185,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <label for="input_typeEscalationId" class="col-sm-2 col-form-label">Escalation</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_typeEscalationId">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row">
                             <label for="input_priority" class="col-sm-2 col-form-label">Priority</label>
                             <div class="col-sm-10">
-                                <div class="row">
-                                    <div class="col-sm-5">
-                                        <input type="checkbox" class="form-check-input" id="input_priority">
-                                    </div>
-                                    <div class="col-sm-7">
-                                        <div class="row">
-                                            <label for="input_enabled" class="col-sm-3 col-form-label">Enabled</label>
-                                            <div class="col-sm-9">
-                                                <input type="checkbox" class="form-check-input" id="input_enabled">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <input type="checkbox" class="form-check-input" id="input_priority"
+                                    style="padding: 0.32rem 0.4rem;">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="input_enabled" class="col-sm-2 col-form-label">Enabled</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" class="form-check-input" id="input_enabled"
+                                    style="padding: 0.32rem 0.4rem;">
                             </div>
                         </div>
                     </div>
