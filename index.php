@@ -82,8 +82,7 @@
     <!-- scripts start -->
     <script src="./assets/js/jquery-3.7.0.min.js"></script>
     <script src="./assets/js/jquery.validate.min.js"></script>
-    <script src="./assets/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"></script>
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <script src="./assets/js/datatables.min.js"></script>
     <script src="./assets/js/moment.min.js"></script>
     <script src="./src/app.js"></script>
