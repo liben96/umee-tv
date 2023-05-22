@@ -65,6 +65,16 @@ const initTable = (data) => {
           },
         },
       },
+      buttons: [
+        {
+          className: 'btn-export border-0 btn-outline-export',
+          text: "<button type='button' class='button'>Add Channel</button>",
+          action: function (e, dt, node, config) {
+            // $('#myTable').DataTable().ajax.reload();
+          },
+          titleAttr: 'Add Channel',
+        },
+      ],
       columns: [
         {data: 'id', title: 'ID', className: 'align-middle', visible: false},
         {
@@ -178,7 +188,7 @@ const initTable = (data) => {
 };
 
 const initDatePicker = (id) => {
-  $(id).flatpickr();
+  $(id).flatpickr({dateFormat: 'd/m/Y'});
 };
 
 const calculateUptime = (startDate) => {
@@ -292,6 +302,9 @@ const toggleEditModal = (id) => {
       if (key === 'enabled' || key === 'priority') {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);
+      }
+      if (key === 'cardNumberExpiry') {
+        $(`#edit-form #input_${key}`).val(moment(selectedChannel[key]).format('D/M/YYYY'));
       } else if (key === 'logo') {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).attr('src', `./assets/images/logos/${selectedChannel[key]}`);
@@ -341,6 +354,8 @@ const submitEditForm = async () => {
   Object.keys(body).forEach((key) => {
     if (key === 'enabled' || key === 'priority') {
       body[key] = $(`#edit-form #input_${key}`).is(':checked') ? 1 : 0;
+    } else if (key === 'cardNumberExpiry') {
+      body[key] = moment($(`#edit-form #input_${key}`).val(), 'D-M-YYYY').format('YYYY-M-D');
     } else if (key === 'id') {
       body[key] = parseFloat($(`#edit-form #input_${key}`).val());
     } else {
