@@ -14,6 +14,7 @@
     <link href="./assets/css/fontawesome/css/fontawesome.min.css" rel="stylesheet">
     <link href="./assets/css/fontawesome/css/brands.min.css" rel="stylesheet">
     <link href="./assets/css/fontawesome/css/solid.min.css" rel="stylesheet">
+    <link href="./assets/css/flatpickr.min.css" rel="stylesheet">
     <link href="./assets/css/style.css" rel="stylesheet">
     </link>
     <!-- styles end -->
@@ -38,7 +39,7 @@
                     <a class="button" href="javascript:void(0)">Admin</a>
                 </div>
             </div> -->
-            <div class="row box">
+            <div class="row">
                 <div class="col">
                     <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
                     </table>
@@ -230,6 +231,7 @@
     <script src="./assets/js/jquery.validate.min.js"></script>
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <script src="./assets/js/datatables.min.js"></script>
+    <script src="./assets/js/flatpickr.js"></script>
     <script src="./assets/js/moment.min.js"></script>
     <script src="./src/app.js"></script>
     <!-- scripts end -->

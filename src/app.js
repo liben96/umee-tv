@@ -95,7 +95,8 @@ const initTable = (data) => {
           data: 'typePDU',
           title: 'PDU',
           width: '35px',
-          render: (data, type, row) => `<div><div> ${row.typePDU}</div>${row.pduPort ? `<div><u>Port</u>: ${row.pduPort}</div>` : ''}<div>`,
+          render: (data, type, row) =>
+            `<div><div> ${row.typePDU || ''}</div>${row.pduPort ? `<div><u>Port</u>: ${row.pduPort}</div>` : ''}<div>`,
           className: 'align-middle',
         },
         {
@@ -174,6 +175,10 @@ const initTable = (data) => {
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
+};
+
+const initDatePicker = (id) => {
+  $(id).flatpickr();
 };
 
 const calculateUptime = (startDate) => {
@@ -300,6 +305,7 @@ const toggleEditModal = (id) => {
   formValidator.resetForm();
   const myModalAlternative = new bootstrap.Modal('#edit-modal', {keyboard: false});
   myModalAlternative.toggle();
+  initDatePicker('#input_cardNumberExpiry');
 };
 
 const toggleEditFormLoader = (isStart) => {
