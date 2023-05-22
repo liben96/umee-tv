@@ -11,6 +11,8 @@ const callAPI = (type, url, data) =>
       method: type,
       url,
       data,
+      processData: false,
+      contentType: false,
     })
       .then((res) => {
         if (type === 'GET') resolve({success: true, data: res});
@@ -269,6 +271,7 @@ const showToast = (success, body) => {
 };
 
 const toggleEditModal = (id) => {
+  toggleEditFormLoader(false);
   if (id) {
     selectedChannel = channelList.find((item) => id === parseFloat(item.id));
     Object.keys(selectedChannel).forEach((key) => {
@@ -295,11 +298,19 @@ const toggleEditModal = (id) => {
     });
   }
   formValidator.resetForm();
-  const myModalAlternative = new bootstrap.Modal('#edit-modal');
+  const myModalAlternative = new bootstrap.Modal('#edit-modal', {keyboard: false});
   myModalAlternative.toggle();
 };
 
-const submitEditForm = async (e) => {
+const toggleEditFormLoader = (isStart) => {
+  var submitBtn = $('#channel-submit-button');
+  submitBtn.prop('disabled', isStart);
+  if (isStart) submitBtn.children('.loader').removeClass('d-none');
+  else submitBtn.children('.loader').addClass('d-none');
+};
+
+const submitEditForm = async () => {
+  toggleEditFormLoader(true);
   let body = {
     id: null,
     name: null,
@@ -331,9 +342,23 @@ const submitEditForm = async (e) => {
     }
   });
 
+  var fileInput = $('#input_logo_input');
+  var selectedFile = fileInput[0].files[0];
+  if (selectedFile) {
+    console.log('Selected file:', selectedFile);
+    var formData = new FormData();
+    formData.append('image', selectedFile);
+    const resImage = await callAPI('POST', './apis/channel-logo-upload.php', formData);
+    if (resImage && resImage.success) {
+      body.logo = resImage.data;
+    }
+  } else {
+    console.log('No file selected.');
+  }
+
   if (body.id && body.name) {
     // Call API
-    const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
+    // const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
     if (res && res.success) {
       showToast(true, res.message);
       $('#edit-modal').modal('hide');
@@ -342,6 +367,7 @@ const submitEditForm = async (e) => {
       showToast(false, (res && res.message) || 'Error while updating channel');
     }
   }
+  toggleEditFormLoader(false);
 };
 
 $(() => {
@@ -351,7 +377,7 @@ $(() => {
   // Form submit of add/edit channel
   $('#edit-form').on('submit', (e) => {
     e.preventDefault();
-    submitEditForm();
+    submitEditForm(this);
   });
 
   // form validation init

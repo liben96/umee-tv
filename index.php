@@ -71,9 +71,11 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <label for="input_logo" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10">
-                                <img id="input_logo" src="./assets/images/umee_smile_allwhite.png" class="channel-logo"
-                                    alt="channel-logo">
+                            <div class="col-sm-10 d-flex align-items-center">
+                                <img id="input_logo" src="./assets/images/umee_smile_allwhite.png"
+                                    class="channel-logo me-2" alt="channel-logo">
+                                <input id="input_logo_input" class="form-control" type="file" name="image" id="image"
+                                    accept="image/*" />
                             </div>
                         </div>
                         <div class="row mb-1 d-none">
@@ -212,7 +214,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary" id="channel-submit-button"><span
+                                class="loader d-none">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>Save</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
