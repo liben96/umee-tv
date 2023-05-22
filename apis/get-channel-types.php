@@ -1,7 +1,16 @@
 <?php
 
+$allowedRoleIds = [1,2];
+// Include the database connection file
+require_once 'common/authentication.php';
 // Include the database connection file
 require_once 'common/db_connection.php';
+
+// Create the response object
+$response = array(
+    'success' => false,
+    'message' => ''
+  );
 
 // Your SQL queries
 $query1 = "SELECT * FROM typesEscalation";
@@ -11,7 +20,7 @@ $query4 = "SELECT * FROM typesPVI";
 $query5 = "SELECT * FROM typesSource";
 
 // Create an empty array to store the results
-$response = array();
+$responseDB = array();
 
 // Execute the first query
 $result1 = $conn->query($query1);
@@ -22,10 +31,10 @@ if ($result1) {
         $data1[] = $row;
     }
     // Add the data to the response array
-    $response['typesEscalation'] = $data1;
+    $responseDB['typesEscalation'] = $data1;
 } else {
     // Query execution failed
-    echo "Error executing query 1: " . $conn->error;
+    $response['message'] = "Error executing query 1: " . $conn->error;
 }
 
 // Execute the second query
@@ -37,10 +46,10 @@ if ($result2) {
         $data2[] = $row;
     }
     // Add the data to the response array
-    $response['typesOTT'] = $data2;
+    $responseDB['typesOTT'] = $data2;
 } else {
     // Query execution failed
-    echo "Error executing query 2: " . $conn->error;
+    $response['message'] = "Error executing query 2: " . $conn->error;
 }
 
 // Execute the third query
@@ -52,10 +61,10 @@ if ($result3) {
         $data3[] = $row;
     }
     // Add the data to the response array
-    $response['typesPDU'] = $data3;
+    $responseDB['typesPDU'] = $data3;
 } else {
     // Query execution failed
-    echo "Error executing query 3: " . $conn->error;
+    $response['message'] = "Error executing query 3: " . $conn->error;
 }
 
 // Execute the fourth query
@@ -67,10 +76,10 @@ if ($result4) {
         $data4[] = $row;
     }
     // Add the data to the response array
-    $response['typesPVI'] = $data4;
+    $responseDB['typesPVI'] = $data4;
 } else {
     // Query execution failed
-    echo "Error executing query 4: " . $conn->error;
+    $response['message'] = "Error executing query 4: " . $conn->error;
 }
 
 // Execute the fourth query
@@ -82,11 +91,15 @@ if ($result5) {
         $data5[] = $row;
     }
     // Add the data to the response array
-    $response['typesSource'] = $data5;
+    $responseDB['typesSource'] = $data5;
 } else {
     // Query execution failed
-    echo "Error executing query 5: " . $conn->error;
+    $response['message'] = "Error executing query 5: " . $conn->error;
 }
+
+$response['success'] = true;
+$response['data'] = $responseDB;
+
 
 // Close the database connection
 $conn->close();

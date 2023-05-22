@@ -1,0 +1,8 @@
+# Composer
+/vendor/
+/composer.phar
+/composer.lock
+
+# Composer generated files
+/autoload.php
+/.env

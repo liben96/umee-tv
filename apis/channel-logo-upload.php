@@ -1,5 +1,8 @@
 <?php
 
+$allowedRoleIds = [1];
+// Include the database connection file
+require_once 'common/authentication.php';
 // Create the response object
 $response = array(
     'success' => false,

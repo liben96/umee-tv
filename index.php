@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!doctype html>
 <html lang="en">
 
@@ -17,15 +18,92 @@
     <link href="./assets/css/flatpickr.min.css" rel="stylesheet">
     <link href="./assets/css/style.css" rel="stylesheet">
     </link>
+    <?php if(!isset($_SESSION['userId'])) : ?>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+
+        .card {
+            width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-control {
+            border-color: #ddd;
+        }
+
+        .form-control:focus {
+            border-color: #009688;
+            box-shadow: 0 0 0 0.2rem rgba(0, 150, 136, 0.25);
+        }
+
+        .form-check-label {
+            color: #666;
+        }
+
+        .btn-primary {
+            background-color: #009688;
+            border-color: #009688;
+        }
+
+        .btn-primary:hover {
+            background-color: #008077;
+            border-color: #008077;
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 150, 136, 0.5);
+        }
+    </style>
+    <?php endif; ?>
     <!-- styles end -->
 </head>
 
 <body>
+    <?php if(!isset($_SESSION['userId'])): ?>
+    <div class="card">
+        <div class="text-center">
+            <img src=" ./assets/images/umee_smile_allblack.png" class="mb-4" style="width:140px;" alt="umee-logo">
+        </div>
+        <!-- <h2 class="mb-4">Login</h2> -->
+        <form id="login-form">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username*</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password*</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+            </div>
+            <!-- <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember">
+                <label class="form-check-label" for="remember">Remember me</label>
+            </div> -->
+            <button id="login-submit-button" type="submit" class="btn btn-primary"><span class="loader d-none">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </span>Login</button>
+        </form>
+    </div>
+    <?php else: ?>
     <div class="header">
         <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
         <nav>
             <ul>
-                <li><a class="button" href="javascript:void(0)">Admin</a></li>
+                <li><?php echo $_SESSION['username']?>
+                </li>
+                <li><button type="button" id="logout" class="button">Logout</button></li>
             </ul>
         </nav>
     </div>
@@ -44,18 +122,6 @@
                     <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- notification -->
-    <div id="notification-container" class="position-fixed">
-        <div id="notification" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
-            aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body"></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
             </div>
         </div>
     </div>
@@ -224,6 +290,19 @@
                 </form>
             </div>
         </div>
+        <?php endif; ?>
+
+        <!-- notification -->
+        <div id="notification-container" class="position-fixed">
+            <div id="notification" class="toast align-items-center text-white border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- scripts start -->
@@ -233,6 +312,28 @@
     <script src="./assets/js/datatables.min.js"></script>
     <script src="./assets/js/flatpickr.js"></script>
     <script src="./assets/js/moment.min.js"></script>
+    <script type="text/javascript">
+        // prettier-ignore
+        let username = '<?php if(isset($_SESSION['username'])) {
+            echo $_SESSION['username'];
+        } else {
+            echo null;
+        } ?>'
+        // prettier-ignore
+        let userId = '<?php if(isset($_SESSION['userId'])) {
+            echo $_SESSION['userId'];
+        } else {
+            echo null;
+        } ?>'
+        if (userId) userId = parseFloat(userId);
+        // prettier-ignore
+        let roleId = '<?php if(isset($_SESSION['roleId'])) {
+            echo $_SESSION['roleId'];
+        } else {
+            echo null;
+        } ?>'
+        if (roleId) roleId = parseFloat(roleId);
+    </script>
     <script src="./src/app.js"></script>
     <!-- scripts end -->
 </body>

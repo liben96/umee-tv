@@ -15,11 +15,8 @@ const callAPI = (type, url, data) =>
       contentType: false,
     })
       .then((res) => {
-        if (type === 'GET') resolve({success: true, data: res});
-        else {
-          if (res && res.success !== undefined) resolve({...res});
-          else resolve({success: false, message: res});
-        }
+        if (res && res.success !== undefined) resolve({...res});
+        else resolve({success: true, data: res});
       })
       .catch((e) => {
         resolve({success: false, data: e});
@@ -173,9 +170,11 @@ const initTable = (data) => {
                 ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Restart"><i class="fa-solid fa-arrows-rotate"></i></a>`
                 : ''
             }
-            <a href="javascript:void(0)" onclick="toggleEditModal(${
-              row.id
-            })" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit"><i class="fa-solid fa-pen"></i></a>
+            ${
+              roleId === 1
+                ? `<a href="javascript:void(0)" onclick="toggleEditModal(${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit"><i class="fa-solid fa-pen"></i></a>`
+                : ''
+            }
             <div>`,
         },
       ],
@@ -286,7 +285,7 @@ const showToast = (success, body) => {
 };
 
 const toggleEditModal = (id) => {
-  toggleEditFormLoader(false);
+  toggleEditFormLoader('#channel-submit-button', false);
   if (id) {
     selectedChannel = channelList.find((item) => id === parseFloat(item.id));
     Object.keys(selectedChannel).forEach((key) => {
@@ -321,15 +320,15 @@ const toggleEditModal = (id) => {
   initDatePicker('#input_cardNumberExpiry');
 };
 
-const toggleEditFormLoader = (isStart) => {
-  var submitBtn = $('#channel-submit-button');
+const toggleEditFormLoader = (selector, isStart) => {
+  var submitBtn = $(selector);
   submitBtn.prop('disabled', isStart);
   if (isStart) submitBtn.children('.loader').removeClass('d-none');
   else submitBtn.children('.loader').addClass('d-none');
 };
 
 const submitEditForm = async () => {
-  toggleEditFormLoader(true);
+  toggleEditFormLoader('#channel-submit-button', true);
   let body = {
     id: null,
     name: null,
@@ -388,27 +387,79 @@ const submitEditForm = async () => {
       showToast(false, (res && res.message) || 'Error while updating channel');
     }
   }
-  toggleEditFormLoader(false);
+  toggleEditFormLoader('#channel-submit-button', false);
+};
+
+const submitLoginForm = async () => {
+  // toggleEditFormLoader('#login-submit-button', true);
+  let body = {
+    username: $(`#username`).val(),
+    password: $(`#password`).val(),
+  };
+
+  if (body.username && body.password) {
+    // Call API
+    const res = await callAPI('POST', './apis/login.php', JSON.stringify(body));
+    if (res && res.success) {
+      showToast(true, res.message);
+      location.reload();
+    } else {
+      showToast(false, (res && res.message) || 'Error while loggin in');
+    }
+  }
+  // toggleEditFormLoader('#login-submit-button', false);
+};
+
+const logout = async () => {
+  const res = await callAPI('GET', './apis/logout.php');
+  if (res && res.success) {
+    location.reload();
+  }
 };
 
 $(() => {
-  // Loading channel list on init
-  fetchChannelList();
+  console.log('userId', userId);
+  if (userId) {
+    // Loading channel list on init
+    fetchChannelList();
 
-  // Form submit of add/edit channel
-  $('#edit-form').on('submit', (e) => {
-    e.preventDefault();
-    submitEditForm(this);
-  });
+    // Form submit of add/edit channel
+    $('#edit-form').on('submit', (e) => {
+      e.preventDefault();
+      submitEditForm(this);
+    });
 
-  // form validation init
-  formValidator = $('#edit-form').validate({
-    errorClass: 'd-none',
-    highlight: function (element) {
-      $(element).addClass('border border-danger');
-    },
-    unhighlight: function (element) {
-      $(element).removeClass('border border-danger');
-    },
-  });
+    // form validation init
+    formValidator = $('#edit-form').validate({
+      errorClass: 'd-none',
+      highlight: function (element) {
+        $(element).addClass('border border-danger');
+      },
+      unhighlight: function (element) {
+        $(element).removeClass('border border-danger');
+      },
+    });
+
+    // Form submit of add/edit channel
+    $('#logout').on('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  } else {
+    // Form submit of login form
+    $('#login-form').on('submit', (e) => {
+      e.preventDefault();
+      submitLoginForm();
+    });
+    // form validation init
+    $('#login-form').validate({
+      errorClass: 'd-none',
+      highlight: function (element) {
+        $(element).addClass('border border-danger');
+      },
+      unhighlight: function (element) {
+        $(element).removeClass('border border-danger');
+      },
+    });
+  }
 });

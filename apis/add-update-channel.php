@@ -1,5 +1,8 @@
 <?php
 
+$allowedRoleIds = [1];
+// Include the database connection file
+require_once 'common/authentication.php';
 // Include the database connection file
 require_once 'common/db_connection.php';
 
