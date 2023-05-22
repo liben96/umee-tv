@@ -358,7 +358,7 @@ const submitEditForm = async () => {
 
   if (body.id && body.name) {
     // Call API
-    // const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
+    const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
     if (res && res.success) {
       showToast(true, res.message);
       $('#edit-modal').modal('hide');
