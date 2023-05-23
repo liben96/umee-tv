@@ -242,7 +242,7 @@ const loadMenu = async () => {
     res.data.forEach((item) => {
       if (item.parentId) {
         // find parent by id and push to it
-        let parentIndex = finalMenu.findIndex((itemParent) => itemParent.id === item.parentId);
+        let parentIndex = finalMenu.findIndex((itemParent) => parseFloat(itemParent.id) === parseFloat(item.parentId));
         if (!finalMenu[parentIndex].child) finalMenu[parentIndex].child = [];
         finalMenu[parentIndex].child.push(item);
       } else if (item.childsTable) {
@@ -405,7 +405,7 @@ const submitEditForm = async () => {
     if (key === 'enabled' || key === 'priority') {
       body[key] = $(`#edit-form #input_${key}`).is(':checked') ? 1 : 0;
     } else if (key === 'cardNumberExpiry') {
-      body[key] = $(`#edit-form #input_${key}`).val() ? moment($(`#edit-form #input_${key}`).val(), 'D-M-YYYY').format('YYYY-M-D') : null;
+      body[key] = $(`#edit-form #input_${key}`).val() ? moment($(`#edit-form #input_${key}`).val(), 'D-M-YYYY').format('YYYY-M-D') : '';
     } else if (key === 'id') {
       body[key] = parseFloat($(`#edit-form #input_${key}`).val());
     } else {
@@ -495,6 +495,13 @@ $(() => {
       e.preventDefault();
       logout();
     });
+
+    var x = document.getElementById('myTopnav');
+    if (x.className === 'topnav') {
+      x.className += ' responsive';
+    } else {
+      x.className = 'topnav';
+    }
   } else {
     // Form submit of login form
     $('#login-form').on('submit', (e) => {
