@@ -230,7 +230,9 @@ const initChannelForm = () => {
     if (key === 'typesEscalation') inputKey = 'typeEscalationId';
     $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', '').text('Select an option'));
     typesLists[key].forEach((item) => {
-      $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', item.id).text(item.description));
+      if (item.visible === undefined || parseFloat(item.visible)) {
+        $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', item.id).text(item.description));
+      }
     });
   });
 };
