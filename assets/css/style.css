@@ -181,6 +181,7 @@ input[type="reset"]:active,
   font-size: 14px;
   padding-top: calc(0.32rem + var(--bs-border-width));
   padding-bottom: calc(0.32rem + var(--bs-border-width));
+  text-align: right;
 }
 
 #edit-form input{

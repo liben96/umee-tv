@@ -26,8 +26,10 @@ const callAPI = (type, url, data) =>
 const initTable = (data) => {
   if (dataTable) {
     // Table is already initialised just update the data
+    let currentPageNumber = dataTable.api().page();
     dataTable.fnClearTable();
     dataTable.fnAddData(data);
+    dataTable.api().page(currentPageNumber).draw('page');
   } else {
     dataTable = $('#tv-list').dataTable({
       data,
@@ -318,6 +320,18 @@ const showToast = (success, body) => {
   bsAlert.show();
 };
 
+const readImageURL = (input) => {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      $('#edit-form #input_logo').attr('src', e.target.result);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+
 const toggleEditModal = (id) => {
   toggleEditFormLoader('#channel-submit-button', false);
   if (id) {
@@ -336,11 +350,14 @@ const toggleEditModal = (id) => {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);
       }
-      if (key === 'cardNumberExpiry') {
-        $(`#edit-form #input_${key}`).val(moment(selectedChannel[key]).format('D/M/YYYY'));
+      if (key === 'cardNumberExpiry' && selectedChannel[key]) {
+        $(`#edit-form #input_${key}`).val(selectedChannel[key] ? moment(selectedChannel[key]).format('D/M/YYYY') : '');
       } else if (key === 'logo') {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).attr('src', `./assets/images/logos/${selectedChannel[key]}`);
+        $('#edit-form #input_logo_input').on('change', function () {
+          readImageURL(this);
+        });
       } else {
         // Setting all text inputs
         $(`#edit-form #input_${key}`).val(selectedChannel[key]);
@@ -388,7 +405,7 @@ const submitEditForm = async () => {
     if (key === 'enabled' || key === 'priority') {
       body[key] = $(`#edit-form #input_${key}`).is(':checked') ? 1 : 0;
     } else if (key === 'cardNumberExpiry') {
-      body[key] = moment($(`#edit-form #input_${key}`).val(), 'D-M-YYYY').format('YYYY-M-D');
+      body[key] = $(`#edit-form #input_${key}`).val() ? moment($(`#edit-form #input_${key}`).val(), 'D-M-YYYY').format('YYYY-M-D') : null;
     } else if (key === 'id') {
       body[key] = parseFloat($(`#edit-form #input_${key}`).val());
     } else {
