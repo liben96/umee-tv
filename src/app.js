@@ -258,6 +258,22 @@ const loadMenu = async () => {
       }
     });
     // Render menu in UI
+    finalMenu.forEach((item) => {
+      let menuHTML = '';
+      if (item.child) {
+        menuHTML = `<div class="dropdown">
+            <button class="dropbtn">${item.description}
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                ${item.child.map((chld) => `<a target="_blank" href=${chld.url || 'javascript:void(0)'}>${chld.description}</a>`).join('')}
+            </div>
+        </div>`;
+      } else {
+        menuHTML = `<a target="_blank" href="${item.url || 'javascript:void(0)'}">${item.description}</a>`;
+      }
+      $('#main-menu').append(menuHTML);
+    });
   } else showToast(false, (res && res.message) || 'Error while loading menu');
 };
 
@@ -276,7 +292,7 @@ const fetchChannelList = async () => {
     }
     if (typesLists || (resChannelTypes && resChannelTypes.success)) {
       if (!typesLists) typesLists = resChannelTypes && resChannelTypes.data;
-      if (roleId === 1) {
+      if (roleId === 1 && resChannelTypes && resChannelTypes.data) {
         // Load the menu after types are loaded
         loadMenu();
       }
@@ -354,7 +370,11 @@ const toggleEditModal = (id) => {
         $(`#edit-form #input_${key}`).val(selectedChannel[key] ? moment(selectedChannel[key]).format('D/M/YYYY') : '');
       } else if (key === 'logo') {
         // Setting all text inputs
-        $(`#edit-form #input_${key}`).attr('src', `./assets/images/logos/${selectedChannel[key]}`);
+        $(`#edit-form #input_${key}`).attr(
+          'src',
+          selectedChannel[key] ? `./assets/images/logos/${selectedChannel[key]}` : './assets/images/logos/no-logo.png',
+        );
+        $('#edit-form #input_logo_input').val('');
         $('#edit-form #input_logo_input').on('change', function () {
           readImageURL(this);
         });

@@ -97,16 +97,43 @@
         </form>
     </div>
     <?php else: ?>
-    <div class="header">
+    <!-- <div class="header">
         <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
         <nav>
             <ul>
                 <li><?php echo $_SESSION['userFullName']?>
-                    (<?php echo $_SESSION['role']?>)
-                </li>
-                <li><button type="button" id="logout" class="button light">Logout</button></li>
-            </ul>
-        </nav>
+    (<?php echo $_SESSION['role']?>)
+    </li>
+    <li><button type="button" id="logout" class="button light">Logout</button></li>
+    </ul>
+    </nav>
+    </div> -->
+    <div class="topnav" id="myTopnav">
+        <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
+        <div id="main-menu">
+            <!-- <a href="#home">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <div class="dropdown">
+                <button class="dropbtn">Dropdown
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#">Link 1</a>
+                    <a href="#">Link 2</a>
+                    <a href="#">Link 3</a>
+                </div>
+            </div>
+            <a href="#about">About</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a> -->
+        </div>
+        <div class="right-buttons">
+            <div>
+                <?php echo $_SESSION['userFullName']?>
+                (<?php echo $_SESSION['role']?>)
+            </div>
+            <div><button type="button" id="logout" class="button light">Logout</button></div>
+        </div>
     </div>
     <div class="container-fluid">
         <div class="m-4">
@@ -152,16 +179,16 @@
                                 <input type="text" class="form-control" id="input_id" readonly>
                             </div>
                         </div>
-                        <div class="row mb-1 d-none">
-                            <label for="input_name" class="col-sm-2 col-form-label text-end">Channel Number*</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="input_name" readonly>
-                            </div>
-                        </div>
                         <div class="row mb-1">
                             <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="input_channelName" required>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_name" class="col-sm-2 col-form-label text-end">Number</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="input_name">
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -196,7 +223,7 @@
                                         <div class="row">
                                             <label for="input_pviPort" class="col-sm-3 col-form-label">Port</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="input_pviPort">
+                                                <input type="number" class="form-control" id="input_pviPort">
                                             </div>
                                         </div>
                                     </div>
@@ -215,7 +242,7 @@
                                         <div class="row">
                                             <label for="input_pduPort" class="col-sm-3 col-form-label">Port</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="input_pduPort">
+                                                <input type="number" class="form-control" id="input_pduPort">
                                             </div>
                                         </div>
                                     </div>
@@ -292,16 +319,16 @@
             </div>
         </div>
         <?php endif; ?>
+    </div>
 
-        <!-- notification -->
-        <div id="notification-container" class="position-fixed">
-            <div id="notification" class="toast align-items-center text-white border-0" role="alert"
-                aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body"></div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
-                </div>
+    <!-- notification -->
+    <div id="notification-container" class="position-fixed">
+        <div id="notification" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
