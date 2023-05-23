@@ -94,7 +94,7 @@ if (!empty($jsonData)) {
 
         } else {
             $response['success'] = false;
-            $response['message'] = "Error executing the query";
+            $response['message'] = "Error executing the query: " . $conn->error;
         }
     } else {
         // JSON decoding failed
