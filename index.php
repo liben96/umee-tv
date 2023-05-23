@@ -180,15 +180,15 @@
                             </div>
                         </div>
                         <div class="row mb-1">
-                            <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
+                            <label for="input_name" class="col-sm-2 col-form-label text-end">Number*</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="input_channelName" required>
+                                <input type="number" class="form-control" id="input_name" required>
                             </div>
                         </div>
                         <div class="row mb-1">
-                            <label for="input_name" class="col-sm-2 col-form-label text-end">Number</label>
+                            <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" id="input_name">
+                                <input type="text" class="form-control" id="input_channelName" required>
                             </div>
                         </div>
                         <div class="row mb-1">
