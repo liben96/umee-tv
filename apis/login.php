@@ -24,7 +24,7 @@ if (!empty($jsonData)) {
         $username = $data['username'];
         $password = md5($data['password']); // Convert the submitted password to MD5 format
 
-        $query = "SELECT * FROM users WHERE username = '".$username."' AND password = '".$password."' AND enabled = 1";
+        $query = "SELECT u.id, u.username, u.name, u.usersRoleId as roleId, ur.description as role FROM users u LEFT JOIN usersRoles ur ON ur.id = u.usersRoleId  WHERE u.username = '".$username."' AND u.password = '".$password."' AND u.enabled = 1";
 
         // Execute the query
         $result = $conn->query($query);
@@ -37,9 +37,10 @@ if (!empty($jsonData)) {
             // Query executed successfully
             $response['message'] = "Logged in sucesssully";
             $response['data'] = $resUser;
-            $_SESSION['roleId'] = $response['data']['usersRoleId'];
+            $_SESSION['roleId'] = $response['data']['roleId'];
             $_SESSION['userId'] = $response['data']['id'];
-            $_SESSION['username'] = $response['data']['username'];
+            $_SESSION['userFullName'] = $response['data']['name'];
+            $_SESSION['role'] = $response['data']['role'];
             // Update last access datetime
             $conn->query("UPDATE users SET lastAccess = NOW() WHERE id = ". $response['data']['id']);
 

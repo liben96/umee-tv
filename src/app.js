@@ -233,17 +233,51 @@ const initChannelForm = () => {
   });
 };
 
+const loadMenu = async () => {
+  const res = await callAPI('GET', './apis/get-dynamic-menu.php');
+  if (res && res.success) {
+    let finalMenu = [];
+    res.data.forEach((item) => {
+      if (item.parentId) {
+        // find parent by id and push to it
+        let parentIndex = finalMenu.findIndex((itemParent) => itemParent.id === item.parentId);
+        if (!finalMenu[parentIndex].child) finalMenu[parentIndex].child = [];
+        finalMenu[parentIndex].child.push(item);
+      } else if (item.childsTable) {
+        let childTable = JSON.parse(item.childsTable);
+        // Get child items from typesLists object
+        let finalItem = {...item};
+        finalItem.child = childTable.type
+          ? typesLists[childTable.table].filter((typ) => parseFloat(typ.type) === childTable.type)
+          : typesLists[childTable.table];
+        finalMenu.push(finalItem);
+      } else {
+        finalMenu.push(item);
+      }
+    });
+    // Render menu in UI
+  } else showToast(false, (res && res.message) || 'Error while loading menu');
+};
+
 const fetchChannelList = async () => {
   const res = await callAPI('GET', './apis/get-channel-list.php');
   if (res.success) {
     let resChannelTypes;
+    if (roleId === 2) {
+      // mock type list becuase this role does not need it
+      typesLists = {};
+    }
     // Only load types first time no need load again on next refresh
     if (!typesLists) {
       // Get channel types arrays
       resChannelTypes = await callAPI('GET', './apis/get-channel-types.php');
     }
     if (typesLists || (resChannelTypes && resChannelTypes.success)) {
-      if (!typesLists) typesLists = resChannelTypes.data;
+      if (!typesLists) typesLists = resChannelTypes && resChannelTypes.data;
+      if (roleId === 1) {
+        // Load the menu after types are loaded
+        loadMenu();
+      }
       // Get data from flusonic
       const resFluSonic = await callAPI('GET', './apis/flusonic_response.json');
       if (resFluSonic.success) {
@@ -418,7 +452,6 @@ const logout = async () => {
 };
 
 $(() => {
-  console.log('userId', userId);
   if (userId) {
     // Loading channel list on init
     fetchChannelList();

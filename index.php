@@ -91,7 +91,7 @@
                 <input type="checkbox" class="form-check-input" id="remember">
                 <label class="form-check-label" for="remember">Remember me</label>
             </div> -->
-            <button id="login-submit-button" type="submit" class="btn btn-primary"><span class="loader d-none">
+            <button id="login-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
                     <i class="fa fa-spinner fa-spin"></i>
                 </span>Login</button>
         </form>
@@ -101,9 +101,10 @@
         <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
         <nav>
             <ul>
-                <li><?php echo $_SESSION['username']?>
+                <li><?php echo $_SESSION['userFullName']?>
+                    (<?php echo $_SESSION['role']?>)
                 </li>
-                <li><button type="button" id="logout" class="button">Logout</button></li>
+                <li><button type="button" id="logout" class="button light">Logout</button></li>
             </ul>
         </nav>
     </div>
@@ -313,12 +314,6 @@
     <script src="./assets/js/flatpickr.js"></script>
     <script src="./assets/js/moment.min.js"></script>
     <script type="text/javascript">
-        // prettier-ignore
-        let username = '<?php if(isset($_SESSION['username'])) {
-            echo $_SESSION['username'];
-        } else {
-            echo null;
-        } ?>'
         // prettier-ignore
         let userId = '<?php if(isset($_SESSION['userId'])) {
             echo $_SESSION['userId'];

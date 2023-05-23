@@ -64,8 +64,8 @@ input[type="reset"],
     -webkit-appearance: none;
     /* position: relative;
     display: inline-block; */
-    background: #FF00FF;
-    color: #fff;
+    background: #ffffff;
+    color: #000;
     text-decoration: none;
     border-radius: 6px;
     font-weight: 800;
@@ -84,7 +84,7 @@ input[type="submit"]:hover,
 input[type="reset"]:hover,
 .button:hover
 {
-    background: #FF00FF;
+    background: #e2e2e2;
 }
 
 input[type="button"]:active,
@@ -92,7 +92,7 @@ input[type="submit"]:active,
 input[type="reset"]:active,
 .button:active
 {
-    background: #FF00FF;
+    background: #e2e2e2;
 }
 
 .channel-logo {
@@ -186,4 +186,12 @@ input[type="reset"]:active,
 #edit-form input{
   font-size: 14px;
   padding: 0.32rem 0.75rem
+}
+
+.page-link, .page-link:hover{
+  color: #000
+}
+
+.active>.page-link, .page-link.active{
+  color: #fff !important;
 }

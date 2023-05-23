@@ -1,6 +1,6 @@
 <?php
 
-$allowedRoleIds = [1,2];
+$allowedRoleIds = [1];
 // Include the database connection file
 require_once 'common/authentication.php';
 // Include the database connection file
@@ -18,6 +18,7 @@ $query2 = "SELECT * FROM typesOTT";
 $query3 = "SELECT * FROM typesPDU";
 $query4 = "SELECT * FROM typesPVI";
 $query5 = "SELECT * FROM typesSource";
+$query6 = "SELECT * FROM typesMediaExcel";
 
 // Create an empty array to store the results
 $responseDB = array();
@@ -95,6 +96,20 @@ if ($result5) {
 } else {
     // Query execution failed
     $response['message'] = "Error executing query 5: " . $conn->error;
+}
+
+$result6 = $conn->query($query6);
+if ($result6) {
+    // Fetch the data from the result set
+    $data6 = array();
+    while ($row = $result6->fetch_assoc()) {
+        $data6[] = $row;
+    }
+    // Add the data to the response array
+    $responseDB['typesMediaExcel'] = $data6;
+} else {
+    // Query execution failed
+    $response['message'] = "Error executing query 6: " . $conn->error;
 }
 
 $response['success'] = true;
