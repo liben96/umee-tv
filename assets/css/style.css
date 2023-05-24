@@ -318,6 +318,24 @@ table.dataTable{
   right: 45%
 }
 
+.has-icon{
+  position: relative;
+}
+
+.has-icon .form-control{
+  padding-right: 30px !important;
+}
+
+.has-icon .input-icon{
+  position: absolute;
+  right: 20px;
+  top: 6px;
+}
+
+.table-search-container .input-icon{
+  right: 10px;
+}
+
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
 @media screen and (max-width: 600px) {
   .topnav a:not(:first-child), .dropdown .dropbtn {

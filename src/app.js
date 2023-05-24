@@ -202,9 +202,31 @@ const initTable = (data) => {
     $('#add-channel').on('click', () => {
       toggleEditModal();
     });
+
+    $(`#edit-form #input_wikiUrl`).on('keyup', (e) => {
+      setWikiPreviewUrl();
+    });
+
+    $(`#table-search`).on('keyup', (e) => {
+      setSearchClear();
+    });
+
+    $(`#search-clear`).on('click', (e) => {
+      $(`#table-search`).val('');
+      dataTable.api().search('').draw();
+      setSearchClear();
+    });
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
+};
+
+setSearchClear = () => {
+  if ($(`#table-search`).val()) {
+    $('#search-clear').removeClass('d-none');
+  } else {
+    $('#search-clear').addClass('d-none');
+  }
 };
 
 const initDatePicker = (id) => {
@@ -381,6 +403,15 @@ const readImageURL = (input) => {
   }
 };
 
+const setWikiPreviewUrl = () => {
+  if ($(`#edit-form #input_wikiUrl`).val()) {
+    $('#wiki-href').attr('href', $(`#edit-form #input_wikiUrl`).val());
+    $('#wiki-href').removeClass('d-none');
+  } else {
+    $('#wiki-href').addClass('d-none');
+  }
+};
+
 const setChannelForm = (selectedChannel, key) => {
   if (
     key === 'typeSourceId' ||
@@ -407,6 +438,9 @@ const setChannelForm = (selectedChannel, key) => {
     $('#edit-form #input_logo_input').on('change', function () {
       readImageURL(this);
     });
+  } else if (key === 'wikiUrl') {
+    $(`#edit-form #input_${key}`).val(selectedChannel[key]);
+    setWikiPreviewUrl();
   } else {
     // Setting all text inputs
     $(`#edit-form #input_${key}`).val(selectedChannel[key]);

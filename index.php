@@ -119,7 +119,12 @@
                 <div class="row">
                     <div class="col">
                         <div class="d-flex align-items-center border-bottom pb-2">
-                            <input id="table-search" type="text" class="form-control" placeholder="Type to search" />
+                            <div class="has-icon table-search-container">
+                                <input id="table-search" type="text" class="form-control"
+                                    placeholder="Type to search" />
+                                <a id="search-clear" href="javascript:void(0)" class="input-icon d-none text-dark"><i
+                                        class="fa-solid fa-xmark"></i></i></a>
+                            </div>
                             <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2">Add Channel</button>
                         </div>
                         <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
@@ -271,14 +276,22 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-7">
-                                            <div class="row">
+                                            <!-- <div class="row">
                                                 <label for="input_wikiUrl" class="col-sm-3 col-form-label">Wiki</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" id="input_wikiUrl">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label for="input_wikiUrl" class="col-sm-2 col-form-label">Wiki</label>
+                                <div class="col-sm-10 has-icon">
+                                    <input type="text" class="form-control" id="input_wikiUrl">
+                                    <a id="wiki-href" href="javascript:void(0)" class="input-icon"><i
+                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
                                 </div>
                             </div>
                             <div class="row">
@@ -321,6 +334,17 @@
             </div>
         </div>
     </div>
+    <!-- <footer className="mt-2 mr-0">
+        <div class="row">
+            <div className="text-right mt-2 col-sm-12">
+                <p className="mr-3 m-0">
+                    © u-mee&nbsp;
+                    <span class="current-year">2003</span>
+                    . All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer> -->
 
     <!-- scripts start -->
     <script src="./assets/js/jquery-3.7.0.min.js"></script>
