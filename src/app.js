@@ -33,6 +33,20 @@ const initTable = (data) => {
   } else {
     dataTable = $('#tv-list').dataTable({
       data,
+      dom:
+        '<"d-flex align-items-center">' +
+        'rt' +
+        '<"d-flex align-items-center"l<"d-flex align-items-center justify-content-center footer-entries"i><"flex-grow-1"p>>',
+      // buttons: [
+      //   {
+      //     className: 'btn btn-sm btn-dark ms-2',
+      //     text: 'Add Channel',
+      //     action: function (e, dt, node, config) {
+      //       // $('#myTable').DataTable().ajax.reload();
+      //     },
+      //     titleAttr: 'Add Channel',
+      //   },
+      // ],
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -64,16 +78,6 @@ const initTable = (data) => {
           },
         },
       },
-      buttons: [
-        {
-          className: 'btn-export border-0 btn-outline-export',
-          text: "<button type='button' class='button'>Add Channel</button>",
-          action: function (e, dt, node, config) {
-            // $('#myTable').DataTable().ajax.reload();
-          },
-          titleAttr: 'Add Channel',
-        },
-      ],
       columns: [
         {data: 'id', title: 'ID', className: 'align-middle', visible: false},
         {
@@ -117,7 +121,16 @@ const initTable = (data) => {
             }${row.cardNumberExpiry ? `<div><u>Expiry</u>: ${moment(row.cardNumberExpiry).format('DD MMMM YYYY')}</div>` : ''}<div>`,
           className: 'align-middle',
         },
-        {data: 'typeEscalation', title: 'Escalation', className: 'text-center align-middle', width: '62px'},
+        {
+          data: 'typeEscalation',
+          title: 'Escalation',
+          className: 'text-center align-middle',
+          width: '62px',
+          render: (data, type, row) =>
+            `<div><div> ${row.typeEscalation || ''}</div>${
+              row.wikiUrl ? `<div><a href="${row.wikiUrl}" target="_blank">Wiki</a></div>` : ''
+            }<div>`,
+        },
         {
           data: 'priority',
           title: 'Priority',
@@ -182,6 +195,12 @@ const initTable = (data) => {
       ],
       order: [[2, 'asc']],
       pageLength: 10,
+    });
+    $('#table-search').on('keyup click', function () {
+      dataTable.api().search($('#table-search').val()).draw();
+    });
+    $('#add-channel').on('click', () => {
+      toggleEditModal();
     });
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
@@ -279,7 +298,18 @@ const loadMenu = async () => {
   } else showToast(false, (res && res.message) || 'Error while loading menu');
 };
 
+const mainLoader = (isStart) => {
+  if (isStart) {
+    $('#main-area').addClass('d-none');
+    $('#main-loader').removeClass('d-none');
+  } else {
+    $('#main-area').removeClass('d-none');
+    $('#main-loader').addClass('d-none');
+  }
+};
+
 const fetchChannelList = async () => {
+  mainLoader(true);
   const res = await callAPI('GET', './apis/get-channel-list.php');
   if (res.success) {
     let resChannelTypes;
@@ -322,6 +352,7 @@ const fetchChannelList = async () => {
       }
     }
   }
+  mainLoader(false);
 };
 
 const showToast = (success, body) => {
@@ -350,41 +381,50 @@ const readImageURL = (input) => {
   }
 };
 
+const setChannelForm = (selectedChannel, key) => {
+  if (
+    key === 'typeSourceId' ||
+    key === 'input_typeOTTId' ||
+    key === 'input_typePVIId' ||
+    key === 'input_typePDUId' ||
+    key === 'input_typeEscalationId'
+  ) {
+    $(`#edit-form #input_${key}`).val(selectedChannel[key]);
+  }
+  if (key === 'enabled' || key === 'priority') {
+    // Setting all text inputs
+    $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);
+  }
+  if (key === 'cardNumberExpiry' && selectedChannel[key]) {
+    $(`#edit-form #input_${key}`).val(selectedChannel[key] ? moment(selectedChannel[key]).format('D/M/YYYY') : '');
+  } else if (key === 'logo') {
+    // Setting all text inputs
+    $(`#edit-form #input_${key}`).attr(
+      'src',
+      selectedChannel[key] ? `./assets/images/logos/${selectedChannel[key]}` : './assets/images/logos/no-logo.png',
+    );
+    $('#edit-form #input_logo_input').val('');
+    $('#edit-form #input_logo_input').on('change', function () {
+      readImageURL(this);
+    });
+  } else {
+    // Setting all text inputs
+    $(`#edit-form #input_${key}`).val(selectedChannel[key]);
+  }
+};
+
 const toggleEditModal = (id) => {
+  $('#form-title').html((id ? 'Edit' : 'Add') + ' Channel');
   toggleEditFormLoader('#channel-submit-button', false);
   if (id) {
     selectedChannel = channelList.find((item) => id === parseFloat(item.id));
     Object.keys(selectedChannel).forEach((key) => {
-      if (
-        key === 'typeSourceId' ||
-        key === 'input_typeOTTId' ||
-        key === 'input_typePVIId' ||
-        key === 'input_typePDUId' ||
-        key === 'input_typeEscalationId'
-      ) {
-        $(`#edit-form #input_${key}`).val(selectedChannel[key]);
-      }
-      if (key === 'enabled' || key === 'priority') {
-        // Setting all text inputs
-        $(`#edit-form #input_${key}`).prop('checked', parseInt(selectedChannel[key]) ? true : false);
-      }
-      if (key === 'cardNumberExpiry' && selectedChannel[key]) {
-        $(`#edit-form #input_${key}`).val(selectedChannel[key] ? moment(selectedChannel[key]).format('D/M/YYYY') : '');
-      } else if (key === 'logo') {
-        // Setting all text inputs
-        $(`#edit-form #input_${key}`).attr(
-          'src',
-          selectedChannel[key] ? `./assets/images/logos/${selectedChannel[key]}` : './assets/images/logos/no-logo.png',
-        );
-        $('#edit-form #input_logo_input').val('');
-        $('#edit-form #input_logo_input').on('change', function () {
-          readImageURL(this);
-        });
-      } else {
-        // Setting all text inputs
-        $(`#edit-form #input_${key}`).val(selectedChannel[key]);
-      }
-      // Setting other inputs menually
+      setChannelForm(selectedChannel, key);
+    });
+  } else {
+    let emptyChannel = getEmptyChannel();
+    Object.keys(emptyChannel).forEach((key) => {
+      setChannelForm(emptyChannel, key);
     });
   }
   formValidator.resetForm();
@@ -400,9 +440,8 @@ const toggleEditFormLoader = (selector, isStart) => {
   else submitBtn.children('.loader').addClass('d-none');
 };
 
-const submitEditForm = async () => {
-  toggleEditFormLoader('#channel-submit-button', true);
-  let body = {
+const getEmptyChannel = () => {
+  return {
     id: null,
     name: null,
     channelName: null,
@@ -420,7 +459,14 @@ const submitEditForm = async () => {
     typeEscalationId: null,
     priority: null,
     enabled: null,
+    wikiUrl: null,
+    logo: null,
   };
+};
+
+const submitEditForm = async () => {
+  toggleEditFormLoader('#channel-submit-button', true);
+  let body = getEmptyChannel();
 
   //Getting new values from form
   Object.keys(body).forEach((key) => {
@@ -429,7 +475,9 @@ const submitEditForm = async () => {
     } else if (key === 'cardNumberExpiry') {
       body[key] = $(`#edit-form #input_${key}`).val() ? moment($(`#edit-form #input_${key}`).val(), 'D-M-YYYY').format('YYYY-M-D') : '';
     } else if (key === 'id') {
-      body[key] = parseFloat($(`#edit-form #input_${key}`).val());
+      body[key] = $(`#edit-form #input_${key}`).val() ? parseFloat($(`#edit-form #input_${key}`).val()) : undefined;
+    } else if (key === 'logo') {
+      body[key] = $(`#input_${key}`).attr('src').split('/')[$(`#input_${key}`).attr('src').split('/').length - 1];
     } else {
       body[key] = $(`#edit-form #input_${key}`).val();
     }
@@ -449,7 +497,7 @@ const submitEditForm = async () => {
     console.log('No file selected.');
   }
 
-  if (body.id && body.name) {
+  if (body.name && body.channelName) {
     // Call API
     const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
     if (res && res.success) {

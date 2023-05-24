@@ -23,8 +23,8 @@ if (!empty($jsonData)) {
     // Check if JSON decoding was successful
     if ($data !== null) {
         // Check if the 'id' field is present in the JSON body
-        $id = $data['id'];
-        if (isset($id)) {
+        if (isset($data['id'])) {
+            $id = $data['id'];
             // Build the dynamic update query based on the provided data
             $query = "UPDATE channel SET ";
 
@@ -35,8 +35,9 @@ if (!empty($jsonData)) {
                         // Replace empty value with NULL keyword
                         $query .= $key . " = NULL, ";
                     } else {
+                        $finalValue = mysqli_real_escape_string($conn, $value);
                         // Add non-empty value to the query
-                        $query .= $key . " = '" . $value . "', ";
+                        $query .= $key . " = '" . $finalValue . "', ";
                     }
                 }
             }
@@ -69,7 +70,8 @@ if (!empty($jsonData)) {
                     // Replace empty value with NULL keyword
                     $placeholders[] = "NULL";
                 } else {
-                    $placeholders[] = "'" . $value . "'";
+                    $finalValue = mysqli_real_escape_string($conn, $value);
+                    $placeholders[] = "'" . $finalValue . "'";
                 }
             }
 

@@ -184,7 +184,7 @@ input[type="reset"]:active,
   text-align: right;
 }
 
-#edit-form input{
+#main-area .form-control, #edit-form .form-select{
   font-size: 14px;
   padding: 0.32rem 0.75rem
 }
@@ -294,6 +294,28 @@ input[type="reset"]:active,
 /* Show the dropdown menu when the user moves the mouse over the dropdown button */
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+div.dataTables_wrapper div.dataTables_info{
+  padding-top: 1px;
+  padding-left:10px;
+}
+
+.btn-dark{
+  background-color: #333;
+}
+
+#table-search{
+  max-width: 300px;
+}
+
+table.dataTable{
+  margin-top: 0!important;
+}
+
+.footer-entries{
+  position: absolute;
+  right: 45%
 }
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
