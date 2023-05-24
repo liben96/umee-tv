@@ -290,7 +290,7 @@
                                 <label for="input_wikiUrl" class="col-sm-2 col-form-label">Wiki</label>
                                 <div class="col-sm-10 has-icon">
                                     <input type="text" class="form-control" id="input_wikiUrl">
-                                    <a id="wiki-href" href="javascript:void(0)" class="input-icon"><i
+                                    <a id="wiki-href" target="_blank" href="javascript:void(0)" class="input-icon"><i
                                             class="fa-solid fa-arrow-up-right-from-square"></i></a>
                                 </div>
                             </div>
