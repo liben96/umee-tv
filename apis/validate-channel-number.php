@@ -32,6 +32,7 @@ try {
         $count = $row['count'];
 
         $response['success'] = true;
+        $response['message'] = $count > 0 ? "This number already exist" : "";
         $response['data'] = ['exist' => $count > 0 ? true : false];
         ;
     } else {

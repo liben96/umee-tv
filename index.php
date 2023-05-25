@@ -172,6 +172,7 @@
                                 <label for="input_name" class="col-sm-2 col-form-label text-end">Number*</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" id="input_name" required>
+                                    <span id="input_name_error" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row mb-1">

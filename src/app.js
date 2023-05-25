@@ -4,7 +4,9 @@ let channelList = [],
   formValidator,
   selectedChannel,
   dataTable,
-  typesLists;
+  typesLists,
+  isChannelExist,
+  originalNumber;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -196,32 +198,84 @@ const initTable = (data) => {
       order: [[2, 'asc']],
       pageLength: 10,
     });
+
+    // This is a good place to put all jquery events because this part executes only once
+
+    // Table search input event
     $('#table-search').on('keyup click', function () {
       dataTable.api().search($('#table-search').val()).draw();
+      setSearchClear();
     });
+
+    // Add channel button event
     $('#add-channel').on('click', () => {
       toggleEditModal();
     });
 
+    // wiki url input event
     $(`#edit-form #input_wikiUrl`).on('keyup', (e) => {
       setWikiPreviewUrl();
     });
 
-    $(`#table-search`).on('keyup', (e) => {
-      setSearchClear();
-    });
-
+    // Search clear button event
     $(`#search-clear`).on('click', (e) => {
       $(`#table-search`).val('');
       dataTable.api().search('').draw();
       setSearchClear();
     });
 
-    //Set current year
+    // Set current year for footer
     $('.current-year').html(moment().format('YYYY'));
+
+    // channel number input event to validate if it already exist
+    setupOnStopTypeEvent('#edit-form #input_name', validateChannelName);
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
+};
+
+setupOnStopTypeEvent = (selector, event) => {
+  let typingTimer,
+    doneTypingInterval = 500;
+  //on keyup, start the countdown
+  $(selector).on('keyup', function () {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(event, doneTypingInterval);
+  });
+
+  //on keydown, clear the countdown
+  $(selector).on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+};
+
+toggleInputError = (isShow, selector, error) => {
+  if (isShow) {
+    $(selector).addClass('has-error border border-danger');
+    $(`${selector}_error`).html(error);
+  } else {
+    $(selector).removeClass('has-error border border-danger');
+    $(`${selector}_error`).html('');
+  }
+};
+
+validateChannelName = async () => {
+  let body = {
+    number: $('#edit-form #input_name').val(),
+  };
+  if (body.number && body.number !== originalNumber) {
+    const res = await callAPI('POST', './apis/validate-channel-number.php', JSON.stringify(body));
+    if (res && res.success && res.data.exist) {
+      isChannelExist = res.data && res.data.exist;
+      toggleInputError(true, '#input_name', res.message || 'This number already exist');
+    } else {
+      isChannelExist = false;
+      toggleInputError(false, '#input_name');
+    }
+  } else {
+    isChannelExist = false;
+    toggleInputError(false, '#input_name');
+  }
 };
 
 setSearchClear = () => {
@@ -464,6 +518,11 @@ const toggleEditModal = (id) => {
       setChannelForm(emptyChannel, key);
     });
   }
+  // Reset channel name validation flag
+  isChannelExist = false;
+  originalNumber = $('#input_name').val();
+  toggleInputError(false, '#input_name');
+
   formValidator.resetForm();
   const myModalAlternative = new bootstrap.Modal('#edit-modal', {keyboard: false});
   myModalAlternative.toggle();
@@ -520,21 +579,21 @@ const submitEditForm = async () => {
     }
   });
 
-  var fileInput = $('#input_logo_input');
-  var selectedFile = fileInput[0].files[0];
-  if (selectedFile) {
-    console.log('Selected file:', selectedFile);
-    var formData = new FormData();
-    formData.append('image', selectedFile);
-    const resImage = await callAPI('POST', './apis/channel-logo-upload.php', formData);
-    if (resImage && resImage.success) {
-      body.logo = resImage.data;
+  if (body.name && body.channelName && !isChannelExist) {
+    var fileInput = $('#input_logo_input');
+    var selectedFile = fileInput[0].files[0];
+    if (selectedFile) {
+      console.log('Selected file:', selectedFile);
+      var formData = new FormData();
+      formData.append('image', selectedFile);
+      const resImage = await callAPI('POST', './apis/channel-logo-upload.php', formData);
+      if (resImage && resImage.success) {
+        body.logo = resImage.data;
+      }
+    } else {
+      console.log('No file selected.');
     }
-  } else {
-    console.log('No file selected.');
-  }
 
-  if (body.name && body.channelName) {
     // Call API
     const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
     if (res && res.success) {
