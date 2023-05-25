@@ -3,6 +3,7 @@
 session_start();
 // Include the database connection file
 require_once 'common/db_connection.php';
+require_once 'common/logger.php';
 
 // Retrieve the raw POST data
 $jsonData = file_get_contents('php://input');
@@ -43,6 +44,7 @@ if (!empty($jsonData)) {
             $_SESSION['role'] = $response['data']['role'];
             // Update last access datetime
             $conn->query("UPDATE users SET lastAccess = NOW() WHERE id = ". $response['data']['id']);
+            add_log($conn, 'logged in');
 
         } else {
             $response['success'] = false;

@@ -5,6 +5,8 @@ $allowedRoleIds = [1];
 require_once 'common/authentication.php';
 // Include the database connection file
 require_once 'common/db_connection.php';
+// Include the database logger file
+require_once 'common/logger.php';
 
 try {
     // Retrieve the raw POST data
@@ -90,8 +92,10 @@ try {
                 $response['success'] = true;
                 // Query executed successfully
                 if (isset($id)) {
+                    add_log($conn, "updated channel #{$data['id']}");
                     $response['message'] = "Channel updated successfully.";
                 } else {
+                    add_log($conn, "added channel {$data['channelName']}");
                     $response['message'] = "New channel added successfully.";
                 }
 

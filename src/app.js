@@ -407,28 +407,46 @@ const fetchChannelList = async () => {
         // Load the menu after types are loaded
         loadMenu();
       }
-      // Get data from flusonic
-      const resFluSonic = await callAPI('GET', './apis/flusonic_response.json');
-      if (resFluSonic.success) {
-        let finalArray = res.data.map((item) => {
-          // Find and get disabled and uptime by comparing name field
-          let foundSonicChannel = resFluSonic.data.streams.find((itemFluSonic) => itemFluSonic.name === item.name);
-          if (foundSonicChannel) {
-            let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
-            return {
-              ...item,
-              flusonicDisabled: foundSonicChannel.disabled,
-              flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
-              flusonicInputs: foundSonicChannel.config_on_disk.inputs,
-              flusonicBlackoutFound: blackoutFound,
-              flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
-            };
-          } else return item;
-        });
-        channelList = finalArray;
-        initTable(finalArray);
-        initChannelForm();
+
+      let fluSonicList = [];
+      // Gather list of flusonic sources that needs to be loaded
+      // Step-1 Get unique items by typeOTTId
+      const uniqueOTTIds = [...new Set(res.data.map((item) => item.typeOTTId))];
+
+      // Step-2 Call all flusonic apis
+      for (const ottId of uniqueOTTIds) {
+        let foundFlusonicType = typesLists.typesOTT.find((item) => parseFloat(item.id) === parseFloat(ottId));
+        if (foundFlusonicType && foundFlusonicType.url) {
+          let body = {
+            url: foundFlusonicType.url,
+            user: foundFlusonicType.user,
+            password: foundFlusonicType.password,
+          };
+          const resFluSonic = await callAPI('POST', './apis/load_external_list.php', JSON.stringify(body));
+          if (resFluSonic && resFluSonic.success && resFluSonic.data && resFluSonic.data.streams) {
+            fluSonicList = [...fluSonicList, ...resFluSonic.data.streams];
+          }
+        }
       }
+
+      let finalArray = res.data.map((item) => {
+        // Find and get disabled and uptime by comparing name field
+        let foundSonicChannel = fluSonicList.find((itemFluSonic) => itemFluSonic.name === item.name);
+        if (foundSonicChannel) {
+          let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
+          return {
+            ...item,
+            flusonicDisabled: foundSonicChannel.disabled,
+            flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
+            flusonicInputs: foundSonicChannel.config_on_disk.inputs,
+            flusonicBlackoutFound: blackoutFound,
+            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
+          };
+        } else return item;
+      });
+      channelList = finalArray;
+      initTable(finalArray);
+      initChannelForm();
     }
   }
   mainLoader(false);
