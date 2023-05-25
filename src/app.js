@@ -216,6 +216,9 @@ const initTable = (data) => {
       dataTable.api().search('').draw();
       setSearchClear();
     });
+
+    //Set current year
+    $('.current-year').html(moment().format('YYYY'));
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
@@ -605,6 +608,13 @@ $(() => {
       x.className += ' responsive';
     } else {
       x.className = 'topnav';
+    }
+
+    // Show/hide add channel based on role
+    if (roleId === 1) {
+      $('#add-channel').removeClass('d-none');
+    } else {
+      $('#add-channel').remove();
     }
   } else {
     // Form submit of login form

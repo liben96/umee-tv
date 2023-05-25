@@ -125,12 +125,21 @@
                                 <a id="search-clear" href="javascript:void(0)" class="input-icon d-none text-dark"><i
                                         class="fa-solid fa-xmark"></i></i></a>
                             </div>
-                            <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2">Add Channel</button>
+                            <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2 d-none">Add
+                                Channel</button>
                         </div>
                         <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
                         </table>
                     </div>
                 </div>
+                <footer class="mt-5">
+                    <div class="row">
+                        <div class="mt-2 col text-end">
+                            <p class="mr-3 m-0"> © u-mee&nbsp;<span class="current-year"></span>. All rights reserved.
+                            </p>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
 
@@ -334,17 +343,6 @@
             </div>
         </div>
     </div>
-    <!-- <footer className="mt-2 mr-0">
-        <div class="row">
-            <div className="text-right mt-2 col-sm-12">
-                <p className="mr-3 m-0">
-                    © u-mee&nbsp;
-                    <span class="current-year">2003</span>
-                    . All rights reserved.
-                </p>
-            </div>
-        </div>
-    </footer> -->
 
     <!-- scripts start -->
     <script src="./assets/js/jquery-3.7.0.min.js"></script>
