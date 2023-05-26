@@ -463,7 +463,7 @@ const fetchChannelList = async (isRefresh) => {
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
             flusonicInputs: foundSonicChannel.config_on_disk.inputs,
             flusonicBlackoutFound: blackoutFound,
-            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
+            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? false : true,
             // flusonicUrl: foundSonicChannel.url,
             flusonicUser: foundSonicChannel.user,
             flusonicPassword: foundSonicChannel.password,
@@ -609,7 +609,7 @@ const submitChannelAction = async () => {
       body.body = {
         inputs: [
           ...selectedConfirmItem.flusonicInputs.map((item) => {
-            if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === 10 ? false : true;
+            if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === 10 ? true : false;
             return {
               ...item,
               priority: item.url.includes('blackout/') ? (item.priority === 10 ? 0 : 10) : item.priority,
