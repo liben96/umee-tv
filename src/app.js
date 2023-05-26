@@ -580,13 +580,15 @@ const toggleConfirmModal = (action, id) => {
   selectedConfirmAction = action;
   if (action === 'blackout')
     confirmModalElm.html(
-      `Do you want to <b class="fw-bold">${
+      `<div>Are you sure you want to <b class="fw-bold">${
         selectedConfirmItem.flusonicBlackoutEnabled ? 'disable' : 'enable'
-      }</b> ${action} for channel <b lass="fw-bold">${selectedConfirmItem.channelName} (#${selectedConfirmItem.name})</b>`,
+      }</b> the ${action} for the following channel?</div><div><b class="fw-bold">${selectedConfirmItem.name} - ${
+        selectedConfirmItem.channelName
+      }</b></div>`,
     );
   else
     confirmModalElm.html(
-      `Do you want to <b class="fw-bold">${action}</b> this channel <b class="fw-bold">${selectedConfirmItem.channelName} (#${selectedConfirmItem.name})</b>`,
+      `<div>Are you sure you want to <b class="fw-bold">${action}</b> the following channel?</div><div><b class="fw-bold">${selectedConfirmItem.name} - ${selectedConfirmItem.channelName}</b></div>`,
     );
   const myModalAlternative = new bootstrap.Modal('#confirm-modal', {keyboard: false});
   myModalAlternative.toggle();
