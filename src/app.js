@@ -338,7 +338,11 @@ const initChannelForm = () => {
     $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', '').text('Select an option'));
     typesLists[key].forEach((item) => {
       if (item.visible === undefined || parseFloat(item.visible)) {
-        $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', item.id).text(item.description));
+        $(`#edit-form #input_${inputKey}`).append(
+          $('<option></option>')
+            .attr('value', item.id)
+            .text(key !== 'typesOTT' ? item.description : `${item.description}${item.url ? ` (${item.url.replace('http://', '')})` : ''}`),
+        );
       }
     });
   });
