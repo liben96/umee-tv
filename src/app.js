@@ -440,14 +440,16 @@ const fetchChannelList = async (isRefresh) => {
           };
           const resFluSonic = await callAPI('POST', './apis/load_external_list.php', JSON.stringify(body));
           if (resFluSonic && resFluSonic.success && resFluSonic.data && resFluSonic.data.streams) {
-            fluSonicList = [...fluSonicList, ...resFluSonic.data.streams.map((item) => ({...item, ...body}))];
+            fluSonicList = [...fluSonicList, ...resFluSonic.data.streams.map((item) => ({...item, ...body, sourceUrl: body.url}))];
           }
         }
       }
 
       let finalArray = res.data.map((item) => {
         // Find and get disabled and uptime by comparing name field
-        let foundSonicChannel = fluSonicList.find((itemFluSonic) => itemFluSonic.name === item.name);
+        let foundSonicChannel = fluSonicList.find(
+          (itemFluSonic) => itemFluSonic.name === item.name && itemFluSonic.sourceUrl === item.flusonicUrl,
+        );
         if (foundSonicChannel) {
           let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
           return {
@@ -457,7 +459,7 @@ const fetchChannelList = async (isRefresh) => {
             flusonicInputs: foundSonicChannel.config_on_disk.inputs,
             flusonicBlackoutFound: blackoutFound,
             flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
-            flusonicUrl: foundSonicChannel.url,
+            // flusonicUrl: foundSonicChannel.url,
             flusonicUser: foundSonicChannel.user,
             flusonicPassword: foundSonicChannel.password,
           };
