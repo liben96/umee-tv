@@ -342,7 +342,8 @@ footer {
 }
 
 .table-action-image{
-   height: 17px;
+   height: 25px;
+   margin-bottom: 2px;
 }
 
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
