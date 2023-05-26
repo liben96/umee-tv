@@ -320,9 +320,9 @@ const calculateUptime = (startDate) => {
   if (hours > 0) {
     uptimeString += ' ' + hours + 'h';
   }
-  // if (minutes > 0) {
-  //   uptimeString += ' ' + minutes + 'm';
-  // }
+  if (minutes > 0) {
+    uptimeString += ' ' + minutes + 'm';
+  }
 
   return uptimeString;
 };
