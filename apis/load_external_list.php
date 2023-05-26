@@ -1,6 +1,6 @@
 <?php
 
-$allowedRoleIds = [1];
+$allowedRoleIds = [1,2];
 require_once 'common/authentication.php';
 
 // Read the request body

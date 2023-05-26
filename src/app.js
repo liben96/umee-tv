@@ -419,10 +419,10 @@ const fetchChannelList = async (isRefresh) => {
   if (res && res.success) {
     channelDBList = res.data; // We will use this later if refresh only
     let resChannelTypes;
-    if (roleId === 2) {
-      // mock type list becuase this role does not need it
-      typesLists = {};
-    }
+    // if (roleId === 2) {
+    //   // mock type list becuase this role does not need it
+    //   typesLists = {};
+    // }
     // Only load types first time no need load again on next refresh
     if (!typesLists) {
       // Get channel types arrays
@@ -478,7 +478,6 @@ const fetchChannelList = async (isRefresh) => {
           return {...item, flusonicNotFound: item.flusonicUrl ? true : false};
         }
       });
-      console.log(finalArray.find((item) => item.name === '103'));
       channelList = finalArray;
       initTable(finalArray);
       initChannelForm();
