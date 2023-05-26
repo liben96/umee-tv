@@ -335,6 +335,7 @@ const initChannelForm = () => {
     if (key === 'typesPVI') inputKey = 'typePVIId';
     if (key === 'typesPDU') inputKey = 'typePDUId';
     if (key === 'typesEscalation') inputKey = 'typeEscalationId';
+    $(`#edit-form #input_${inputKey}`).html('');
     $(`#edit-form #input_${inputKey}`).append($('<option></option>').attr('value', '').text('Select an option'));
     typesLists[key].forEach((item) => {
       if (item.visible === undefined || parseFloat(item.visible)) {
