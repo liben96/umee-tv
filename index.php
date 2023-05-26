@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>u-mee IPTV Management</title>
+    <title>u-mee TV Admin</title>
 
     <!-- styles start -->
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
