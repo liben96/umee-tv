@@ -2,10 +2,13 @@
 
 $allowedRoleIds = [1];
 require_once 'common/authentication.php';
+// Include the database connection file
+require_once 'common/db_connection.php';
+require_once 'common/logger.php';
 
 // Read the request body
 $requestBody = file_get_contents('php://input');
-$body = json_decode($requestBody, true);
+$data = json_decode($requestBody, true);
 
 // Create the response object
 $response = array(
@@ -14,15 +17,28 @@ $response = array(
   );
 
 try {
-    if(isset($body['url']) && isset($body['user']) && isset($body['password'])) {
+    if(isset($data['url']) && isset($data['user']) && isset($data['password']) && isset($data['action'])) {
         // Get the URL and username from the body
-        $url = $body['url'];
-        $username = $body['user'];
-        $password = $body['password'];
+        $url = (($data['action'] == 'blackout') ? ($data['url'] . '/streamer/api/v3/streams/' .$data['number']) : ($data['url'] . '/streamer/api/v3/streams/' .$data['number']. '/stop'));
+        $username = $data['user'];
+        $password = $data['password'];
 
-        $finalUrl = $url. '/streamer/api/v3/streams/';
         // Create a cURL handle
-        $ch = curl_init($finalUrl);
+        $ch = curl_init($url);
+
+        // Make post call if body is present
+        if(isset($data['body'])) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data['body']));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+            ));
+        }
+
+        if($data['action'] == 'blackout') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        } else {
+            curl_setopt($ch, CURLOPT_POST, 1);
+        }
 
         // Set the basic authentication header
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -39,9 +55,16 @@ try {
                 'error' => curl_error($ch),
               ]);
         } else {
+            if($data['action'] == 'blackout') {
+                $logText = ($data['blackoutEnabled'] ? 'enabled' : 'disabled') . ' blackout for';
+            } else {
+                $logText = "restarted";
+            }
+            $logText = $logText . " channel {$data['channelName']} (#{$data['number']})";
+            add_log($conn, $logText);
             // Return the response in JSON
             $response['success'] = true;
-            $response['data'] = json_decode($responseCurl, true);
+            $response['message'] = 'Action completed successfully';
         }
 
         // Close the cURL handle

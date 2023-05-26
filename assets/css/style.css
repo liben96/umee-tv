@@ -341,6 +341,10 @@ footer {
   font-size: 0.8em;
 }
 
+.table-action-image{
+   height: 17px;
+}
+
 /* When the screen is less than 600 pixels wide, hide all links, except for the first one ("Home"). Show the link that contains should open and close the topnav (.icon) */
 @media screen and (max-width: 600px) {
   .topnav a:not(:first-child), .dropdown .dropbtn {

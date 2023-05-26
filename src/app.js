@@ -6,7 +6,10 @@ let channelList = [],
   dataTable,
   typesLists,
   isChannelExist,
-  originalNumber;
+  originalNumber,
+  selectedConfirmItem,
+  selectedConfirmAction,
+  channelDBList;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -177,14 +180,20 @@ const initTable = (data) => {
             `<div class="text-center">
             ${
               row.flusonicBlackoutFound
-                ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${
+                ? `<a style="text-decoration: initial;" class="me-2" href="javascript:void(0)" onclick="toggleConfirmModal('blackout', ${
+                    row.id
+                  })" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${
                     row.flusonicBlackoutEnabled ? 'Disable' : 'Enable'
-                  } blackout"><i class="fa-solid fa-tv"></i></a>`
+                  } blackout">${
+                    row.flusonicBlackoutEnabled
+                      ? `<img class="table-action-image" src="./assets/images/laliga.png" />`
+                      : `<i class="fa-solid fa-tv"></i></a>`
+                  }`
                 : ''
             }
             ${
               !row.disabled
-                ? `<a class="me-2" href="javascript:void(0)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Restart"><i class="fa-solid fa-arrows-rotate"></i></a>`
+                ? `<a class="me-2" href="javascript:void(0)" onclick="toggleConfirmModal('restart', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Restart"><i class="fa-solid fa-arrows-rotate"></i></a>`
                 : ''
             }
             ${
@@ -387,10 +396,17 @@ const mainLoader = (isStart) => {
   }
 };
 
-const fetchChannelList = async () => {
+const fetchChannelList = async (isRefresh) => {
   mainLoader(true);
-  const res = await callAPI('GET', './apis/get-channel-list.php');
-  if (res.success) {
+  let res;
+  if (!isRefresh) {
+    res = await callAPI('GET', './apis/get-channel-list.php');
+  } else {
+    // Refresh action so mock the API response
+    res = {success: true, data: channelDBList};
+  }
+  if (res && res.success) {
+    channelDBList = res.data; // We will use this later if refresh only
     let resChannelTypes;
     if (roleId === 2) {
       // mock type list becuase this role does not need it
@@ -424,7 +440,7 @@ const fetchChannelList = async () => {
           };
           const resFluSonic = await callAPI('POST', './apis/load_external_list.php', JSON.stringify(body));
           if (resFluSonic && resFluSonic.success && resFluSonic.data && resFluSonic.data.streams) {
-            fluSonicList = [...fluSonicList, ...resFluSonic.data.streams];
+            fluSonicList = [...fluSonicList, ...resFluSonic.data.streams.map((item) => ({...item, ...body}))];
           }
         }
       }
@@ -441,6 +457,9 @@ const fetchChannelList = async () => {
             flusonicInputs: foundSonicChannel.config_on_disk.inputs,
             flusonicBlackoutFound: blackoutFound,
             flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? true : false,
+            flusonicUrl: foundSonicChannel.url,
+            flusonicUser: foundSonicChannel.user,
+            flusonicPassword: foundSonicChannel.password,
           };
         } else return item;
       });
@@ -524,7 +543,7 @@ const setChannelForm = (selectedChannel, key) => {
 
 const toggleEditModal = (id) => {
   $('#form-title').html((id ? 'Edit' : 'Add') + ' Channel');
-  toggleEditFormLoader('#channel-submit-button', false);
+  toggleButtonLoader('#channel-submit-button', false);
   if (id) {
     selectedChannel = channelList.find((item) => id === parseFloat(item.id));
     Object.keys(selectedChannel).forEach((key) => {
@@ -547,7 +566,68 @@ const toggleEditModal = (id) => {
   initDatePicker('#input_cardNumberExpiry');
 };
 
-const toggleEditFormLoader = (selector, isStart) => {
+const toggleConfirmModal = (action, id) => {
+  toggleButtonLoader('#confirm-submit', false);
+  let confirmModalElm = $('#confirm-modal .modal-body');
+  selectedConfirmItem = channelList.find((item) => id === parseFloat(item.id));
+  selectedConfirmAction = action;
+  if (action === 'blackout')
+    confirmModalElm.html(
+      `Do you want to <b class="fw-bold">${
+        selectedConfirmItem.flusonicBlackoutEnabled ? 'disable' : 'enable'
+      }</b> ${action} for channel <b lass="fw-bold">${selectedConfirmItem.channelName} (#${selectedConfirmItem.name})</b>`,
+    );
+  else
+    confirmModalElm.html(
+      `Do you want to <b class="fw-bold">${action}</b> this channel <b class="fw-bold">${selectedConfirmItem.channelName} (#${selectedConfirmItem.name})</b>`,
+    );
+  const myModalAlternative = new bootstrap.Modal('#confirm-modal', {keyboard: false});
+  myModalAlternative.toggle();
+};
+
+const submitChannelAction = async () => {
+  if (selectedConfirmItem) {
+    toggleButtonLoader('#confirm-submit', true);
+    let body = {
+      url: selectedConfirmItem.flusonicUrl,
+      user: selectedConfirmItem.flusonicUser,
+      password: selectedConfirmItem.flusonicPassword,
+      action: selectedConfirmAction,
+      number: selectedConfirmItem.name,
+      channelName: selectedConfirmItem.channelName,
+    };
+
+    // Attach body for blackout action
+    if (selectedConfirmAction === 'blackout') {
+      body.body = {
+        inputs: [
+          ...selectedConfirmItem.flusonicInputs.map((item) => {
+            if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === 10 ? false : true;
+            return {
+              ...item,
+              priority: item.url.includes('blackout/') ? (item.priority === 10 ? 0 : 10) : item.priority,
+            };
+          }),
+        ],
+      };
+    }
+
+    // Call API
+    const res = await callAPI('POST', './apis/call_external_api.php', JSON.stringify(body));
+    if (res && res.success) {
+      showToast(true, res.message);
+      $('#confirm-modal').modal('hide');
+      fetchChannelList(true);
+    } else {
+      showToast(false, (res && res.message) || `Error while ${selectedConfirmAction}ing channel`);
+    }
+    toggleButtonLoader('#confirm-submit', false);
+  } else {
+    showToast(false, `Channel is not seleted for this action`);
+  }
+};
+
+const toggleButtonLoader = (selector, isStart) => {
   var submitBtn = $(selector);
   submitBtn.prop('disabled', isStart);
   if (isStart) submitBtn.children('.loader').removeClass('d-none');
@@ -579,7 +659,7 @@ const getEmptyChannel = () => {
 };
 
 const submitEditForm = async () => {
-  toggleEditFormLoader('#channel-submit-button', true);
+  toggleButtonLoader('#channel-submit-button', true);
   let body = getEmptyChannel();
 
   //Getting new values from form
@@ -622,11 +702,11 @@ const submitEditForm = async () => {
       showToast(false, (res && res.message) || 'Error while updating channel');
     }
   }
-  toggleEditFormLoader('#channel-submit-button', false);
+  toggleButtonLoader('#channel-submit-button', false);
 };
 
 const submitLoginForm = async () => {
-  // toggleEditFormLoader('#login-submit-button', true);
+  // toggleButtonLoader('#login-submit-button', true);
   let body = {
     username: $(`#username`).val(),
     password: $(`#password`).val(),
@@ -642,7 +722,7 @@ const submitLoginForm = async () => {
       showToast(false, (res && res.message) || 'Error while loggin in');
     }
   }
-  // toggleEditFormLoader('#login-submit-button', false);
+  // toggleButtonLoader('#login-submit-button', false);
 };
 
 const logout = async () => {

@@ -8,7 +8,7 @@
         "disabled": false,
         "inputs": [
           {"priority": 1, "url": "udp://ens35@239.0.2.1:1234"},
-          {"priority": 2, "url": "file://blackout/laliga_screen.mp4"}
+          {"priority": 10, "url": "file://blackout/laliga_screen.mp4"}
         ],
         "name": "101",
         "position": 0,
@@ -467,13 +467,477 @@
         ]
       }
     },
+    {
+      "config_on_disk": {
+        "disabled": false,
+        "inputs": [
+          {"priority": 1, "url": "udp://ens35@239.0.2.1:1234"},
+          {"priority": 2, "url": "file://blackout/laliga_screen.mp4"}
+        ],
+        "name": "102",
+        "position": 0,
+        "title": "BBC2",
+        "transcoder": {
+          "decoder": {"deinterlace": false, "deinterlace_rate": "frame"},
+          "global": {"deviceid": "auto", "external": true, "fps": 25, "hw": "nvenc"},
+          "tracks": [
+            {"bitrate": 192000, "codec": "aac", "content": "audio", "input_track": 2, "sample_rate": 44100},
+            {"bitrate": 192000, "codec": "aac", "content": "audio", "input_track": 3, "sample_rate": 44100},
+            {"bitrate": 192000, "codec": "aac", "content": "audio", "input_track": 1, "sample_rate": 44100}
+          ],
+          "video": [
+            {
+              "bitrate": 5000000,
+              "codec": "h264",
+              "preset": "veryfast",
+              "sar": {"x": 1, "y": 1},
+              "size": {"background": "#000000", "height": 1080, "strategy": "fit", "width": 1920},
+              "track": 1
+            },
+            {
+              "bitrate": 700000,
+              "codec": "h264",
+              "open_gop": false,
+              "preset": "veryfast",
+              "profile": "main",
+              "size": {"background": "#000000", "height": 360, "strategy": "fit", "width": -1},
+              "track": 2
+            }
+          ]
+        }
+      },
+      "disabled": false,
+      "inputs": [
+        {
+          "mixer_strategy": "first_video_audio",
+          "priority": 1,
+          "scte35": true,
+          "stats": {
+            "active": true,
+            "bytes": 206646892,
+            "id": "64675eb5-cedf-4695-abc4-f543d732f121",
+            "last_dts_at": 1684496288829,
+            "media_info": {
+              "program_id": 6931,
+              "provider": "BSkyB",
+              "stream_id": 0,
+              "title": "BBC One SE HD",
+              "tracks": [
+                {
+                  "closed_captions": [],
+                  "codec": "h264",
+                  "content": "video",
+                  "fps": 25.0,
+                  "height": 1080,
+                  "is_progressive": false,
+                  "length_size": 4,
+                  "level": "4.0",
+                  "num_refs_frames": 4,
+                  "pid": 5400,
+                  "pix_fmt": "yuv420p",
+                  "pixel_height": 1080,
+                  "pixel_width": 1920,
+                  "profile": "High",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "v1",
+                  "width": 1920
+                },
+                {
+                  "channels": 2,
+                  "closed_captions": [],
+                  "codec": "mp2a",
+                  "content": "audio",
+                  "is_progressive": true,
+                  "language": "NAR",
+                  "length_size": 4,
+                  "pid": 5402,
+                  "pix_fmt": "yuv420p",
+                  "sample_rate": 48000,
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "a1"
+                },
+                {
+                  "closed_captions": [],
+                  "codec": "subtitle",
+                  "content": "application",
+                  "is_progressive": true,
+                  "language": "eng",
+                  "length_size": 4,
+                  "pid": 5404,
+                  "pix_fmt": "yuv420p",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "l1"
+                },
+                {
+                  "closed_captions": [],
+                  "codec": "ttxt",
+                  "content": "application",
+                  "is_progressive": true,
+                  "length_size": 4,
+                  "pid": 5403,
+                  "pix_fmt": "yuv420p",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "l2"
+                },
+                {
+                  "closed_captions": [],
+                  "codec": "text",
+                  "content": "text",
+                  "is_progressive": true,
+                  "language": "eng",
+                  "length_size": 4,
+                  "pid": 5403,
+                  "pix_fmt": "yuv420p",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "t1"
+                },
+                {
+                  "bitrate": 192,
+                  "channels": 2,
+                  "closed_captions": [],
+                  "codec": "ac3",
+                  "content": "audio",
+                  "is_progressive": true,
+                  "language": "eng",
+                  "length_size": 4,
+                  "pid": 5401,
+                  "pix_fmt": "yuv420p",
+                  "sample_rate": 48000,
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "a2"
+                }
+              ]
+            },
+            "opened_at": 1684496053826,
+            "started_at": 1684496055229
+          },
+          "sync": "dts",
+          "url": "udp://ens35@239.0.2.1:1234"
+        },
+        {
+          "mixer_strategy": "first_video_audio",
+          "priority": 2,
+          "scte35": true,
+          "stats": {
+            "active": false,
+            "bytes": 1073303,
+            "last_dts_at": 1684496055209,
+            "media_info": {
+              "flow_type": "stream",
+              "stream_id": 0,
+              "tracks": [
+                {
+                  "bitrate": 455,
+                  "closed_captions": [],
+                  "codec": "h264",
+                  "content": "video",
+                  "fps": 25.0,
+                  "height": 1080,
+                  "is_progressive": true,
+                  "length_size": 4,
+                  "level": "4.0",
+                  "num_refs_frames": 4,
+                  "pix_fmt": "yuv420p",
+                  "pixel_height": 1080,
+                  "pixel_width": 1920,
+                  "profile": "High",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "v1",
+                  "width": 1920
+                }
+              ]
+            },
+            "opened_at": 1684496037680,
+            "started_at": 1684496037684
+          },
+          "sync": "dts",
+          "url": "file://blackout/laliga_screen.mp4"
+        }
+      ],
+      "name": "102",
+      "named_by": "config",
+      "position": 0,
+      "pushes": [],
+      "static": true,
+      "stats": {
+        "transcoder_sd_bitrate": 70699,
+        "status": "running",
+        "transcoder_hd_pixelrate": 0,
+        "transcoder_total_output_bitrate": 0,
+        "client_count": 2,
+        "out_bandwidth": 0,
+        "transcoder_fhd_duration": 89757,
+        "transcoder_uhd_bytes": 0,
+        "dvr_storage_duration": 0,
+        "output_bandwidth": 0,
+        "running": true,
+        "transcoder_sd_pixelrate": 0,
+        "transcoder_sd_duration": 89757,
+        "cpu_units": 0,
+        "transcoded_streams": 0,
+        "opened_at": 1684250223549,
+        "transcoder_hd_bitrate": 0,
+        "transcoder_overloaded": true,
+        "bytes_in": 170708313092,
+        "lifetime": 245996273,
+        "ram_bytes": 0,
+        "dvr_enabled": false,
+        "retry_count": 0,
+        "transcoder_fhd_pixels": 5220,
+        "transcoder_hd_pixels": 0,
+        "dvr_only": false,
+        "alive": true,
+        "source_id": "64675eb5-cedf-4695-abc4-f543d732f121",
+        "url": "udp://ens35@239.0.2.1:1234",
+        "inputs_bandwidth": 6201061,
+        "transcoder_uhd_pixels": 0,
+        "transcoder_hd_duration": 0,
+        "transcoder_fhd_pixelrate": 0,
+        "bitrate": 5918,
+        "transcoder_fhd_bytes": 44783607240,
+        "inputs_bytes": 136267999174,
+        "dvr_replication_running": false,
+        "bytes_out": 26167489490,
+        "ts_delay": 790,
+        "playback_opened_sessions": 2,
+        "dvr_played_duration": 0,
+        "dvr_storage_io_write": 0,
+        "transcoder_sd_bytes": 6345700115,
+        "running_transcoder": true,
+        "dvr_storage_io_read": 0,
+        "push_duration": 0,
+        "transcoder_uhd_pixelrate": 0,
+        "last_dts_at": 1684496288452,
+        "dvr_recorded_duration": 0,
+        "input_bitrate": 5010,
+        "input_error_rate": 0,
+        "dvr_recorded_bytes": 0,
+        "playback_bytes": 343387112,
+        "vision_units": 0,
+        "vision_pixelrate": 0,
+        "playback_duration": 11390,
+        "remote": false,
+        "id": "64639e6f-897a-4d9e-85b5-5f7a92b1db54",
+        "dvr_played_bytes": 0,
+        "last_dts": 1684496288164.9666,
+        "transcoder_fhd_bitrate": 498943,
+        "dvr_storage_bytes": 0,
+        "push_bytes": 0,
+        "playback_total_sessions": 7,
+        "coder_error": false,
+        "output_bitrate": 5918,
+        "transcoder_total_pixelrate": 0,
+        "transcoder_uhd_duration": 0,
+        "vision_gpu_ram_bytes": 0,
+        "transcoder_uhd_bitrate": 0,
+        "transcoder_hd_bytes": 0,
+        "inputs_duration": 246000,
+        "transcoder_sd_pixels": 5220,
+        "media_info": {
+          "program_id": 6931,
+          "provider": "BSkyB",
+          "stream_id": 0,
+          "title": "BBC1",
+          "tracks": [
+            {
+              "avg_fps": 43.07,
+              "avg_gop": 0,
+              "bitrate": 194,
+              "channels": 2,
+              "closed_captions": [],
+              "codec": "aac",
+              "content": "audio",
+              "fps": 43.07,
+              "is_progressive": true,
+              "language": "eng",
+              "length_size": 4,
+              "pix_fmt": "yuv420p",
+              "sample_rate": 44100,
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "a1"
+            },
+            {
+              "avg_fps": 43.06,
+              "avg_gop": 0,
+              "bitrate": 195,
+              "channels": 2,
+              "closed_captions": [],
+              "codec": "aac",
+              "content": "audio",
+              "fps": 43.06,
+              "is_progressive": true,
+              "language": "NAR",
+              "length_size": 4,
+              "pix_fmt": "yuv420p",
+              "sample_rate": 44100,
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "a2"
+            },
+            {
+              "avg_fps": 25.0,
+              "avg_gop": 50,
+              "bframes": 2,
+              "bitrate": 4853,
+              "closed_captions": [],
+              "codec": "h264",
+              "content": "video",
+              "fps": 25.0,
+              "height": 1080,
+              "is_progressive": true,
+              "last_gop": 50,
+              "length_size": 4,
+              "level": "4.0",
+              "num_refs_frames": 4,
+              "pix_fmt": "yuv420p",
+              "pixel_height": 1080,
+              "pixel_width": 1920,
+              "profile": "Main",
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "v1",
+              "width": 1920
+            },
+            {
+              "avg_fps": 25.0,
+              "avg_gop": 50,
+              "bframes": 2,
+              "bitrate": 676,
+              "closed_captions": [],
+              "codec": "h264",
+              "content": "video",
+              "fps": 25.0,
+              "height": 360,
+              "is_progressive": true,
+              "last_gop": 50,
+              "length_size": 4,
+              "level": "3.0",
+              "num_refs_frames": 4,
+              "pix_fmt": "yuv420p",
+              "pixel_height": 360,
+              "pixel_width": 640,
+              "profile": "Main",
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "v2",
+              "width": 640
+            },
+            {
+              "bitrate": 0,
+              "closed_captions": [],
+              "codec": "subtitle",
+              "content": "application",
+              "is_progressive": true,
+              "language": "eng",
+              "length_size": 4,
+              "pix_fmt": "yuv420p",
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "l1"
+            },
+            {
+              "bitrate": 0,
+              "closed_captions": [],
+              "codec": "ttxt",
+              "content": "application",
+              "is_progressive": true,
+              "length_size": 4,
+              "pix_fmt": "yuv420p",
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "l2"
+            },
+            {
+              "bitrate": 0,
+              "closed_captions": [],
+              "codec": "text",
+              "content": "text",
+              "is_progressive": true,
+              "language": "eng",
+              "length_size": 4,
+              "pix_fmt": "yuv420p",
+              "sar_height": 1,
+              "sar_width": 1,
+              "track_id": "t1"
+            }
+          ]
+        },
+        "last_access_at": 1684496286484
+      },
+      "title": "BBC2",
+      "transcoder": {
+        "audio": {},
+        "decoder": {"deinterlace": false, "deinterlace_rate": "frame"},
+        "global": {"deviceid": "auto", "external": true, "fps": 25, "hw": "nvenc"},
+        "tracks": [
+          {
+            "bitrate": 192000,
+            "codec": "aac",
+            "content": "audio",
+            "input_track": 2,
+            "open_gop": false,
+            "preset": "veryfast",
+            "sample_rate": 44100,
+            "split_channels": false
+          },
+          {
+            "bitrate": 192000,
+            "codec": "aac",
+            "content": "audio",
+            "input_track": 3,
+            "open_gop": false,
+            "preset": "veryfast",
+            "sample_rate": 44100,
+            "split_channels": false
+          },
+          {
+            "bitrate": 192000,
+            "codec": "aac",
+            "content": "audio",
+            "input_track": 1,
+            "open_gop": false,
+            "preset": "veryfast",
+            "sample_rate": 44100,
+            "split_channels": false
+          }
+        ],
+        "video": [
+          {
+            "bitrate": 5000000,
+            "codec": "h264",
+            "open_gop": false,
+            "preset": "veryfast",
+            "sar": {"x": 1, "y": 1},
+            "size": {"background": "#000000", "height": 1080, "strategy": "fit", "width": 1920},
+            "track": 1
+          },
+          {
+            "bitrate": 700000,
+            "codec": "h264",
+            "open_gop": false,
+            "preset": "veryfast",
+            "profile": "main",
+            "size": {"background": "#000000", "height": 360, "strategy": "fit", "width": -1},
+            "track": 2
+          }
+        ]
+      }
+    },
 
     {
       "config_on_disk": {
         "disabled": false,
         "inputs": [
-          {"url": "tshttp://x96.us:8880/live/BroadbandGi/7J3jCYskDG/10186.ts"},
-          {"url": "m4f://fdc-ams-1.ipweb.site:8080/UK_Discovery_HD"}
+          {"priority": 1, "url": "udp://ens35@239.0.2.1:1234"},
+          {"priority": 2, "url": "file://blackout/laliga_screen.mp4"}
         ],
         "name": "125",
         "position": 0,
