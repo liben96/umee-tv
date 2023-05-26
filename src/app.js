@@ -9,7 +9,8 @@ let channelList = [],
   originalNumber,
   selectedConfirmItem,
   selectedConfirmAction,
-  channelDBList;
+  channelDBList,
+  pageRefreshTimeout;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -304,6 +305,7 @@ const calculateUptime = (startDate) => {
   const timeDifference = currentDate.getTime() - startDate;
 
   // Calculate days, hours, and minutes
+  const millisecondsPerSecond = 1000 * 1;
   const millisecondsPerMinute = 1000 * 60;
   const millisecondsPerHour = millisecondsPerMinute * 60;
   const millisecondsPerDay = millisecondsPerHour * 24;
@@ -311,6 +313,7 @@ const calculateUptime = (startDate) => {
   const days = Math.floor(timeDifference / millisecondsPerDay);
   const hours = Math.floor((timeDifference % millisecondsPerDay) / millisecondsPerHour);
   const minutes = Math.floor((timeDifference % millisecondsPerHour) / millisecondsPerMinute);
+  const seconds = Math.floor((timeDifference % millisecondsPerMinute) / millisecondsPerSecond);
 
   // Construct the uptime string
   let uptimeString = '';
@@ -322,6 +325,9 @@ const calculateUptime = (startDate) => {
   }
   if (minutes > 0) {
     uptimeString += ' ' + minutes + 'm';
+  }
+  if (seconds > 0) {
+    uptimeString += ' ' + seconds + 's';
   }
 
   return uptimeString;
@@ -402,7 +408,7 @@ const mainLoader = (isStart) => {
 };
 
 const fetchChannelList = async (isRefresh) => {
-  mainLoader(true);
+  if (!isRefresh) mainLoader(true);
   let res;
   if (!isRefresh) {
     res = await callAPI('GET', './apis/get-channel-list.php');
@@ -476,6 +482,11 @@ const fetchChannelList = async (isRefresh) => {
       channelList = finalArray;
       initTable(finalArray);
       initChannelForm();
+
+      // Setup refresh function
+      if (!pageRefreshTimeout) {
+        pageRefreshTimeout = setInterval(() => fetchChannelList(true), 5 * 60 * 1000);
+      }
     }
   }
   mainLoader(false);
