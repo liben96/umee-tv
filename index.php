@@ -8,9 +8,9 @@
     <title>u-mee IPTV Management</title>
 
     <!-- styles start -->
-    <link href="./assets/css/datatables.min.css" rel="stylesheet">
-    </link>
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    </link>
+    <link href="./assets/css/datatables.min.css" rel="stylesheet">
     </link>
     <link href="./assets/css/fontawesome/css/fontawesome.min.css" rel="stylesheet">
     <link href="./assets/css/fontawesome/css/brands.min.css" rel="stylesheet">
@@ -33,6 +33,7 @@
             padding: 20px;
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .card h2 {
