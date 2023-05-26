@@ -323,10 +323,10 @@ const calculateUptime = (startDate) => {
   if (hours > 0) {
     uptimeString += ' ' + hours + 'h';
   }
-  if (minutes > 0) {
+  if (minutes > 0 && hours <= 0) {
     uptimeString += ' ' + minutes + 'm';
   }
-  if (seconds > 0) {
+  if (seconds > 0 && hours <= 0 && minutes <= 0) {
     uptimeString += ' ' + seconds + 's';
   }
 
