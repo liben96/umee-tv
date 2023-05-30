@@ -159,7 +159,7 @@ const initTable = (data) => {
         },
         {
           data: null,
-          title: 'Status',
+          title: 'OTT Status',
           className: 'text-center align-middle all',
           render: (data, type, row) =>
             row.flusonicDisabled !== undefined
@@ -206,7 +206,7 @@ const initTable = (data) => {
         },
       ],
       order: [[2, 'asc']],
-      pageLength: 10,
+      pageLength: 50,
     });
 
     // This is a good place to put all jquery events because this part executes only once
@@ -456,6 +456,8 @@ const fetchChannelList = async (isRefresh) => {
         }
       }
 
+      let channelStatsCount = {online: 0, disabled: 0};
+
       let finalArray = res.data.map((item) => {
         // Find and get disabled and uptime by comparing name field
         let foundSonicChannel = fluSonicList.find(
@@ -463,6 +465,8 @@ const fetchChannelList = async (isRefresh) => {
         );
         if (foundSonicChannel) {
           let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
+          if (foundSonicChannel.disabled) channelStatsCount.disabled += 1;
+          else channelStatsCount.online += 1;
           return {
             ...item,
             flusonicDisabled: foundSonicChannel.disabled,
@@ -481,6 +485,13 @@ const fetchChannelList = async (isRefresh) => {
       channelList = finalArray;
       initTable(finalArray);
       initChannelForm();
+
+      // Set channel stats
+      $('#channels-stats #channels-online').html(`${channelStatsCount.online} channel${channelStatsCount.online > 1 ? 's' : ''} online`);
+      $('#channels-stats #channels-disabled').html(
+        `${channelStatsCount.disabled} channel${channelStatsCount.disabled > 1 ? 's' : ''} disabled`,
+      );
+      if ($('#channels-stats').hasClass('d-none')) $('#channels-stats').removeClass('d-none');
 
       // Setup refresh function
       if (!pageRefreshTimeout) {

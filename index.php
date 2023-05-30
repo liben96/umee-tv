@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>u-mee TV Admin</title>
+    <link rel="icon" type="image/x-icon" href="./assets/images/favicon.ico">
 
     <!-- styles start -->
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
@@ -126,8 +127,18 @@
                                 <a id="search-clear" href="javascript:void(0)" class="input-icon d-none text-dark"><i
                                         class="fa-solid fa-xmark"></i></i></a>
                             </div>
-                            <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2 d-none">Add
-                                Channel</button>
+                            <div class="flex-grow-1">
+                                <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2 d-none">Add
+                                    Channel</button>
+                            </div>
+                            <div id="channels-stats" class="text-small text-start d-none">
+                                <div class="text-success"><i class="fa-solid fa-circle"></i> <span
+                                        id="channels-online"></span>
+                                </div>
+                                <div class="text-danger"><i class="fa-solid fa-circle"></i> <span
+                                        id="channels-disabled"></span>
+                                </div>
+                            </div>
                         </div>
                         <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
                         </table>
