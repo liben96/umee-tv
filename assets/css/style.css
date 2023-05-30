@@ -216,7 +216,7 @@ input[type="reset"]:active,
 }
 
 #main-menu{
-  margin-left:5px;
+  margin-left:15px;
   flex: 1 auto;
 }
 
@@ -249,7 +249,7 @@ input[type="reset"]:active,
 
 /* Style the dropdown button to fit inside the topnav */
 .dropdown .dropbtn {
-  font-size: 15px;
+  font-size: 14px;
   border: none;
   outline: none;
   color: white;
