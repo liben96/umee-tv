@@ -131,13 +131,26 @@
                                 <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2 d-none">Add
                                     Channel</button>
                             </div>
-                            <div id="channels-stats" class="text-small text-start d-none">
-                                <div class="text-success"><i class="fa-solid fa-circle"></i> <span
-                                        id="channels-online"></span>
-                                </div>
-                                <div class="text-danger"><i class="fa-solid fa-circle"></i> <span
-                                        id="channels-disabled"></span>
-                                </div>
+                            <div id="channels-stats" class="text-small d-flex align-items-center d-none">
+                                <button id="filter-online" onclick="filterTable('online')"
+                                    class="btn btn-light btn-sm btn-filter border me-2"><i
+                                        class="fa-solid fa-circle text-success"></i> <span id="channels-online"></span>
+                                </button>
+                                <button id="filter-disabled" onclick="filterTable('disabled')"
+                                    class="btn btn-light border btn-sm btn-filter me-2"><i
+                                        class="fa-solid fa-circle text-secondary"></i>
+                                    <span id="channels-disabled"></span>
+                                </button>
+                                <button id="filter-error" onclick="filterTable('error')"
+                                    class="btn btn-light border btn-sm btn-filter me-2"><i
+                                        class="fa-solid fa-circle text-danger"></i>
+                                    <span id="channels-error"></span>
+                                </button>
+                                <button onclick="filterTable('')" id="filter-clear"
+                                    class="btn btn-light border btn-sm d-none" data-bs-toggle="popover"
+                                    data-bs-trigger="hover focus" data-bs-content="Clear filters"><i
+                                        class="fa-solid fa-filter-circle-xmark"></i>
+                                </button>
                             </div>
                         </div>
                         <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">

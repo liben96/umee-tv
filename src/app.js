@@ -162,11 +162,15 @@ const initTable = (data) => {
           title: 'OTT Status',
           className: 'text-center align-middle all',
           render: (data, type, row) =>
-            row.flusonicDisabled !== undefined
+            row.flusonicStatus !== undefined
               ? `<div class="text-center"><div class="${
-                  !row.flusonicDisabled ? 'text-success' : 'text-secondary'
-                }"><i class="fa-solid fa-circle"></i> ${row.flusonicDisabled ? 'Disabled' : 'Online'}</div>${
+                  row.flusonicStatus == 'Online' ? 'text-success' : row.flusonicStatus == 'Disabled' ? 'text-secondary' : 'text-danger'
+                }"><i class="fa-solid fa-circle"></i> ${row.flusonicStatus}</div>${
                   row.flusonicUptime ? `<div class="text-secondary text-right" style="font-size:0.8rem">${row.flusonicUptime}</div>` : ''
+                }${
+                  row.flusonicStatusError
+                    ? `<div class="text-danger text-right" style="font-size:0.8rem">${row.flusonicStatusError}</div>`
+                    : ''
                 }<div>`
               : `<div class="text-secondary">${row.flusonicNotFound ? 'Not Found' : ''}</div>`,
         },
@@ -213,7 +217,7 @@ const initTable = (data) => {
 
     // Table search input event
     $('#table-search').on('keyup click', function () {
-      dataTable.api().search($('#table-search').val()).draw();
+      searchTable($('#table-search').val());
       setSearchClear();
     });
 
@@ -230,7 +234,7 @@ const initTable = (data) => {
     // Search clear button event
     $(`#search-clear`).on('click', (e) => {
       $(`#table-search`).val('');
-      dataTable.api().search('').draw();
+      searchTable(null, true);
       setSearchClear();
     });
 
@@ -242,6 +246,48 @@ const initTable = (data) => {
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
+};
+
+filterTable = (text) => {
+  let isFilter = true;
+  if ($(`#channels-stats #filter-${text}`).hasClass('btn-dark')) {
+    isFilter = false;
+    $(`#channels-stats .btn-dark`).removeClass('btn-dark');
+  } else {
+    $(`#channels-stats .btn-dark`).removeClass('btn-dark');
+    $(`#channels-stats #filter-${text}`).addClass('btn-dark');
+  }
+  searchTable(null, true);
+  if (text) {
+    searchTable(text, !isFilter);
+    $('#filter-clear').removeClass('d-none');
+  } else {
+    $('#filter-clear').addClass('d-none');
+  }
+};
+
+searchTable = (text, isClear) => {
+  // Clear search
+  if (isClear) {
+    // Need to keep status filters if already applied
+    let filterText = $(`#channels-stats #filter-online`).hasClass('btn-dark')
+      ? 'online'
+      : $(`#channels-stats #filter-disabled`).hasClass('btn-dark')
+      ? 'disabled'
+      : '';
+    dataTable.api().search(filterText).draw();
+  } else {
+    // Search by text supplied also keep other filter
+    let filterText = $(`#channels-stats #filter-online`).hasClass('btn-dark')
+      ? 'online'
+      : $(`#channels-stats #filter-disabled`).hasClass('btn-dark')
+      ? 'disabled'
+      : '';
+    dataTable
+      .api()
+      .search(filterText + ' ' + text)
+      .draw();
+  }
 };
 
 setupOnStopTypeEvent = (selector, event) => {
@@ -456,7 +502,7 @@ const fetchChannelList = async (isRefresh) => {
         }
       }
 
-      let channelStatsCount = {online: 0, disabled: 0};
+      let channelStatsCount = {online: 0, disabled: 0, error: 0};
 
       let finalArray = res.data.map((item) => {
         // Find and get disabled and uptime by comparing name field
@@ -466,10 +512,12 @@ const fetchChannelList = async (isRefresh) => {
         if (foundSonicChannel) {
           let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
           if (foundSonicChannel.disabled) channelStatsCount.disabled += 1;
-          else channelStatsCount.online += 1;
+          else if (foundSonicChannel.stats.status === 'running') channelStatsCount.online += 1;
+          else channelStatsCount.error += 1;
           return {
             ...item,
-            flusonicDisabled: foundSonicChannel.disabled,
+            flusonicStatus: foundSonicChannel.disabled ? 'Disabled' : foundSonicChannel.stats.status === 'running' ? 'Online' : 'Error',
+            flusonicStatusError: foundSonicChannel.stats.source_error || undefined,
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
             flusonicInputs: foundSonicChannel.config_on_disk.inputs,
             flusonicBlackoutFound: blackoutFound,
@@ -487,10 +535,9 @@ const fetchChannelList = async (isRefresh) => {
       initChannelForm();
 
       // Set channel stats
-      $('#channels-stats #channels-online').html(`${channelStatsCount.online} channel${channelStatsCount.online > 1 ? 's' : ''} online`);
-      $('#channels-stats #channels-disabled').html(
-        `${channelStatsCount.disabled} channel${channelStatsCount.disabled > 1 ? 's' : ''} disabled`,
-      );
+      $('#channels-stats #channels-online').html(`Online (${channelStatsCount.online})`);
+      $('#channels-stats #channels-disabled').html(`Disabled (${channelStatsCount.disabled})`);
+      $('#channels-stats #channels-error').html(`Error (${channelStatsCount.error})`);
       if ($('#channels-stats').hasClass('d-none')) $('#channels-stats').removeClass('d-none');
 
       // Setup refresh function
