@@ -183,6 +183,9 @@
                                 <div class="col-sm-10 d-flex align-items-center">
                                     <img id="input_logo" src="./assets/images/no-logo.png" class="channel-logo me-2"
                                         alt="channel-logo">
+                                    <button type="button" id="logo_clear"
+                                        class="btn btn-light btn-sm btn-filter border me-2 d-none"><i
+                                            class="fa-solid fa-xmark"></i></button>
                                     <input id="input_logo_input" class="form-control" type="file" name="image"
                                         id="image" accept="image/*" />
                                 </div>

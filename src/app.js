@@ -143,8 +143,10 @@ const initTable = (data) => {
           className: 'text-center align-middle',
           width: '44px',
           render: (data, type, row) =>
-            `<div class="text-center">${
-              parseInt(row.priority) ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`
+            `<div class="text-center" style="font-size:13px; color:#404040;">${
+              parseInt(row.priority)
+                ? `<i class="fa-solid fa-square-check"></i>`
+                : `<input style="margin-top:6px;" type="checkbox" disabled>`
             }<div>`,
         },
         {
@@ -153,8 +155,10 @@ const initTable = (data) => {
           className: 'text-center align-middle',
           width: '49px',
           render: (data, type, row) =>
-            `<div class="text-center">${
-              parseInt(row.enabled) ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`
+            `<div class="text-center" style="font-size:13px; color:#404040;">${
+              parseInt(row.enabled)
+                ? `<i class="fa-solid fa-square-check"></i>`
+                : `<input style="margin-top:6px;" type="checkbox" disabled>`
             }<div>`,
         },
         {
@@ -399,6 +403,11 @@ const initChannelForm = () => {
       }
     });
   });
+  $('#edit-form #logo_clear').on('click', () => {
+    $('#edit-form #input_logo').attr('src', './assets/images/logos/no-logo.png');
+    $('#edit-form #input_logo_input').val('');
+    $('#edit-form #logo_clear').addClass('d-none');
+  });
 };
 
 const loadMenu = async () => {
@@ -569,6 +578,7 @@ const readImageURL = (input) => {
 
     reader.onload = function (e) {
       $('#edit-form #input_logo').attr('src', e.target.result);
+      $('#edit-form #logo_clear').removeClass('d-none');
     };
 
     reader.readAsDataURL(input.files[0]);
@@ -606,6 +616,8 @@ const setChannelForm = (selectedChannel, key) => {
       'src',
       selectedChannel[key] ? `./assets/images/logos/${selectedChannel[key]}` : './assets/images/logos/no-logo.png',
     );
+    if (selectedChannel[key]) $('#logo_clear').removeClass('d-none');
+    else $('#logo_clear').addClass('d-none');
     $('#edit-form #input_logo_input').val('');
     $('#edit-form #input_logo_input').on('change', function () {
       readImageURL(this);
