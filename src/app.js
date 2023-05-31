@@ -1,6 +1,7 @@
 /// <reference path="../assets/js/jquery-3.7.0.min.js" />
 
 let channelList = [],
+  iptvProvidersList = [],
   formValidator,
   selectedChannel,
   dataTable,
@@ -100,15 +101,36 @@ const initTable = (data) => {
           className: 'align-middle',
           render: (data, type, row) => `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}<div>`,
         },
-        {data: 'typeSource', title: 'Source', className: 'text-center align-middle', width: '42px'},
-        {data: 'typeOTT', title: 'OTT', className: 'text-center align-middle'},
-        {data: 'ip', title: 'IP', className: 'text-center align-middle', width: '46px'},
+        {
+          data: 'typeSource',
+          title: 'Source',
+          className: 'align-middle',
+          width: '50px',
+          render: (data, type, row) =>
+            row.typeSource
+              ? `<div><div> ${row.typeSource}</div>${
+                  row.iptvProviders && roleId === 1
+                    ? row.iptvProviders
+                        .map(
+                          (item, index) =>
+                            `<div><u>URL ${index + 1}</u>: ${item.provider} ${
+                              item.active ? `<span class="text-success"><i class="fa-solid fa-circle"></i></span>` : ''
+                            }`,
+                        )
+                        .join('')
+                    : ''
+                }<div>`
+              : '',
+        },
+        {data: 'typeOTT', title: 'OTT', className: 'text-center align-middle', visible: roleId == 1},
+        {data: 'ip', title: 'IP', className: 'text-center align-middle', width: '46px', visible: roleId == 1},
         {
           data: 'typePVI',
           title: 'PVI',
           render: (data, type, row) =>
             row.typePVI ? `<div><div> ${row.typePVI}</div>${row.pviPort ? `<div><u>Port</u>: ${row.pviPort}</div>` : ''}<div>` : '',
           className: 'align-middle',
+          visible: roleId == 1,
         },
         {
           data: 'typePDU',
@@ -126,6 +148,7 @@ const initTable = (data) => {
               row.cardNumber ? `<div><u>Card Number</u>: ${row.cardNumber}</div>` : ''
             }${row.cardNumberExpiry ? `<div><u>Expiry</u>: ${moment(row.cardNumberExpiry).format('DD MMMM YYYY')}</div>` : ''}<div>`,
           className: 'align-middle',
+          visible: roleId == 1,
         },
         {
           data: 'typeEscalation',
@@ -160,6 +183,7 @@ const initTable = (data) => {
                 ? `<i class="fa-solid fa-square-check"></i>`
                 : `<input style="margin-top:6px;" type="checkbox" disabled>`
             }<div>`,
+          visible: roleId == 1,
         },
         {
           data: null,
@@ -208,6 +232,11 @@ const initTable = (data) => {
             ${
               roleId === 1
                 ? `<a href="javascript:void(0)" onclick="toggleEditModal(${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit"><i class="fa-solid fa-pen"></i></a>`
+                : ''
+            }
+            ${
+              row.flusonicStatus && roleId === 1
+                ? `<a class="ms-2" href="${row.flusonicUrl}/admin/#/streams/${row.name}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Flusonic"><img class="table-action-image-small" src="./assets/images/flusonic.webp" /></a>`
                 : ''
             }
             <div>`,
@@ -467,6 +496,8 @@ const fetchChannelList = async (isRefresh) => {
   let res;
   if (!isRefresh) {
     res = await callAPI('GET', './apis/get-channel-list.php');
+    let resIPTV = await callAPI('GET', './apis/get-iptv-providers.php');
+    if (resIPTV && resIPTV.success) iptvProvidersList = resIPTV.data.map((item) => ({...item, urlPattern: item.urlPattern.split(',')}));
   } else {
     // Refresh action so mock the API response
     res = {success: true, data: channelDBList};
@@ -523,12 +554,28 @@ const fetchChannelList = async (isRefresh) => {
           if (foundSonicChannel.disabled) channelStatsCount.disabled += 1;
           else if (foundSonicChannel.stats.status === 'running') channelStatsCount.online += 1;
           else channelStatsCount.error += 1;
+          let flusonicInputs = foundSonicChannel.inputs.map((item) => ({
+            active: (item.stats && item.stats.active) || false,
+            url: item.url,
+            priority: item.priority,
+          }));
           return {
             ...item,
             flusonicStatus: foundSonicChannel.disabled ? 'Disabled' : foundSonicChannel.stats.status === 'running' ? 'Online' : 'Error',
             flusonicStatusError: foundSonicChannel.stats.source_error || undefined,
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
-            flusonicInputs: foundSonicChannel.config_on_disk.inputs,
+            flusonicInputs: flusonicInputs,
+            iptvProviders: flusonicInputs.reduce((iptvArray, inputItem) => {
+              // See if any iptv provider's url match in input url and get the provider to show in UI
+              let foundIPTVProvider = iptvProvidersList.find((iptv) => {
+                // urlPattern is an array which was split by , so we need another find
+                return iptv.urlPattern.find((urlItem) => inputItem.url.includes(urlItem));
+              });
+              if (foundIPTVProvider) {
+                iptvArray.push({...inputItem, provider: foundIPTVProvider.description});
+              }
+              return iptvArray;
+            }, []),
             flusonicBlackoutFound: blackoutFound,
             flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? false : true,
             // flusonicUrl: foundSonicChannel.url,

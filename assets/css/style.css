@@ -351,6 +351,11 @@ footer {
    margin-bottom: 2px;
 }
 
+.table-action-image-small{
+  height: 15px;
+  margin-bottom: 4px;
+}
+
 .text-small{
   font-size: 12px;
 }
