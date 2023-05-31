@@ -142,12 +142,12 @@
                                     <span id="channels-disabled"></span>
                                 </button>
                                 <button id="filter-error" onclick="filterTable('error')"
-                                    class="btn btn-light border btn-sm btn-filter me-2"><i
+                                    class="btn btn-light border btn-sm btn-filter"><i
                                         class="fa-solid fa-circle text-danger"></i>
                                     <span id="channels-error"></span>
                                 </button>
                                 <button onclick="filterTable('')" id="filter-clear"
-                                    class="btn btn-light border btn-sm d-none" data-bs-toggle="popover"
+                                    class="btn btn-light border btn-sm d-none ms-2" data-bs-toggle="popover"
                                     data-bs-trigger="hover focus" data-bs-content="Clear filters"><i
                                         class="fa-solid fa-filter-circle-xmark"></i>
                                 </button>
