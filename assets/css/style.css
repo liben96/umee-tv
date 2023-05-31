@@ -167,6 +167,11 @@ input[type="reset"]:active,
   margin-top: 11px;;
 }
 
+#edit-modal .form-check-input[type=checkbox]{
+  margin-top: 9px;;
+}
+
+
 #notification-container {
   z-index: 1056;
   top: 75px;
