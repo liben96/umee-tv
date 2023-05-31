@@ -11,7 +11,10 @@ let channelList = [],
   selectedConfirmItem,
   selectedConfirmAction,
   channelDBList,
-  pageRefreshTimeout;
+  pageRefreshTimeout,
+  selectedDeleteItem,
+  deleteConfirmModalCount = 0,
+  deleteModalElm;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -44,16 +47,6 @@ const initTable = (data) => {
         '<"d-flex align-items-center">' +
         'rt' +
         '<"d-flex align-items-center"l<"d-flex align-items-center justify-content-center footer-entries"i><"flex-grow-1"p>>',
-      // buttons: [
-      //   {
-      //     className: 'btn btn-sm btn-dark ms-2',
-      //     text: 'Add Channel',
-      //     action: function (e, dt, node, config) {
-      //       // $('#myTable').DataTable().ajax.reload();
-      //     },
-      //     titleAttr: 'Add Channel',
-      //   },
-      // ],
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -237,6 +230,11 @@ const initTable = (data) => {
             ${
               row.flusonicStatus && roleId === 1
                 ? `<a class="ms-2" href="${row.flusonicUrl}/admin/#/streams/${row.name}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Flusonic"><img class="table-action-image-small" src="./assets/images/flusonic.webp" /></a>`
+                : ''
+            }
+            ${
+              roleId === 1
+                ? `<a class="ms-2" href="javascript:void(0)" onclick="toggleDeleteModal(${row.id}, true)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Delete"><i class="fa-solid fa-trash"></i></a>`
                 : ''
             }
             <div>`,
@@ -761,6 +759,55 @@ const submitChannelAction = async () => {
       showToast(false, (res && res.message) || `Error while ${selectedConfirmAction}ing channel`);
     }
     toggleButtonLoader('#confirm-submit', false);
+  } else {
+    showToast(false, `Channel is not seleted for this action`);
+  }
+};
+
+const toggleDeleteModal = (id, isReset) => {
+  if (isReset) {
+    deleteConfirmModalCount = 0;
+  }
+  if (id) {
+    toggleButtonLoader('#confirm-delete-modal', false);
+    let confirmModalElm = $('#confirm-delete-modal .modal-body');
+    selectedDeleteItem = channelList.find((item) => parseFloat(id) === parseFloat(item.id));
+    confirmModalElm.html(
+      `<div>Are you sure you want to <b class="fw-bold">delete</b> the following channel?</div><div><b class="fw-bold">${selectedDeleteItem.name} - ${selectedDeleteItem.channelName}</b></div>`,
+    );
+    if (!deleteModalElm) deleteModalElm = new bootstrap.Modal('#confirm-delete-modal', {keyboard: false});
+    deleteModalElm.toggle();
+    deleteConfirmModalCount++;
+    $('#confirm-delete-modal .confirmation-count').html(deleteConfirmModalCount);
+    if (deleteConfirmModalCount === 2) $('#confirm-delete-modal .confirm-button-text').html('Delete');
+    else $('#confirm-delete-modal .confirm-button-text').html('Confirm');
+  }
+};
+
+const deleteChannel = async () => {
+  if (selectedDeleteItem) {
+    if (deleteConfirmModalCount < 2) {
+      deleteModalElm.toggle();
+      setTimeout(() => {
+        toggleDeleteModal(selectedDeleteItem.id);
+      }, 500);
+      return;
+    }
+    toggleButtonLoader('#confirm-delete-modal', true);
+    let body = {
+      id: selectedDeleteItem.id,
+    };
+
+    // Call API
+    const res = await callAPI('POST', './apis/delete-channel.php', JSON.stringify(body));
+    if (res && res.success) {
+      showToast(true, res.message);
+      $('#confirm-delete-modal').modal('hide');
+      fetchChannelList();
+    } else {
+      showToast(false, (res && res.message) || `Error while deleting channel`);
+    }
+    toggleButtonLoader('#confirm-delete-modal', false);
   } else {
     showToast(false, `Channel is not seleted for this action`);
   }
