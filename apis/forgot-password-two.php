@@ -25,7 +25,7 @@ if (!empty($jsonData)) {
         $code = $data['code'];
         $password = $data['password'];
 
-        $query = "SELECT email, code, codeExpiry FROM users WHERE email = '$email' AND code = '$code'";
+        $query = "SELECT id, name, email, code, codeExpiry FROM users WHERE email = '$email' AND code = '$code'";
 
         // Execute the query
         $result = $conn->query($query);
@@ -43,7 +43,7 @@ if (!empty($jsonData)) {
 
                 // Check if query was successful
                 if ($resultPass) {
-                    add_log($conn, "changed password");
+                    add_log_public($conn, $resUser['id'], "{$resUser['name']} has changed password");
                     $response['success'] = true;
                     // Query executed successfully
                     $response['message'] = "You have successfully changed your password";
