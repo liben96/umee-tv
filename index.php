@@ -17,7 +17,8 @@
     <link href="./assets/css/fontawesome/css/brands.min.css" rel="stylesheet">
     <link href="./assets/css/fontawesome/css/solid.min.css" rel="stylesheet">
     <link href="./assets/css/flatpickr.min.css" rel="stylesheet">
-    <link href="./assets/css/style.css" rel="stylesheet">
+    <link href="./assets/css/style.css?v=<?= time() ?>"
+        rel="stylesheet">
     </link>
     <?php if(!isset($_SESSION['userId'])) : ?>
     <style>
@@ -439,7 +440,7 @@
         } ?>'
         if (roleId) roleId = parseFloat(roleId);
     </script>
-    <script src="./src/app.js"></script>
+    <script src="./src/app.js?v=<?= time() ?>"></script>
     <!-- scripts end -->
 </body>
 
