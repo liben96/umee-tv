@@ -24,7 +24,7 @@ try {
         $data = json_decode($jsonData, true);
         $log = "";
         // Check if JSON decoding was successful
-        if ($data !== null) {
+        if ($data !== null && isset($data['newValues']) && isset($data['oldValues'])) {
             if(isset($data['id']) && count($data['newValues']) == 1) {
                 // Send success back if no change and only contains id
                 $response['success'] = true;
