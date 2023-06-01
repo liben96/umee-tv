@@ -846,6 +846,16 @@ const getEmptyChannel = () => {
   };
 };
 
+const findObjectDifference = (obj1, obj2) => {
+  return Object.keys(obj1).filter((k) => {
+    if (obj1[k] === null) obj1[k] = '';
+    if (obj2[k] === null) obj2[k] = '';
+    if (!isNaN(parseFloat(obj1[k]))) obj1[k] = parseFloat(obj1[k]);
+    if (!isNaN(parseFloat(obj2[k]))) obj2[k] = parseFloat(obj2[k]);
+    return obj1[k] !== obj2[k];
+  });
+};
+
 const submitEditForm = async () => {
   toggleButtonLoader('#channel-submit-button', true);
   let body = getEmptyChannel();
@@ -880,8 +890,45 @@ const submitEditForm = async () => {
       console.log('No file selected.');
     }
 
+    let oldChannel = {};
+    Object.keys(body).map((key) => {
+      oldChannel[key] = selectedChannel[key];
+    });
+    let difference = findObjectDifference(oldChannel, body);
+    let finalBody = {
+      id: body.id,
+      name: selectedChannel.name,
+      channelName: selectedChannel.channelName,
+      oldValues: selectedChannel,
+      newValues: {
+        id: body.id,
+      },
+    };
+    difference.forEach((key) => {
+      if (key === 'typeEscalationId')
+        finalBody.newValues['typeEscalation'] = body.typeEscalationId
+          ? typesLists.typesEscalation.find((item) => parseFloat(item.id) === parseFloat(body.typeEscalationId)).description
+          : '';
+      if (key === 'typeOTTId')
+        finalBody.newValues['typeOTT'] = body.typeOTTId
+          ? typesLists.typesOTT.find((item) => parseFloat(item.id) === parseFloat(body.typeOTTId)).description
+          : '';
+      if (key === 'typePDUId')
+        finalBody.newValues['typePDU'] = body.typePDUId
+          ? typesLists.typesPDU.find((item) => parseFloat(item.id) === parseFloat(body.typePDUId)).description
+          : '';
+      if (key === 'typePVIId')
+        finalBody.newValues['typePVI'] = body.typePDUId
+          ? typesLists.typesPVI.find((item) => parseFloat(item.id) === parseFloat(body.typePDUId)).description
+          : '';
+      if (key === 'typeSourceId')
+        finalBody.newValues['typeSource'] = body.typeSourceId
+          ? typesLists.typesSource.find((item) => parseFloat(item.id) === parseFloat(body.typeSourceId)).description
+          : '';
+      finalBody.newValues[key] = body[key];
+    });
     // Call API
-    const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(body));
+    const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(finalBody));
     if (res && res.success) {
       showToast(true, res.message);
       $('#edit-modal').modal('hide');

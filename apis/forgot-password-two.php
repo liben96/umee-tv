@@ -43,10 +43,10 @@ if (!empty($jsonData)) {
 
                 // Check if query was successful
                 if ($resultPass) {
+                    add_log($conn, "changed password");
                     $response['success'] = true;
                     // Query executed successfully
                     $response['message'] = "You have successfully changed your password";
-                    // add_log($conn, 'logged in');
                 } else {
                     $response['success'] = false;
                     $response['message'] = "Error while sending email";

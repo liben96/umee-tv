@@ -2,7 +2,7 @@
 
 function add_log($conn, $text)
 {
-    $finalText = "{$_SESSION['userFullName']} (#{$_SESSION['userId']}) {$text}";
+    $finalText = "{$_SESSION['userFullName']} {$text}";
 
     // SQL query
     $query = "INSERT INTO logs (userId, description) VALUES ({$_SESSION['userId']}, '{$finalText}')";

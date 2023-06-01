@@ -33,7 +33,7 @@ try {
 
             // Check if the query was successful
             if ($result) {
-                add_log($conn, "deleted channel {$data['channelName']} (#{$data['id']})");
+                add_log($conn, "deleted channel {$data['name']} - {$data['channelName']} (#{$data['id']})");
                 $response['success'] = true;
                 $response['message'] = 'Channel deleted sucessfully';
             } else {
