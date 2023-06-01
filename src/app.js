@@ -796,6 +796,8 @@ const deleteChannel = async () => {
     toggleButtonLoader('#confirm-delete-modal', true);
     let body = {
       id: selectedDeleteItem.id,
+      name: selectedDeleteItem.name,
+      channelName: selectedDeleteItem.channelName,
     };
 
     // Call API

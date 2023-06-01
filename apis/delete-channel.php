@@ -5,6 +5,8 @@ $allowedRoleIds = [1];
 require_once 'common/authentication.php';
 // Include the database connection file
 require_once 'common/db_connection.php';
+// Include the database logger file
+require_once 'common/logger.php';
 
 // Create the response object
 $response = array(
@@ -22,7 +24,7 @@ try {
         $data = json_decode($jsonData, true);
 
         // Check if JSON decoding was successful
-        if ($data !== null && isset($data['id'])) {
+        if ($data !== null && isset($data['id']) && isset($data['name']) && isset($data['channelName'])) {
             // Your SQL query
             $query = "UPDATE channel SET deleted = 1 WHERE id = ". $data['id'];
 
@@ -31,6 +33,7 @@ try {
 
             // Check if the query was successful
             if ($result) {
+                add_log($conn, "deleted channel {$data['channelName']} (#{$data['id']})");
                 $response['success'] = true;
                 $response['message'] = 'Channel deleted sucessfully';
             } else {
