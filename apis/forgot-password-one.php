@@ -62,7 +62,7 @@ if (!empty($jsonData)) {
                 add_log_public($conn, $resUser['id'], "{$resUser['name']} has requested for password reset");
                 $response['success'] = true;
                 // Query executed successfully
-                $response['message'] = "Please enter code that was sent to your provided email. Code will expire after ".$minExpire." mins.";
+                $response['message'] = "Please enter code that was sent to your provided email and new credentials. Code will expire after ".$minExpire." mins.";
             } else {
                 $response['success'] = false;
                 $response['message'] = "Error while sending email";

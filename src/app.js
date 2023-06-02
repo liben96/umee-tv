@@ -14,7 +14,9 @@ let channelList = [],
   pageRefreshTimeout,
   selectedDeleteItem,
   deleteConfirmModalCount = 0,
-  deleteModalElm;
+  deleteModalElm,
+  resetForm,
+  resetFormStep = 1;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -379,31 +381,30 @@ const initDatePicker = (id) => {
 
 const calculateUptime = (startDate) => {
   const currentDate = new Date();
-  const timeDifference = currentDate.getTime() - startDate;
+  var timeDifference = currentDate.getTime() - startDate;
 
-  // Calculate days, hours, and minutes
-  const millisecondsPerSecond = 1000 * 1;
-  const millisecondsPerMinute = 1000 * 60;
-  const millisecondsPerHour = millisecondsPerMinute * 60;
-  const millisecondsPerDay = millisecondsPerHour * 24;
-
-  const days = Math.floor(timeDifference / millisecondsPerDay);
-  const hours = Math.floor((timeDifference % millisecondsPerDay) / millisecondsPerHour);
-  const minutes = Math.floor((timeDifference % millisecondsPerHour) / millisecondsPerMinute);
-  const seconds = Math.floor((timeDifference % millisecondsPerMinute) / millisecondsPerSecond);
+  var seconds = moment.duration(timeDifference).seconds();
+  var minutes = moment.duration(timeDifference).minutes();
+  var hours = moment.duration(timeDifference).hours();
+  var days = moment.duration(timeDifference).days();
 
   // Construct the uptime string
-  let uptimeString = '';
+  let uptimeString = '',
+    strCount = 0;
   if (days > 0) {
+    strCount++;
     uptimeString += days + 'd';
   }
   if (hours > 0) {
+    strCount++;
     uptimeString += ' ' + hours + 'h';
   }
-  if (minutes > 0 && hours <= 0) {
+  // Maximum two places allowed so only append if strCount <= 1 for both minutes and seconds
+  if (minutes > 0 && strCount <= 1) {
+    strCount++;
     uptimeString += ' ' + minutes + 'm';
   }
-  if (seconds > 0 && hours <= 0 && minutes <= 0) {
+  if (seconds > 0 && strCount <= 1) {
     uptimeString += ' ' + seconds + 's';
   }
 
@@ -967,6 +968,67 @@ const logout = async () => {
   }
 };
 
+const toggleResetForm = () => {
+  resetForm.resetForm();
+  resetFormStep = 1;
+  // Flip main containers
+  $('#login-form').toggleClass('d-none');
+  $('#reset-form').toggleClass('d-none');
+
+  // Reenable email if it is disabled
+  $('#reset-email').attr('disabled', false);
+
+  // Hide alerts if it is visible
+  $('#reset-code-section').addClass('d-none');
+  $('#reset-alert').addClass('d-none');
+
+  // Clear form
+  $('#reset-email').val('');
+  $('#reset-code').val('');
+  $('#reset-password').val('');
+  $('#reset-confirm-password').val('');
+};
+
+const showInPageAlert = (id, type, message) => {
+  // Remove other alert types class
+  $(`#${id}`).removeClass(`alert-success`);
+  $(`#${id}`).removeClass(`alert-danger`);
+
+  $(`#${id}`).addClass(`alert-${type}`);
+  $(`#${id}-text`).html(message);
+  $(`#${id}`).toggleClass('d-none');
+};
+
+const submitResetForm = async (e) => {
+  e.preventDefault();
+  if ($('#reset-form').valid()) {
+    toggleButtonLoader('#reset-submit-button', true);
+    $('#reset-alert').addClass('d-none');
+    let body = {
+      email: $('#reset-email').val(),
+      code: resetFormStep === 2 ? $('#reset-code').val() : undefined,
+      password: resetFormStep === 2 ? $('#reset-password').val() : undefined,
+    };
+    const res = await callAPI('POST', `./apis/forgot-password-${resetFormStep === 2 ? 'two' : 'one'}.php`, JSON.stringify(body));
+    if (res && res.success) {
+      // turn on step 2
+      if (resetFormStep === 1) {
+        $('#reset-email').attr('disabled', true);
+        $('#reset-code-section').toggleClass('d-none');
+      }
+      resetFormStep = 2;
+      setTimeout(() => {
+        showInPageAlert('reset-alert', 'success', res.message);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        showInPageAlert('reset-alert', 'danger', res.message);
+      }, 300);
+    }
+    toggleButtonLoader('#reset-submit-button', false);
+  }
+};
+
 $(() => {
   if (userId) {
     // Loading channel list on init
@@ -1016,6 +1078,21 @@ $(() => {
     });
     // form validation init
     $('#login-form').validate({
+      errorClass: 'd-none',
+      highlight: function (element) {
+        $(element).addClass('border border-danger');
+      },
+      unhighlight: function (element) {
+        $(element).removeClass('border border-danger');
+      },
+    });
+    // form validation init
+    resetForm = $('#reset-form').validate({
+      rules: {
+        ['reset-confirm-password']: {
+          equalTo: '#reset-password',
+        },
+      },
       errorClass: 'd-none',
       highlight: function (element) {
         $(element).addClass('border border-danger');

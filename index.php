@@ -35,7 +35,7 @@
             padding: 20px;
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            margin-bottom: 120px;
         }
 
         .card h2 {
@@ -83,15 +83,50 @@
         <form id="login-form">
             <div class="mb-3">
                 <label for="username" class="form-label">Username*</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter username"
+                    required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password*</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password"
+                    autocomplete required>
             </div>
+            <div class="mb-3 text-end"><a href="javascript:void(0)" onclick="toggleResetForm()">Forgot your
+                    password?</a></div>
             <button id="login-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
                     <i class="fa fa-spinner fa-spin"></i>
                 </span>Login</button>
+        </form>
+        <form id="reset-form" class="d-none" onsubmit="return submitResetForm(event)">
+            <div class="mb-3">
+                <label for="reset-email" class="form-label">Email*</label>
+                <input name="reset-email" type="email" class="form-control" id="reset-email"
+                    placeholder="Enter email of your account" required>
+            </div>
+            <div id="reset-code-section" class="d-none">
+                <div class="mb-3">
+                    <label for="reset-code" class="form-label">Code*</label>
+                    <input type="text" class="form-control" id="reset-code" name="reset-code"
+                        placeholder="Enter code sent to your email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="reset-password" class="form-label">Password*</label>
+                    <input type="password" class="form-control" id="reset-password" name="reset-password"
+                        placeholder="Enter password" autocomplete required>
+                </div>
+                <div class="mb-3">
+                    <label for="reset-confirm-password" class="form-label">Cofirm Password*</label>
+                    <input type="password" class="form-control" id="reset-confirm-password"
+                        name="reset-confirm-password" placeholder="Re-Enter password" autocomplete required>
+                </div>
+            </div>
+            <div id="reset-alert" class="alert alert-success fade show d-none" role="alert">
+                <span id="reset-alert-text"></span>
+            </div>
+            <div class="mb-3 text-end"><a href="javascript:void(0)" onclick="toggleResetForm()">Back to Login</a></div>
+            <button id="reset-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </span><span id="reset-submit-text">Reset</span></button>
         </form>
     </div>
     <?php else: ?>
@@ -200,14 +235,16 @@
                             <div class="row mb-1">
                                 <label for="input_name" class="col-sm-2 col-form-label text-end">Number*</label>
                                 <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="input_name" required>
+                                    <input type="number" class="form-control" id="input_name" name="input_name"
+                                        required>
                                     <span id="input_name_error" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row mb-1">
                                 <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="input_channelName" required>
+                                    <input type="text" class="form-control" id="input_channelName"
+                                        name="input_channelName" required>
                                 </div>
                             </div>
                             <div class="row mb-1">

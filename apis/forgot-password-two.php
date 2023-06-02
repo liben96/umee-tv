@@ -46,23 +46,23 @@ if (!empty($jsonData)) {
                     add_log_public($conn, $resUser['id'], "{$resUser['name']} has changed password");
                     $response['success'] = true;
                     // Query executed successfully
-                    $response['message'] = "You have successfully changed your password";
+                    $response['message'] = "You have successfully changed your password. You can go back and login with your new password.";
                 } else {
                     $response['success'] = false;
-                    $response['message'] = "Error while sending email";
+                    $response['message'] = "Error while sending email.";
                 }
             } else {
                 $response['success'] = false;
-                $response['message'] = "The code that you have entered is expired";
+                $response['message'] = "The code that you have entered is expired.";
             }
         } else {
             $response['success'] = false;
-            $response['message'] = "You have entered wrong code";
+            $response['message'] = "You have entered wrong code.";
         }
     } else {
         // JSON decoding failed
         $response['success'] = false;
-        $response['message'] = "Please enter a code";
+        $response['message'] = "Please enter a code.";
     }
 
     // Close the database connection
