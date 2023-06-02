@@ -20,7 +20,7 @@ try {
         $username = $body['user'];
         $password = $body['password'];
 
-        $finalUrl = $url. '/streamer/api/v3/streams/';
+        $finalUrl = $url. '/streamer/api/v3/streams?limit=1000';
         // Create a cURL handle
         $ch = curl_init($finalUrl);
 
