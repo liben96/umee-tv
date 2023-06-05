@@ -95,7 +95,12 @@ const initTable = (data) => {
           data: 'channelName',
           title: 'Channel',
           className: 'align-middle',
-          render: (data, type, row) => `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}<div>`,
+          render: (data, type, row) =>
+            `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}${
+              row.hibox && !row.hiboxSynced
+                ? `<div><span class="text-danger">Hibox name: ${row.hibox.name}</span> <a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('restart', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sync in hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
+                : ''
+            }${row.hiboxNotFound ? `<div><span class="text-danger">Not found in hibox</span><div>` : ''}<div>`,
         },
         {
           data: 'typeSource',
@@ -552,7 +557,18 @@ const fetchChannelList = async (isRefresh) => {
         // Find hibox channel
         // let foundHiboxChannel = channelHiboxList.find((itemHibox) => itemHibox.number === parseFloat(item.name));
         // if (foundHiboxChannel) {
-        //   console.log('foundHiboxChannel', foundHiboxChannel);
+        //   finalItem = {
+        //     ...finalItem,
+        //     hiboxSynced: item.channelName === foundHiboxChannel.name,
+        //     hibox: {
+        //       ...foundHiboxChannel,
+        //     },
+        //   };
+        // } else {
+        //   finalItem = {
+        //     ...finalItem,
+        //     hiboxNotFound: true,
+        //   };
         // }
         // Find and get disabled and uptime by comparing name field
         let foundSonicChannel = fluSonicList.find(
@@ -698,6 +714,7 @@ const toggleEditModal = (id) => {
     });
   } else {
     let emptyChannel = getEmptyChannel();
+    selectedChannel = emptyChannel;
     Object.keys(emptyChannel).forEach((key) => {
       setChannelForm(emptyChannel, key);
     });
@@ -862,8 +879,8 @@ const findObjectDifference = (obj1, obj2) => {
   return Object.keys(obj1).filter((k) => {
     if (obj1[k] === null) obj1[k] = '';
     if (obj2[k] === null) obj2[k] = '';
-    if (!isNaN(parseFloat(obj1[k]))) obj1[k] = parseFloat(obj1[k]);
-    if (!isNaN(parseFloat(obj2[k]))) obj2[k] = parseFloat(obj2[k]);
+    // if (!isNaN(parseFloat(obj1[k]))) obj1[k] = parseFloat(obj1[k]);
+    // if (!isNaN(parseFloat(obj2[k]))) obj2[k] = parseFloat(obj2[k]);
     return obj1[k] !== obj2[k];
   });
 };

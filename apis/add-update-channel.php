@@ -32,10 +32,9 @@ try {
             } else {
                 // $log = "updated channel {$data['name']} - {$data['channelName']} (#{$data['id']}) with values (";
 
-                $log = "updated channel ". (isset($data['newValues']['name']) ? $data['newValues']['name'] : $data['name'])." - ". (isset($data['newValues']['channelName']) ? $data['newValues']['channelName'] : $data['channelName'])." (#{$data['id']}) with values (";
-
                 // Check if the 'id' field is present in the JSON body
                 if (isset($data['id'])) {
+                    $log = "updated channel ". (isset($data['newValues']['name']) ? $data['newValues']['name'] : $data['name'])." - ". (isset($data['newValues']['channelName']) ? $data['newValues']['channelName'] : $data['channelName'])." (#{$data['id']}) with values (";
                     $id = $data['id'];
                     // Build the dynamic update query based on the provided data
                     $query = "UPDATE channel SET ";
@@ -69,13 +68,22 @@ try {
                     // Add the WHERE condition to update the row with the specified ID
                     $query .= " WHERE id = " . $id;
                 } else {
+                    $log = "added channel ". (isset($data['newValues']['name']) ? $data['newValues']['name'] : $data['name'])." - ". (isset($data['newValues']['channelName']) ? $data['newValues']['channelName'] : $data['channelName']);
                     // ID is not present, add a new row
 
                     // Build the dynamic insert query based on the provided data
                     $query = "INSERT INTO channel (";
 
                     // Get the list of keys
-                    $keys = array_keys($data);
+                    $keys = [];
+                    $values = [];
+
+                    foreach ($data['newValues'] as $key => $value) {
+                        if ($key != 'id' && $key !== 'typeEscalation' && $key !== 'typeOTT' && $key !== 'typePDU' && $key !== 'typePVI' && $key !== 'typeSource') {
+                            array_push($keys, $key);
+                            array_push($values, $value);
+                        }
+                    }
 
                     // Add the keys to the query
                     $query .= implode(", ", $keys);
@@ -85,14 +93,16 @@ try {
                     // Build the placeholder values for prepared statement
                     $placeholders = array();
 
-                    foreach ($data['newValues'] as $value) {
-                        // Check if the value is empty
-                        if ($value === '') {
-                            // Replace empty value with NULL keyword
-                            $placeholders[] = "NULL";
-                        } else {
-                            $finalValue = mysqli_real_escape_string($conn, $value);
-                            $placeholders[] = "'" . $finalValue . "'";
+                    foreach ($values as $value) {
+                        if ($key !== 'typeEscalation' && $key !== 'typeOTT' && $key !== 'typePDU' && $key !== 'typePVI' && $key !== 'typeSource') {
+                            // Check if the value is empty
+                            if ($value === '') {
+                                // Replace empty value with NULL keyword
+                                $placeholders[] = "NULL";
+                            } else {
+                                $finalValue = mysqli_real_escape_string($conn, $value);
+                                $placeholders[] = "'" . $finalValue . "'";
+                            }
                         }
                     }
 
@@ -100,7 +110,7 @@ try {
                     $query .= implode(", ", $placeholders);
 
                     $query .= ")";
-                    $log = "added channel {$data['channelName']}";
+                    // $log = "added channel {$data['channelName']}";
                 }
 
                 // Execute the query
