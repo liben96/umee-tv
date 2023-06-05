@@ -11,13 +11,13 @@ $dotenv->load();
 
 function sendEmail($to, $subject, $body)
 {
-    try {
-        // Create the response object
-        $response = array(
-            'success' => false,
-            'message' => ''
-          );
+    // Create the response object
+    $response = array(
+        'success' => false,
+        'message' => ''
+      );
 
+    try {
         $mail = new PHPMailer();
 
         // Enable SMTP debugging if needed
