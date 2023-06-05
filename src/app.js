@@ -767,11 +767,17 @@ const submitChannelAction = async () => {
     if (selectedConfirmAction === 'blackout') {
       body.body = {
         inputs: [
-          ...selectedConfirmItem.flusonicInputs.map((item) => {
+          ...selectedConfirmItem.flusonicInputs.map((item, index) => {
             if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === undefined || item.priority === 10 ? true : false;
             return {
               ...item,
-              priority: item.url.includes('blackout/') ? (item.priority === undefined || item.priority === 10 ? 0 : 10) : item.priority,
+              priority: item.url.includes('blackout/')
+                ? item.priority === undefined || item.priority === 10
+                  ? 0
+                  : 10
+                : item.priority !== undefined
+                ? item.priority
+                : index + 2,
             };
           }),
         ],
