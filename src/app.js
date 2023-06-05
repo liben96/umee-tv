@@ -777,7 +777,7 @@ const submitChannelAction = async () => {
                   : 10
                 : item.priority !== undefined
                 ? item.priority
-                : index + 2,
+                : index + 1,
             };
           }),
         ],
