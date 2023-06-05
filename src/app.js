@@ -1,6 +1,7 @@
 /// <reference path="../assets/js/jquery-3.7.0.min.js" />
 
 let channelList = [],
+  channelHiboxList = [],
   iptvProvidersList = [],
   formValidator,
   selectedChannel,
@@ -497,6 +498,8 @@ const fetchChannelList = async (isRefresh) => {
     res = await callAPI('GET', './apis/get-channel-list.php');
     let resIPTV = await callAPI('GET', './apis/get-iptv-providers.php');
     if (resIPTV && resIPTV.success) iptvProvidersList = resIPTV.data.map((item) => ({...item, urlPattern: item.urlPattern.split(',')}));
+    // let resHibox = await callAPI('GET', './apis/get-hibox-channel-list.php');
+    // if (resHibox && resHibox.success) channelHiboxList = resHibox.data;
   } else {
     // Refresh action so mock the API response
     res = {success: true, data: channelDBList};
@@ -544,6 +547,13 @@ const fetchChannelList = async (isRefresh) => {
       let channelStatsCount = {online: 0, disabled: 0, error: 0};
 
       let finalArray = res.data.map((item) => {
+        let finalItem = {...item};
+
+        // Find hibox channel
+        // let foundHiboxChannel = channelHiboxList.find((itemHibox) => itemHibox.number === parseFloat(item.name));
+        // if (foundHiboxChannel) {
+        //   console.log('foundHiboxChannel', foundHiboxChannel);
+        // }
         // Find and get disabled and uptime by comparing name field
         let foundSonicChannel = fluSonicList.find(
           (itemFluSonic) => itemFluSonic.name === item.name && itemFluSonic.url === item.flusonicUrl,
@@ -558,8 +568,8 @@ const fetchChannelList = async (isRefresh) => {
             url: item.url,
             priority: item.priority,
           }));
-          return {
-            ...item,
+          finalItem = {
+            ...finalItem,
             flusonicStatus: foundSonicChannel.disabled ? 'Disabled' : foundSonicChannel.stats.status === 'running' ? 'Online' : 'Error',
             flusonicStatusError: foundSonicChannel.stats.source_error || undefined,
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
@@ -576,14 +586,15 @@ const fetchChannelList = async (isRefresh) => {
               return iptvArray;
             }, []),
             flusonicBlackoutFound: blackoutFound,
-            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 10 ? false : true,
+            flusonicBlackoutEnabled: blackoutFound && blackoutFound.priority === 0 ? true : false,
             // flusonicUrl: foundSonicChannel.url,
             flusonicUser: foundSonicChannel.user,
             flusonicPassword: foundSonicChannel.password,
           };
         } else {
-          return {...item, flusonicNotFound: item.flusonicUrl ? true : false};
+          finalItem = {...finalItem, flusonicNotFound: item.flusonicUrl ? true : false};
         }
+        return finalItem;
       });
       channelList = finalArray;
       initTable(finalArray);
@@ -740,10 +751,10 @@ const submitChannelAction = async () => {
       body.body = {
         inputs: [
           ...selectedConfirmItem.flusonicInputs.map((item) => {
-            if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === 10 ? true : false;
+            if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === undefined || item.priority === 10 ? true : false;
             return {
               ...item,
-              priority: item.url.includes('blackout/') ? (item.priority === 10 ? 0 : 10) : item.priority,
+              priority: item.url.includes('blackout/') ? (item.priority === undefined || item.priority === 10 ? 0 : 10) : item.priority,
             };
           }),
         ],
