@@ -95,7 +95,7 @@ const initTable = (data) => {
         {
           data: 'channelName',
           title: 'Channel',
-          className: 'align-middle',
+          className: 'align-middle all',
           render: (data, type, row) =>
             `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}${
               roleId === 1 && row.hibox && !row.hiboxSynced
@@ -243,7 +243,7 @@ const initTable = (data) => {
             }
             ${
               row.hibox && roleId === 1
-                ? `<a class="ms-2" href="${hiboxBaseURL}hiboxadmin/ChannelAdmin?action=edit&channel_id=${row.hibox.id}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Hibox"><img class="table-action-image-small" src="./assets/images/hibox.png" /></a>`
+                ? `<a class="ms-2" href="${hiboxBaseURL}/hiboxadmin/ChannelAdmin?action=edit&channel_id=${row.hibox.id}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Hibox"><img class="table-action-image-small" src="./assets/images/hibox.png" /></a>`
                 : ''
             }
             ${
@@ -287,7 +287,9 @@ const initTable = (data) => {
     $('.current-year').html(moment().format('YYYY'));
 
     // channel number input event to validate if it already exist
-    setupOnStopTypeEvent('#edit-form #input_name', validateChannelName);
+    setupOnStopTypeEvent('#edit-form #input_name', validateChannelNumber);
+    // channel name input event to show info alert
+    setupOnStopTypeEvent('#edit-form #input_channelName', validateChannelName);
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
@@ -360,7 +362,7 @@ toggleInputError = (isShow, selector, error) => {
   }
 };
 
-validateChannelName = async () => {
+const validateChannelNumber = async () => {
   let body = {
     number: $('#edit-form #input_name').val(),
   };
@@ -376,6 +378,18 @@ validateChannelName = async () => {
   } else {
     isChannelExist = false;
     toggleInputError(false, '#input_name');
+  }
+  validateChannelName();
+};
+
+const validateChannelName = async () => {
+  if (
+    $('#edit-form #input_channelName').val() !== selectedChannel.channelName ||
+    $('#edit-form #input_name').val() !== selectedChannel.name
+  ) {
+    showInPageAlert('edit-alert', 'warning', 'Note: The channel will be synchronized in Hibox.');
+  } else {
+    showInPageAlert('edit-alert', 'warning', null);
   }
 };
 
@@ -718,6 +732,7 @@ const setChannelForm = (selectedChannel, key) => {
 const toggleEditModal = (id) => {
   $('#form-title').html((id ? 'Edit' : 'Add') + ' Channel');
   toggleButtonLoader('#channel-submit-button', false);
+  showInPageAlert('edit-alert', 'warning', null);
   if (id) {
     selectedChannel = channelList.find((item) => id === parseFloat(item.id));
     Object.keys(selectedChannel).forEach((key) => {
@@ -961,6 +976,7 @@ const submitEditForm = async () => {
       id: body.id,
       name: selectedChannel.name,
       channelName: selectedChannel.channelName,
+      hibox: selectedChannel.hibox,
       oldValues: selectedChannel,
       newValues: {
         id: body.id,
@@ -989,6 +1005,7 @@ const submitEditForm = async () => {
           : '';
       finalBody.newValues[key] = body[key];
     });
+    // console.log('finalBody', finalBody);
     // Call API
     const res = await callAPI('POST', './apis/add-update-channel.php', JSON.stringify(finalBody));
     if (res && res.success) {
@@ -1052,12 +1069,12 @@ const toggleResetForm = () => {
 
 const showInPageAlert = (id, type, message) => {
   // Remove other alert types class
-  $(`#${id}`).removeClass(`alert-success`);
-  $(`#${id}`).removeClass(`alert-danger`);
+  $(`#${id}`).removeClass((index, className) => (className.match(/(^|\s)alert-\S+/g) || []).join(' '));
 
   $(`#${id}`).addClass(`alert-${type}`);
   $(`#${id}-text`).html(message);
-  $(`#${id}`).toggleClass('d-none');
+  if (message) $(`#${id}`).removeClass('d-none');
+  else $(`#${id}`).addClass('d-none');
 };
 
 const submitResetForm = async (e) => {

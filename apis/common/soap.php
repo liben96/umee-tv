@@ -54,7 +54,7 @@ function callSoap($method, $params)
 
     try {
         // WSDL URL
-        $wsdl = $_ENV['HIBOX_BASE_URL'].$_ENV['HIBOX_WSDL_PATH'];
+        $wsdl = $_ENV['HIBOX_BASE_URL'].'/'.$_ENV['HIBOX_WSDL_PATH'];
 
         // Authentication credentials
         $username = $_ENV['HIBOX_USERNAME'];

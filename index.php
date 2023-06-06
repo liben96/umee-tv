@@ -384,6 +384,9 @@
                                         style="padding: 0.32rem 0.4rem;">
                                 </div>
                             </div>
+                            <div id="edit-alert" class="alert alert-success fade show mb-0 mt-2 d-none" role="alert">
+                                <span id="edit-alert-text"></span>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="channel-submit-button"><span

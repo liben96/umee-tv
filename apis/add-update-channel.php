@@ -7,6 +7,8 @@ require_once 'common/authentication.php';
 require_once 'common/db_connection.php';
 // Include the database logger file
 require_once 'common/logger.php';
+// Include the soap file
+require_once 'common/soap.php';
 
 try {
     // Retrieve the raw POST data
@@ -118,13 +120,40 @@ try {
 
                 // Check if the query was successful
                 if ($result) {
-                    $response['success'] = true;
                     // Query executed successfully
                     if (isset($id)) {
+                        $successMessage = "Channel updated successfully";
+                        if(isset($data['newValues']['name']) || isset($data['newValues']['channelName'])) {
+                            $body = array(
+                                'channel' => array(
+                                    'id' => $data['hibox']['id'],
+                                    'name' => isset($data['newValues']['channelName']) ? $data['newValues']['channelName'] : $data['hibox']['name'],
+                                    'type' => $data['hibox']['type'],
+                                    'number' => isset($data['newValues']['name']) ? (int) $data['newValues']['name'] : $data['hibox']['number'],
+                                    'epgId' => isset($data['newValues']['name']) ? $data['newValues']['name'] : $data['hibox']['epgId'],
+                                    'numberInNetwork' => $data['hibox']['numberInNetwork']
+                                )
+                            );
+
+                            // calling update SOAP call
+                            $hiboxRes = callSoap('updateChannel', array($body));
+
+                            // Check if the SOAP call was successful
+                            if (isset($hiboxRes) && $hiboxRes['success']) {
+                                $response['message'] = $successMessage. " and synchronised with Hibox.";
+                            } else {
+                                $response['success'] = false;
+                                $response['message'] = $successMessage. ". But error while synchronising in Hibox.";
+
+                            }
+                        } else {
+                            $response['message'] = $successMessage.".";
+                        }
                         add_log($conn, $log);
-                        $response['message'] = "Channel updated successfully.";
+                        $response['success'] = true;
                     } else {
                         add_log($conn, $log);
+                        $response['success'] = true;
                         $response['message'] = "New channel added successfully.";
                     }
 
