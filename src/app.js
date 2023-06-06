@@ -771,7 +771,7 @@ const toggleConfirmModal = (action, id) => {
     );
   else if (action === 'sync')
     confirmModalElm.html(
-      `<div>Are you sure you want to <b>sync</b> the following channel in <b>Hibox<b>?</div><div><b class="fw-bold">${selectedConfirmItem.name} - ${selectedConfirmItem.channelName}</b></div>`,
+      `<div>Are you sure you want to <b class="fw-bold">sync</b> the following channel in <b class="fw-bold">Hibox</b>?</div><div><b class="fw-bold">${selectedConfirmItem.name} - ${selectedConfirmItem.channelName}</b></div>`,
     );
   else
     confirmModalElm.html(
