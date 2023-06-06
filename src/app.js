@@ -17,7 +17,8 @@ let channelList = [],
   deleteConfirmModalCount = 0,
   deleteModalElm,
   resetForm,
-  resetFormStep = 1;
+  resetFormStep = 1,
+  hiboxBaseURL;
 const callAPI = (type, url, data) =>
   new Promise((resolve, reject) => {
     $.ajax({
@@ -97,10 +98,10 @@ const initTable = (data) => {
           className: 'align-middle',
           render: (data, type, row) =>
             `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}${
-              row.hibox && !row.hiboxSynced
-                ? `<div><span class="text-danger">Hibox name: ${row.hibox.name}</span> <a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('restart', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sync in hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
+              roleId === 1 && row.hibox && !row.hiboxSynced
+                ? `<div><span class="text-danger fst-italic">Hibox name: ${row.hibox.name}</span> <a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('sync', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sync in Hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
                 : ''
-            }${row.hiboxNotFound ? `<div><span class="text-danger">Not found in hibox</span><div>` : ''}<div>`,
+            }${roleId === 1 && row.hiboxNotFound ? `<div><span class="text-danger fst-italic">Not found in Hibox</span><div>` : ''}<div>`,
         },
         {
           data: 'typeSource',
@@ -238,6 +239,11 @@ const initTable = (data) => {
             ${
               row.flusonicStatus && roleId === 1
                 ? `<a class="ms-2" href="${row.flusonicUrl}/admin/#/streams/${row.name}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Flusonic"><img class="table-action-image-small" src="./assets/images/flusonic.webp" /></a>`
+                : ''
+            }
+            ${
+              row.hibox && roleId === 1
+                ? `<a class="ms-2" href="${hiboxBaseURL}hiboxadmin/ChannelAdmin?action=edit&channel_id=${row.hibox.id}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Hibox"><img class="table-action-image-small" src="./assets/images/hibox.png" /></a>`
                 : ''
             }
             ${
@@ -503,8 +509,13 @@ const fetchChannelList = async (isRefresh) => {
     res = await callAPI('GET', './apis/get-channel-list.php');
     let resIPTV = await callAPI('GET', './apis/get-iptv-providers.php');
     if (resIPTV && resIPTV.success) iptvProvidersList = resIPTV.data.map((item) => ({...item, urlPattern: item.urlPattern.split(',')}));
-    // let resHibox = await callAPI('GET', './apis/get-hibox-channel-list.php');
-    // if (resHibox && resHibox.success) channelHiboxList = resHibox.data;
+    if (roleId === 1) {
+      let resHibox = await callAPI('GET', './apis/get-hibox-channel-list.php');
+      if (resHibox && resHibox.success) {
+        channelHiboxList = resHibox.data.channels;
+        hiboxBaseURL = resHibox.data.url;
+      }
+    }
   } else {
     // Refresh action so mock the API response
     res = {success: true, data: channelDBList};
@@ -555,21 +566,21 @@ const fetchChannelList = async (isRefresh) => {
         let finalItem = {...item};
 
         // Find hibox channel
-        // let foundHiboxChannel = channelHiboxList.find((itemHibox) => itemHibox.number === parseFloat(item.name));
-        // if (foundHiboxChannel) {
-        //   finalItem = {
-        //     ...finalItem,
-        //     hiboxSynced: item.channelName === foundHiboxChannel.name,
-        //     hibox: {
-        //       ...foundHiboxChannel,
-        //     },
-        //   };
-        // } else {
-        //   finalItem = {
-        //     ...finalItem,
-        //     hiboxNotFound: true,
-        //   };
-        // }
+        let foundHiboxChannel = channelHiboxList.find((itemHibox) => itemHibox.number === parseFloat(item.name));
+        if (foundHiboxChannel) {
+          finalItem = {
+            ...finalItem,
+            hiboxSynced: item.channelName === foundHiboxChannel.name,
+            hibox: {
+              ...foundHiboxChannel,
+            },
+          };
+        } else {
+          finalItem = {
+            ...finalItem,
+            hiboxNotFound: true,
+          };
+        }
         // Find and get disabled and uptime by comparing name field
         let foundSonicChannel = fluSonicList.find(
           (itemFluSonic) => itemFluSonic.name === item.name && itemFluSonic.url === item.flusonicUrl,
@@ -743,6 +754,10 @@ const toggleConfirmModal = (action, id) => {
         selectedConfirmItem.channelName
       }</b></div>`,
     );
+  else if (action === 'sync')
+    confirmModalElm.html(
+      `<div>Are you sure you want to <b>sync</b> the following channel in <b>Hibox<b>?</div><div><b class="fw-bold">${selectedConfirmItem.name} - ${selectedConfirmItem.channelName}</b></div>`,
+    );
   else
     confirmModalElm.html(
       `<div>Are you sure you want to <b class="fw-bold">${action}</b> the following channel?</div><div><b class="fw-bold">${selectedConfirmItem.name} - ${selectedConfirmItem.channelName}</b></div>`,
@@ -754,42 +769,54 @@ const toggleConfirmModal = (action, id) => {
 const submitChannelAction = async () => {
   if (selectedConfirmItem) {
     toggleButtonLoader('#confirm-submit', true);
-    let body = {
-      url: selectedConfirmItem.flusonicUrl,
-      user: selectedConfirmItem.flusonicUser,
-      password: selectedConfirmItem.flusonicPassword,
-      action: selectedConfirmAction,
-      number: selectedConfirmItem.name,
-      channelName: selectedConfirmItem.channelName,
-    };
-
-    // Attach body for blackout action
-    if (selectedConfirmAction === 'blackout') {
-      body.body = {
-        inputs: [
-          ...selectedConfirmItem.flusonicInputs.map((item, index) => {
-            if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === undefined || item.priority === 10 ? true : false;
-            return {
-              url: item.url,
-              priority: item.url.includes('blackout/')
-                ? item.priority === undefined || item.priority === 10
-                  ? 0
-                  : 10
-                : item.priority !== undefined
-                ? item.priority
-                : index + 1,
-            };
-          }),
-        ],
+    let res;
+    if (selectedConfirmAction === 'sync') {
+      let body = {
+        ...selectedConfirmItem.hibox,
+        name: selectedConfirmItem.channelName,
       };
+
+      // Call API
+      res = await callAPI('POST', './apis/update-hibox-channel.php', JSON.stringify(body));
+    } else {
+      let body = {
+        url: selectedConfirmItem.flusonicUrl,
+        user: selectedConfirmItem.flusonicUser,
+        password: selectedConfirmItem.flusonicPassword,
+        action: selectedConfirmAction,
+        number: selectedConfirmItem.name,
+        channelName: selectedConfirmItem.channelName,
+      };
+
+      // Attach body for blackout action
+      if (selectedConfirmAction === 'blackout') {
+        body.body = {
+          inputs: [
+            ...selectedConfirmItem.flusonicInputs.map((item, index) => {
+              if (item.url.includes('blackout/')) body.blackoutEnabled = item.priority === undefined || item.priority === 10 ? true : false;
+              return {
+                url: item.url,
+                priority: item.url.includes('blackout/')
+                  ? item.priority === undefined || item.priority === 10
+                    ? 0
+                    : 10
+                  : item.priority !== undefined
+                  ? item.priority
+                  : index + 1,
+              };
+            }),
+          ],
+        };
+      }
+
+      // Call API
+      res = await callAPI('POST', './apis/call_external_api.php', JSON.stringify(body));
     }
 
-    // Call API
-    const res = await callAPI('POST', './apis/call_external_api.php', JSON.stringify(body));
     if (res && res.success) {
       showToast(true, res.message);
       $('#confirm-modal').modal('hide');
-      fetchChannelList(true);
+      fetchChannelList(selectedConfirmAction !== 'sync');
     } else {
       showToast(false, (res && res.message) || `Error while ${selectedConfirmAction}ing channel`);
     }

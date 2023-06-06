@@ -44,7 +44,7 @@ function soapClientWSSecurityHeader($user, $password)
     return new SoapHeader($ns_wsse, 'Security', new SoapVar($auth, XSD_ANYXML), true);
 }
 
-function callSoap()
+function callSoap($method, $params)
 {
     // Create the response object
     $response = array(
@@ -54,7 +54,7 @@ function callSoap()
 
     try {
         // WSDL URL
-        $wsdl = $_ENV['HIBOX_URL'];
+        $wsdl = $_ENV['HIBOX_BASE_URL'].$_ENV['HIBOX_WSDL_PATH'];
 
         // Authentication credentials
         $username = $_ENV['HIBOX_USERNAME'];
@@ -73,12 +73,14 @@ function callSoap()
 
         $client->__setSoapHeaders(soapClientWSSecurityHeader($username, $password));
 
-        $soapRes = $client->getAllChannels();
+        $soapRes = $client->__soapCall($method, $params);
 
         // Send the response
         if ($soapRes) {
             $response['success'] = true;
-            $response['data'] = $soapRes->return;
+            if(isset($params) && count($params) === 0) {
+                $response['data'] = $soapRes->return;
+            }
         } else {
             $response['success'] = true;
             $response['message'] = "Failed to load data from hibox";
