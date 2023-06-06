@@ -99,7 +99,7 @@ const initTable = (data) => {
           render: (data, type, row) =>
             `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}${
               roleId === 1 && row.hibox && !row.hiboxSynced
-                ? `<div><span class="text-danger fst-italic">Hibox name: ${row.hibox.name}</span> <a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('sync', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sync in Hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
+                ? `<div><span class="text-danger fst-italic">Hibox name: ${row.hibox.name}</span>&nbsp;&nbsp;<a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('sync', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sync in Hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
                 : ''
             }${roleId === 1 && row.hiboxNotFound ? `<div><span class="text-danger fst-italic">Not found in Hibox</span><div>` : ''}<div>`,
         },
