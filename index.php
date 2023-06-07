@@ -193,7 +193,7 @@
                         </table>
                     </div>
                 </div>
-                <footer class="mt-5">
+                <footer class="mt-3">
                     <div class="row">
                         <div class="mt-2 col text-end">
                             <p class="mr-3 m-0"> © u-mee&nbsp;<span class="current-year"></span>. All rights reserved.

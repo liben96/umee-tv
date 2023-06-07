@@ -50,7 +50,10 @@ const initTable = (data) => {
       dom:
         '<"d-flex align-items-center">' +
         'rt' +
-        '<"d-flex align-items-center"l<"d-flex align-items-center justify-content-center footer-entries"i><"flex-grow-1"p>>',
+        '<"d-flex align-items-center"l<"d-flex align-items-center justify-content-center text-center footer-entries"i><"flex-grow-1"p>>',
+      language: {
+        infoFiltered: ' <br/> Filtered from _MAX_ total entries',
+      },
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -83,7 +86,7 @@ const initTable = (data) => {
         },
       },
       columns: [
-        {data: 'id', title: 'ID', className: 'align-middle', visible: false},
+        {data: 'id', title: 'ID', className: 'align-middle', visible: false, searchable: false},
         {
           data: 'name',
           title: '',
