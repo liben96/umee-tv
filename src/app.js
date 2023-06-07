@@ -50,7 +50,7 @@ const initTable = (data) => {
       dom:
         '<"d-flex align-items-center">' +
         'rt' +
-        '<"d-flex align-items-center"l<"d-flex align-items-center justify-content-center text-center footer-entries"i><"flex-grow-1"p>>',
+        '<"d-flex align-items-center flex-column flex-md-row gap-2"l<"d-flex align-items-center justify-content-center text-center flex-grow-1"i><""p>>',
       language: {
         infoFiltered: ' <br/> Filtered from _MAX_ total entries',
       },
@@ -193,7 +193,8 @@ const initTable = (data) => {
         {
           data: null,
           title: 'OTT Status',
-          className: 'text-center align-middle all',
+          className: 'text-center align-middle',
+          responsivePriority: 1,
           render: (data, type, row) =>
             row.flusonicStatus !== undefined
               ? `<div class="text-center"><div class="${
@@ -641,6 +642,7 @@ const fetchChannelList = async (isRefresh) => {
         return finalItem;
       });
       channelList = finalArray;
+      mainLoader(false);
       initTable(finalArray);
       initChannelForm();
 
@@ -656,7 +658,6 @@ const fetchChannelList = async (isRefresh) => {
       }
     }
   }
-  mainLoader(false);
 };
 
 const showToast = (success, body) => {

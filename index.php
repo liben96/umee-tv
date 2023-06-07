@@ -139,7 +139,7 @@
                 <?php echo $_SESSION['userFullName']?>
                 (<?php echo $_SESSION['role']?>)
             </div>
-            <div><button type="button" id="logout" class="button light">Logout</button></div>
+            <div><button type="button" id="logout" class="btn button light">Logout</button></div>
         </div>
     </div>
     <div id="main-loader" class="d-none">
@@ -153,250 +153,248 @@
     </div>
     <div id="main-area">
         <div class="container-fluid">
-            <div class="m-4">
-                <div class="row">
-                    <div class="col">
-                        <div class="d-flex align-items-center border-bottom pb-2">
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex border-bottom flex-column flex-md-row gap-2 pb-2">
+                        <div class="d-flex flex-grow-1">
                             <div class="has-icon table-search-container">
                                 <input id="table-search" type="text" class="form-control"
                                     placeholder="Type to search" />
                                 <a id="search-clear" href="javascript:void(0)" class="input-icon d-none text-dark"><i
                                         class="fa-solid fa-xmark"></i></i></a>
                             </div>
-                            <div class="flex-grow-1">
+                            <div class="">
                                 <button type="button" id="add-channel" class="btn btn-sm btn-dark ms-2 d-none">Add
                                     Channel</button>
                             </div>
-                            <div id="channels-stats" class="text-small d-flex align-items-center d-none">
-                                <button id="filter-online" onclick="filterTable('online')"
-                                    class="btn btn-light btn-sm btn-filter border me-2"><i
-                                        class="fa-solid fa-circle text-success"></i> <span id="channels-online"></span>
-                                </button>
-                                <button id="filter-disabled" onclick="filterTable('disabled')"
-                                    class="btn btn-light border btn-sm btn-filter me-2"><i
-                                        class="fa-solid fa-circle text-secondary"></i>
-                                    <span id="channels-disabled"></span>
-                                </button>
-                                <button id="filter-error" onclick="filterTable('error')"
-                                    class="btn btn-light border btn-sm btn-filter"><i
-                                        class="fa-solid fa-circle text-danger"></i>
-                                    <span id="channels-error"></span>
-                                </button>
-                                <button onclick="filterTable('')" id="filter-clear"
-                                    class="btn btn-light border btn-sm d-none ms-2" data-bs-toggle="popover"
-                                    data-bs-trigger="hover focus" data-bs-content="Clear filters"><i
-                                        class="fa-solid fa-filter-circle-xmark"></i>
-                                </button>
-                            </div>
                         </div>
-                        <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
-                        </table>
+                        <div id="channels-stats" class="text-small d-flex align-items-center d-none">
+                            <button id="filter-online" onclick="filterTable('online')"
+                                class="btn btn-light btn-sm btn-filter border me-2"><i
+                                    class="fa-solid fa-circle text-success"></i> <span id="channels-online"></span>
+                            </button>
+                            <button id="filter-disabled" onclick="filterTable('disabled')"
+                                class="btn btn-light border btn-sm btn-filter me-2"><i
+                                    class="fa-solid fa-circle text-secondary"></i>
+                                <span id="channels-disabled"></span>
+                            </button>
+                            <button id="filter-error" onclick="filterTable('error')"
+                                class="btn btn-light border btn-sm btn-filter"><i
+                                    class="fa-solid fa-circle text-danger"></i>
+                                <span id="channels-error"></span>
+                            </button>
+                            <button onclick="filterTable('')" id="filter-clear"
+                                class="btn btn-light border btn-sm d-none ms-2" data-bs-toggle="popover"
+                                data-bs-trigger="hover focus" data-bs-content="Clear filters"><i
+                                    class="fa-solid fa-filter-circle-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
+                    </table>
+                </div>
+            </div>
+            <footer class="mt-3">
+                <div class="row">
+                    <div class="mt-2 col text-end">
+                        <p class="mr-3 m-0"> © u-mee&nbsp;<span class="current-year"></span>. All rights reserved.
+                        </p>
                     </div>
                 </div>
-                <footer class="mt-3">
-                    <div class="row">
-                        <div class="mt-2 col text-end">
-                            <p class="mr-3 m-0"> © u-mee&nbsp;<span class="current-year"></span>. All rights reserved.
-                            </p>
-                        </div>
-                    </div>
-                </footer>
-            </div>
+            </footer>
         </div>
+    </div>
 
-        <!-- Modal for channel edit -->
-        <div id="edit-modal" class="modal fade">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 745px;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Edit Channel</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form id="edit-form">
-                        <div class="modal-body">
-                            <div class="row mb-1">
-                                <label for="input_logo" class="col-sm-2 col-form-label"></label>
-                                <div class="col-sm-10 d-flex align-items-center">
-                                    <img id="input_logo" src="./assets/images/no-logo.png" class="channel-logo me-2"
-                                        alt="channel-logo">
-                                    <button type="button" id="logo_clear"
-                                        class="btn btn-light btn-sm btn-filter border me-2 d-none"><i
-                                            class="fa-solid fa-xmark"></i></button>
-                                    <input id="input_logo_input" class="form-control" type="file" name="image"
-                                        id="image" accept="image/*" />
-                                </div>
+    <!-- Modal for channel edit -->
+    <div id="edit-modal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 745px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Edit Channel</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="edit-form">
+                    <div class="modal-body">
+                        <div class="row mb-1">
+                            <label for="input_logo" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10 d-flex align-items-center">
+                                <img id="input_logo" src="./assets/images/no-logo.png" class="channel-logo me-2"
+                                    alt="channel-logo">
+                                <button type="button" id="logo_clear"
+                                    class="btn btn-light btn-sm btn-filter border me-2 d-none"><i
+                                        class="fa-solid fa-xmark"></i></button>
+                                <input id="input_logo_input" class="form-control" type="file" name="image" id="image"
+                                    accept="image/*" />
                             </div>
-                            <div class="row mb-1 d-none">
-                                <label for="input_id" class="col-sm-2 col-form-label text-end">ID</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="input_id" readonly>
-                                </div>
+                        </div>
+                        <div class="row mb-1 d-none">
+                            <label for="input_id" class="col-sm-2 col-form-label text-end">ID</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input_id" readonly>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_name" class="col-sm-2 col-form-label text-end">Number*</label>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="input_name" name="input_name"
-                                        required>
-                                    <span id="input_name_error" class="text-danger"></span>
-                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_name" class="col-sm-2 col-form-label text-end">Number*</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="input_name" name="input_name" required>
+                                <span id="input_name_error" class="text-danger"></span>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="input_channelName"
-                                        name="input_channelName" required>
-                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_channelName" class="col-sm-2 col-form-label">Name*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input_channelName" name="input_channelName"
+                                    required>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_typeSourceId" class="col-sm-2 col-form-label">Source</label>
-                                <div class="col-sm-10">
-                                    <select id="input_typeSourceId" class="form-select" aria-label="Source">
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_typeSourceId" class="col-sm-2 col-form-label">Source</label>
+                            <div class="col-sm-10">
+                                <select id="input_typeSourceId" class="form-select" aria-label="Source">
+                                </select>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_typeOTTId" class="col-sm-2 col-form-label">OTT</label>
-                                <div class="col-sm-10">
-                                    <select id="input_typeOTTId" class="form-select" aria-label="OTT">
-                                    </select>
-                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_typeOTTId" class="col-sm-2 col-form-label">OTT</label>
+                            <div class="col-sm-10">
+                                <select id="input_typeOTTId" class="form-select" aria-label="OTT">
+                                </select>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_ip" class="col-sm-2 col-form-label">IP</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="input_ip">
-                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_ip" class="col-sm-2 col-form-label">IP</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input_ip">
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_typePVIId" class="col-sm-2 col-form-label">PVI</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <select id="input_typePVIId" class="form-select" aria-label="PVI">
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <div class="row">
-                                                <label for="input_pviPort" class="col-sm-3 col-form-label">Port</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" class="form-control" id="input_pviPort">
-                                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_typePVIId" class="col-sm-2 col-form-label">PVI</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <select id="input_typePVIId" class="form-select" aria-label="PVI">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <label for="input_pviPort" class="col-sm-3 col-form-label">Port</label>
+                                            <div class="col-sm-9">
+                                                <input type="number" class="form-control" id="input_pviPort">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_typePDUId" class="col-sm-2 col-form-label">PDU</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <select id="input_typePDUId" class="form-select" aria-label="PDU">
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <div class="row">
-                                                <label for="input_pduPort" class="col-sm-3 col-form-label">Port</label>
-                                                <div class="col-sm-9">
-                                                    <input type="number" class="form-control" id="input_pduPort">
-                                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_typePDUId" class="col-sm-2 col-form-label">PDU</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <select id="input_typePDUId" class="form-select" aria-label="PDU">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <label for="input_pduPort" class="col-sm-3 col-form-label">Port</label>
+                                            <div class="col-sm-9">
+                                                <input type="number" class="form-control" id="input_pduPort">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_box" class="col-sm-2 col-form-label">Box</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <input type="text" class="form-control" id="input_box">
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <div class="row">
-                                                <label for="input_rack" class="col-sm-3 col-form-label">Rack</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="input_rack">
-                                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_box" class="col-sm-2 col-form-label">Box</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="input_box">
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <label for="input_rack" class="col-sm-3 col-form-label">Rack</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="input_rack">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_cardNumber" class="col-sm-2 col-form-label">Card Number</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <input type="text" class="form-control" id="input_cardNumber">
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <div class="row">
-                                                <label for="input_cardNumberExpiry"
-                                                    class="col-sm-3 col-form-label">Expiry</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" id="input_cardNumberExpiry">
-                                                </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_cardNumber" class="col-sm-2 col-form-label">Card Number</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="input_cardNumber">
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="row">
+                                            <label for="input_cardNumberExpiry"
+                                                class="col-sm-3 col-form-label">Expiry</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="input_cardNumberExpiry">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_typeEscalationId" class="col-sm-2 col-form-label">Escalation</label>
-                                <div class="col-sm-10">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <select id="input_typeEscalationId" class="form-select"
-                                                aria-label="Escalation">
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <!-- <div class="row">
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_typeEscalationId" class="col-sm-2 col-form-label">Escalation</label>
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <select id="input_typeEscalationId" class="form-select" aria-label="Escalation">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <!-- <div class="row">
                                                 <label for="input_wikiUrl" class="col-sm-3 col-form-label">Wiki</label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" id="input_wikiUrl">
                                                 </div>
                                             </div> -->
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <label for="input_wikiUrl" class="col-sm-2 col-form-label">Wiki</label>
-                                <div class="col-sm-10 has-icon">
-                                    <input type="text" class="form-control" id="input_wikiUrl">
-                                    <a id="wiki-href" target="_blank" href="javascript:void(0)" class="input-icon"><i
-                                            class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label for="input_priority" class="col-sm-2 col-form-label">Priority</label>
-                                <div class="col-sm-10">
-                                    <input type="checkbox" class="form-check-input" id="input_priority"
-                                        style="padding: 0.32rem 0.4rem;">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label for="input_enabled" class="col-sm-2 col-form-label">Enabled</label>
-                                <div class="col-sm-10">
-                                    <input type="checkbox" class="form-check-input" id="input_enabled"
-                                        style="padding: 0.32rem 0.4rem;">
-                                </div>
-                            </div>
-                            <div id="edit-alert" class="alert alert-success fade show mb-0 mt-2 d-none" role="alert">
-                                <span id="edit-alert-text"></span>
+                        </div>
+                        <div class="row mb-1">
+                            <label for="input_wikiUrl" class="col-sm-2 col-form-label">Wiki</label>
+                            <div class="col-sm-10 has-icon">
+                                <input type="text" class="form-control" id="input_wikiUrl">
+                                <a id="wiki-href" target="_blank" href="javascript:void(0)" class="input-icon"><i
+                                        class="fa-solid fa-arrow-up-right-from-square"></i></a>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" id="channel-submit-button"><span
-                                    class="loader d-none">
-                                    <i class="fa fa-spinner fa-spin"></i>
-                                </span>Save</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <div class="row">
+                            <label for="input_priority" class="col-2 col-form-label">Priority</label>
+                            <div class="col-10">
+                                <input type="checkbox" class="form-check-input" id="input_priority"
+                                    style="padding: 0.32rem 0.4rem;">
+                            </div>
                         </div>
-                    </form>
-                </div>
+                        <div class="row">
+                            <label for="input_enabled" class="col-2 col-form-label">Enabled</label>
+                            <div class="col-10">
+                                <input type="checkbox" class="form-check-input" id="input_enabled"
+                                    style="padding: 0.32rem 0.4rem;">
+                            </div>
+                        </div>
+                        <div id="edit-alert" class="alert alert-success fade show mb-0 mt-2 d-none" role="alert">
+                            <span id="edit-alert-text"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="channel-submit-button"><span
+                                class="loader d-none">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </span>Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
             </div>
         </div>
 
