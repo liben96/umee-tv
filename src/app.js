@@ -92,6 +92,7 @@ const initTable = (data) => {
           title: '',
           className: 'align-middle',
           orderable: false,
+          width: '100px',
           render: (data, type, row) =>
             `<div class="text-center">${row.logo ? `<img src="./assets/images/logos/${row.logo}" class="channel-logo" />` : ''}<div>`,
         },
@@ -765,6 +766,12 @@ const toggleConfirmModal = (action, id) => {
   let confirmModalElm = $('#confirm-modal .modal-body');
   selectedConfirmItem = channelList.find((item) => id === parseFloat(item.id));
   selectedConfirmAction = action;
+  $('#confirm-submit').removeClass((index, className) => (className.match(/(^|\s)btn-\S+/g) || []).join(' '));
+  if (action === 'restart') {
+    $('#confirm-submit').addClass('btn-success');
+  } else {
+    $('#confirm-submit').addClass('btn-dark');
+  }
   if (action === 'blackout')
     confirmModalElm.html(
       `<div>Are you sure you want to <b class="fw-bold">${
@@ -874,7 +881,7 @@ const deleteChannel = async () => {
       }, 500);
       return;
     }
-    toggleButtonLoader('#confirm-delete-modal', true);
+    toggleButtonLoader('#confirm-delete-submit', true);
     let body = {
       id: selectedDeleteItem.id,
       name: selectedDeleteItem.name,
@@ -890,7 +897,7 @@ const deleteChannel = async () => {
     } else {
       showToast(false, (res && res.message) || `Error while deleting channel`);
     }
-    toggleButtonLoader('#confirm-delete-modal', false);
+    toggleButtonLoader('#confirm-delete-submit', false);
   } else {
     showToast(false, `Channel is not seleted for this action`);
   }

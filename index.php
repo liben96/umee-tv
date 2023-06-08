@@ -431,7 +431,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-dark" id="confirm-submit" onclick="deleteChannel()">
+                    <button type="submit" class="btn btn-danger" id="confirm-delete-submit" onclick="deleteChannel()">
                         <span class="loader d-none">
                             <i class="fa fa-spinner fa-spin"></i></span>
                         <span class="confirm-button-text">Confirm</span>
