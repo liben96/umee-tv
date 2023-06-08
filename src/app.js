@@ -388,8 +388,8 @@ const validateChannelNumber = async () => {
 
 const validateChannelName = async () => {
   if (
-    $('#edit-form #input_channelName').val() !== selectedChannel.channelName ||
-    $('#edit-form #input_name').val() !== selectedChannel.name
+    selectedChannel.id &&
+    ($('#edit-form #input_channelName').val() !== selectedChannel.channelName || $('#edit-form #input_name').val() !== selectedChannel.name)
   ) {
     showInPageAlert('edit-alert', 'warning', 'Note: The channel will be synchronized in Hibox.');
   } else {
