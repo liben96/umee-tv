@@ -194,8 +194,7 @@ const initTable = (data) => {
         {
           data: null,
           title: 'OTT Status',
-          className: 'text-center align-middle',
-          responsivePriority: 1,
+          className: 'text-center align-middle all',
           render: (data, type, row) =>
             row.flusonicStatus !== undefined
               ? `<div class="text-center"><div class="${
@@ -214,7 +213,8 @@ const initTable = (data) => {
           title: 'Actions',
           orderable: false,
           searchable: false,
-          className: 'text-center align-middle hide-in-details actions-col all',
+          className: 'text-center align-middle hide-in-details actions-col',
+          responsivePriority: 1,
           width: '63px',
           render: (data, type, row) =>
             `<div class="text-center">
@@ -390,6 +390,7 @@ const validateChannelNumber = async () => {
 const validateChannelName = async () => {
   if (
     selectedChannel.id &&
+    selectedChannel.hibox &&
     ($('#edit-form #input_channelName').val() !== selectedChannel.channelName || $('#edit-form #input_name').val() !== selectedChannel.name)
   ) {
     showInPageAlert('edit-alert', 'warning', 'Note: The channel will be synchronized in Hibox.');
@@ -842,6 +843,7 @@ const submitChannelAction = async () => {
     if (res && res.success) {
       showToast(true, res.message);
       $('#confirm-modal').modal('hide');
+      $('.dtr-bs-modal').modal('hide');
       fetchChannelList(selectedConfirmAction !== 'sync');
     } else {
       showToast(false, (res && res.message) || `Error while ${selectedConfirmAction}ing channel`);
@@ -893,6 +895,7 @@ const deleteChannel = async () => {
     if (res && res.success) {
       showToast(true, res.message);
       $('#confirm-delete-modal').modal('hide');
+      $('.dtr-bs-modal').modal('hide');
       fetchChannelList();
     } else {
       showToast(false, (res && res.message) || `Error while deleting channel`);
@@ -1022,6 +1025,7 @@ const submitEditForm = async () => {
     if (res && res.success) {
       showToast(true, res.message);
       $('#edit-modal').modal('hide');
+      $('.dtr-bs-modal').modal('hide');
       fetchChannelList();
     } else {
       showToast(false, (res && res.message) || 'Error while updating channel');

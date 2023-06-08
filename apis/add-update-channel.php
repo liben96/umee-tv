@@ -123,7 +123,7 @@ try {
                     // Query executed successfully
                     if (isset($id)) {
                         $successMessage = "Channel updated successfully";
-                        if(isset($data['newValues']['name']) || isset($data['newValues']['channelName'])) {
+                        if((isset($data['newValues']['name']) || isset($data['newValues']['channelName'])) && isset($data['hibox'])) {
                             $body = array(
                                 'channel' => array(
                                     'id' => $data['hibox']['id'],
