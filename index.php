@@ -156,7 +156,7 @@
             <div class="row">
                 <div class="col">
                     <div class="d-flex border-bottom flex-column flex-md-row gap-2 pb-2">
-                        <div class="d-flex flex-grow-1">
+                        <div class="d-flex align-items-center flex-grow-1">
                             <div class="has-icon table-search-container">
                                 <input id="table-search" type="text" class="form-control"
                                     placeholder="Type to search" />
@@ -397,46 +397,46 @@
                 </form>
             </div>
         </div>
+    </div>
 
-        <div id="confirm-modal" class="modal fade">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Confirmation</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+    <div id="confirm-modal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-dark" id="confirm-submit"
-                            onclick="submitChannelAction()"><span class="loader d-none">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </span>Confirm</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-dark" id="confirm-submit" onclick="submitChannelAction()"><span
+                            class="loader d-none">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </span>Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-        <div id="confirm-delete-modal" class="modal fade">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Confirmation <span
-                                class="confirmation-count">1</span></h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
+    </div>
+    <div id="confirm-delete-modal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Confirmation <span
+                            class="confirmation-count">1</span></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-dark" id="confirm-submit" onclick="deleteChannel()">
-                            <span class="loader d-none">
-                                <i class="fa fa-spinner fa-spin"></i></span>
-                            <span class="confirm-button-text">Confirm</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-dark" id="confirm-submit" onclick="deleteChannel()">
+                        <span class="loader d-none">
+                            <i class="fa fa-spinner fa-spin"></i></span>
+                        <span class="confirm-button-text">Confirm</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
