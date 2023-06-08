@@ -130,18 +130,37 @@
         </form>
     </div>
     <?php else: ?>
-    <div class="topnav" id="myTopnav">
+    <!-- <div class="topnav" id="myTopnav">
         <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
         <div id="main-menu">
         </div>
         <div class="right-buttons">
             <div>
                 <?php echo $_SESSION['userFullName']?>
-                (<?php echo $_SESSION['role']?>)
-            </div>
-            <div><button type="button" id="logout" class="btn button light">Logout</button></div>
-        </div>
+    (<?php echo $_SESSION['role']?>)
     </div>
+    <div><button type="button" id="logout" class="btn button light">Logout</button></div>
+    </div>
+    </div> -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="#"><img src="./assets/images/umee_smile_allwhite.png" class="umee-logo"
+                    alt="umee-logo"></a>
+            <div class="collapse navbar-collapse" id="navbarScroll">
+            </div>
+            <div class="right-buttons">
+                <div>
+                    <?php echo $_SESSION['userFullName']?>
+                    (<?php echo $_SESSION['role']?>)
+                </div>
+                <div><button type="button" id="logout" class="btn button light">Logout</button></div>
+            </div>
+        </div>
+    </nav>
     <div id="main-loader" class="d-none">
         <div class="text-center mt-3">
             <h4>

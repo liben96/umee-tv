@@ -493,22 +493,46 @@ const loadMenu = async () => {
       }
     });
     // Render menu in UI
+    // finalMenu.forEach((item) => {
+    //   let menuHTML = '';
+    //   if (item.child) {
+    //     menuHTML = `<div class="dropdown">
+    //         <button class="dropbtn">${item.description}
+    //             <i class="fa fa-caret-down"></i>
+    //         </button>
+    //         <div class="dropdown-content">
+    //             ${item.child.map((chld) => `<a target="_blank" href=${chld.url || 'javascript:void(0)'}>${chld.description}</a>`).join('')}
+    //         </div>
+    //     </div>`;
+    //   } else {
+    //     menuHTML = `<a target="_blank" href="${item.url || 'javascript:void(0)'}">${item.description}</a>`;
+    //   }
+    //   $('#main-menu').append(menuHTML);
+    let menuHTML = '<ul class="navbar-nav me-auto mb-2 mb-lg-0">';
     finalMenu.forEach((item) => {
-      let menuHTML = '';
       if (item.child) {
-        menuHTML = `<div class="dropdown">
-            <button class="dropbtn">${item.description}
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-                ${item.child.map((chld) => `<a target="_blank" href=${chld.url || 'javascript:void(0)'}>${chld.description}</a>`).join('')}
-            </div>
-        </div>`;
+        menuHTML += `<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              ${item.description}
+          </a>
+          <ul class="dropdown-menu">
+            ${item.child
+              .map(
+                (chld) =>
+                  `<li><a class="dropdown-item" target="_blank" href=${chld.url || 'javascript:void(0)'}>${chld.description}</a></li>`,
+              )
+              .join('')}
+          </ul>
+      </li>`;
       } else {
-        menuHTML = `<a target="_blank" href="${item.url || 'javascript:void(0)'}">${item.description}</a>`;
+        menuHTML += `<li class="nav-item">
+          <a class="nav-link active" aria-current="page" target="_blank" href="${item.url || 'javascript:void(0)'}">${item.description}</a>
+      </li>`;
       }
-      $('#main-menu').append(menuHTML);
     });
+    menuHTML += `</ul>`;
+    $('#navbarScroll').append(menuHTML);
   } else showToast(false, (res && res.message) || 'Error while loading menu');
 };
 
