@@ -151,7 +151,7 @@ const initTable = (data) => {
           title: 'Info',
           render: (data, type, row) =>
             `<div>${row.box ? `<div><u>Box</u>: ${row.box} <u>Rack</u>: ${row.rack}</div>` : ''}${
-              row.cardNumber ? `<div><u>Card Number</u>: ${row.cardNumber}</div>` : ''
+              row.cardNumber ? `<div><u>Card Number</u>: ${row.cardNumber.replace('|', '</br>')}</div>` : ''
             }${row.cardNumberExpiry ? `<div><u>Expiry</u>: ${moment(row.cardNumberExpiry).format('DD MMMM YYYY')}</div>` : ''}<div>`,
           className: 'align-middle',
           visible: roleId == 1,
