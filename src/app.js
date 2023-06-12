@@ -19,23 +19,6 @@ let channelList = [],
   resetForm,
   resetFormStep = 1,
   hiboxBaseURL;
-const callAPI = (type, url, data) =>
-  new Promise((resolve, reject) => {
-    $.ajax({
-      method: type,
-      url,
-      data,
-      processData: false,
-      contentType: false,
-    })
-      .then((res) => {
-        if (res && res.success !== undefined) resolve({...res});
-        else resolve({success: true, data: res});
-      })
-      .catch((e) => {
-        resolve({success: false, data: e});
-      });
-  });
 
 const initTable = (data) => {
   if (dataTable) {
@@ -342,21 +325,6 @@ searchTable = (text, isClear) => {
   }
 };
 
-setupOnStopTypeEvent = (selector, event) => {
-  let typingTimer,
-    doneTypingInterval = 500;
-  //on keyup, start the countdown
-  $(selector).on('keyup', function () {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(event, doneTypingInterval);
-  });
-
-  //on keydown, clear the countdown
-  $(selector).on('keydown', function () {
-    clearTimeout(typingTimer);
-  });
-};
-
 toggleInputError = (isShow, selector, error) => {
   if (isShow) {
     $(selector).addClass('has-error border border-danger');
@@ -411,14 +379,19 @@ const initDatePicker = (id) => {
   $(id).flatpickr({dateFormat: 'd/m/Y'});
 };
 
-const calculateUptime = (startDate) => {
-  const currentDate = new Date();
-  var timeDifference = currentDate.getTime() - startDate;
+const calculateUptime = (startDate, isDiff) => {
+  let timeDifference = 0;
+  if (isDiff) {
+    timeDifference = startDate;
+  } else {
+    const currentDate = new Date();
+    timeDifference = currentDate.getTime() - startDate;
+  }
 
-  var seconds = moment.duration(timeDifference).seconds();
-  var minutes = moment.duration(timeDifference).minutes();
-  var hours = moment.duration(timeDifference).hours();
-  var days = moment.duration(timeDifference).days();
+  let seconds = moment.duration(timeDifference).seconds();
+  let minutes = moment.duration(timeDifference).minutes();
+  let hours = moment.duration(timeDifference).hours();
+  let days = moment.duration(timeDifference).days();
 
   // Construct the uptime string
   let uptimeString = '',
@@ -468,82 +441,6 @@ const initChannelForm = () => {
     $('#edit-form #input_logo_input').val('');
     $('#edit-form #logo_clear').addClass('d-none');
   });
-};
-
-const loadMenu = async () => {
-  const res = await callAPI('GET', './apis/get-dynamic-menu.php');
-  if (res && res.success) {
-    let finalMenu = [];
-    res.data.forEach((item) => {
-      if (item.parentId) {
-        // find parent by id and push to it
-        let parentIndex = finalMenu.findIndex((itemParent) => parseFloat(itemParent.id) === parseFloat(item.parentId));
-        if (!finalMenu[parentIndex].child) finalMenu[parentIndex].child = [];
-        finalMenu[parentIndex].child.push(item);
-      } else if (item.childsTable) {
-        let childTable = JSON.parse(item.childsTable);
-        // Get child items from typesLists object
-        let finalItem = {...item};
-        finalItem.child = childTable.type
-          ? typesLists[childTable.table].filter((typ) => parseFloat(typ.type) === childTable.type)
-          : typesLists[childTable.table];
-        finalMenu.push(finalItem);
-      } else {
-        finalMenu.push(item);
-      }
-    });
-    // Render menu in UI
-    // finalMenu.forEach((item) => {
-    //   let menuHTML = '';
-    //   if (item.child) {
-    //     menuHTML = `<div class="dropdown">
-    //         <button class="dropbtn">${item.description}
-    //             <i class="fa fa-caret-down"></i>
-    //         </button>
-    //         <div class="dropdown-content">
-    //             ${item.child.map((chld) => `<a target="_blank" href=${chld.url || 'javascript:void(0)'}>${chld.description}</a>`).join('')}
-    //         </div>
-    //     </div>`;
-    //   } else {
-    //     menuHTML = `<a target="_blank" href="${item.url || 'javascript:void(0)'}">${item.description}</a>`;
-    //   }
-    //   $('#main-menu').append(menuHTML);
-    let menuHTML = '<ul class="navbar-nav me-auto mb-2 mb-lg-0">';
-    finalMenu.forEach((item) => {
-      if (item.child) {
-        menuHTML += `<li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              ${item.description}
-          </a>
-          <ul class="dropdown-menu">
-            ${item.child
-              .map(
-                (chld) =>
-                  `<li><a class="dropdown-item" target="_blank" href=${chld.url || 'javascript:void(0)'}>${chld.description}</a></li>`,
-              )
-              .join('')}
-          </ul>
-      </li>`;
-      } else {
-        menuHTML += `<li class="nav-item">
-          <a class="nav-link active" aria-current="page" target="_blank" href="${item.url || 'javascript:void(0)'}">${item.description}</a>
-      </li>`;
-      }
-    });
-    menuHTML += `</ul>`;
-    $('#navbarScroll').append(menuHTML);
-  } else showToast(false, (res && res.message) || 'Error while loading menu');
-};
-
-const mainLoader = (isStart) => {
-  if (isStart) {
-    $('#main-area').addClass('d-none');
-    $('#main-loader').removeClass('d-none');
-  } else {
-    $('#main-area').removeClass('d-none');
-    $('#main-loader').addClass('d-none');
-  }
 };
 
 const fetchChannelList = async (isRefresh) => {
@@ -632,17 +529,34 @@ const fetchChannelList = async (isRefresh) => {
         if (foundSonicChannel) {
           let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
           if (foundSonicChannel.disabled) channelStatsCount.disabled += 1;
-          else if (foundSonicChannel.stats.status === 'running') channelStatsCount.online += 1;
+          else if (foundSonicChannel.stats.status === 'running' && foundSonicChannel.stats.transcoder_overloaded !== true)
+            channelStatsCount.online += 1;
           else channelStatsCount.error += 1;
           let flusonicInputs = foundSonicChannel.inputs.map((item) => ({
             active: (item.stats && item.stats.active) || false,
             url: item.url,
             priority: item.priority,
           }));
+
+          // Error string for source timeout and delay. Add more here if you want
+          let flusonicStatusError = '';
+          if (foundSonicChannel.stats.source_error) flusonicStatusError += foundSonicChannel.stats.source_error + ', ';
+          if (
+            foundSonicChannel.stats.transcoder_overloaded &&
+            foundSonicChannel.stats.ts_delay &&
+            calculateUptime(foundSonicChannel.stats.ts_delay, true)
+          )
+            flusonicStatusError += `${calculateUptime(foundSonicChannel.stats.ts_delay, true)} delay, `;
+          if (flusonicStatusError) flusonicStatusError = flusonicStatusError.slice(0, -2);
+
           finalItem = {
             ...finalItem,
-            flusonicStatus: foundSonicChannel.disabled ? 'Disabled' : foundSonicChannel.stats.status === 'running' ? 'Online' : 'Error',
-            flusonicStatusError: foundSonicChannel.stats.source_error || undefined,
+            flusonicStatus: foundSonicChannel.disabled
+              ? 'Disabled'
+              : foundSonicChannel.stats.status === 'running' && foundSonicChannel.stats.transcoder_overloaded !== true
+              ? 'Online'
+              : 'Error',
+            flusonicStatusError: flusonicStatusError || undefined,
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
             flusonicInputs: flusonicInputs,
             iptvProviders: flusonicInputs.reduce((iptvArray, inputItem) => {
@@ -684,20 +598,6 @@ const fetchChannelList = async (isRefresh) => {
       }
     }
   }
-};
-
-const showToast = (success, body) => {
-  let notiElem = $('#notification');
-  $('#notification .toast-body').text(body);
-  if (notiElem.hasClass('bg-success')) {
-    notiElem.removeClass('bg-success');
-  }
-  if (notiElem.hasClass('bg-danger')) {
-    notiElem.removeClass('bg-danger');
-  }
-  notiElem.addClass(success ? 'bg-success' : 'bg-danger');
-  let bsAlert = new bootstrap.Toast(notiElem, {autohide: success});
-  bsAlert.show();
 };
 
 const readImageURL = (input) => {
@@ -1078,13 +978,6 @@ const submitLoginForm = async () => {
   // toggleButtonLoader('#login-submit-button', false);
 };
 
-const logout = async () => {
-  const res = await callAPI('GET', './apis/logout.php');
-  if (res && res.success) {
-    location.reload();
-  }
-};
-
 const toggleResetForm = () => {
   resetForm.resetForm();
   resetFormStep = 1;
@@ -1104,16 +997,7 @@ const toggleResetForm = () => {
   $('#reset-code').val('');
   $('#reset-password').val('');
   $('#reset-confirm-password').val('');
-};
-
-const showInPageAlert = (id, type, message) => {
-  // Remove other alert types class
-  $(`#${id}`).removeClass((index, className) => (className.match(/(^|\s)alert-\S+/g) || []).join(' '));
-
-  $(`#${id}`).addClass(`alert-${type}`);
-  $(`#${id}-text`).html(message);
-  if (message) $(`#${id}`).removeClass('d-none');
-  else $(`#${id}`).addClass('d-none');
+  $('#reset-submit-text').html('Send');
 };
 
 const submitResetForm = async (e) => {
@@ -1132,6 +1016,7 @@ const submitResetForm = async (e) => {
       if (resetFormStep === 1) {
         $('#reset-email').attr('disabled', true);
         $('#reset-code-section').toggleClass('d-none');
+        $('#reset-submit-text').html('Confirm');
       }
       resetFormStep = 2;
       setTimeout(() => {
@@ -1168,18 +1053,12 @@ $(() => {
       },
     });
 
-    // Form submit of add/edit channel
-    $('#logout').on('click', (e) => {
-      e.preventDefault();
-      logout();
-    });
-
-    var x = document.getElementById('myTopnav');
-    if (x.className === 'topnav') {
-      x.className += ' responsive';
-    } else {
-      x.className = 'topnav';
-    }
+    // var x = document.getElementById('myTopnav');
+    // if (x.className === 'topnav') {
+    //   x.className += ' responsive';
+    // } else {
+    //   x.className = 'topnav';
+    // }
 
     // Show/hide add channel based on role
     if (roleId === 1) {

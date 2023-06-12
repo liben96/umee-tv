@@ -91,11 +91,13 @@
                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter password"
                     autocomplete required>
             </div>
-            <div class="mb-3 text-end"><a href="javascript:void(0)" onclick="toggleResetForm()">Forgot your
-                    password?</a></div>
-            <button id="login-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
-                    <i class="fa fa-spinner fa-spin"></i>
-                </span>Login</button>
+            <div class="d-flex align-items-center mt-4">
+                <button id="login-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </span><span id="login-submit-text">Login</span></button>
+                <div class="text-end flex-grow-1"><a href="javascript:void(0)" onclick="toggleResetForm()">Forgot your
+                        password?</a></div>
+            </div>
         </form>
         <form id="reset-form" class="d-none" onsubmit="return submitResetForm(event)">
             <div class="mb-3">
@@ -123,25 +125,17 @@
             <div id="reset-alert" class="alert alert-success fade show d-none" role="alert">
                 <span id="reset-alert-text"></span>
             </div>
-            <div class="mb-3 text-end"><a href="javascript:void(0)" onclick="toggleResetForm()">Back to Login</a></div>
-            <button id="reset-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
-                    <i class="fa fa-spinner fa-spin"></i>
-                </span><span id="reset-submit-text">Reset</span></button>
+            <div class="d-flex align-items-center mt-4">
+                <button id="reset-submit-button" type="submit" class="btn btn-dark"><span class="loader d-none">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </span><span id="reset-submit-text">Send</span></button>
+                <div class="text-end flex-grow-1"><a href="javascript:void(0)" onclick="toggleResetForm()">Back to
+                        Login</a></div>
+            </div>
         </form>
     </div>
     <?php else: ?>
-    <!-- <div class="topnav" id="myTopnav">
-        <img src="./assets/images/umee_smile_allwhite.png" class="umee-logo" alt="umee-logo">
-        <div id="main-menu">
-        </div>
-        <div class="right-buttons">
-            <div>
-                <?php echo $_SESSION['userFullName']?>
-    (<?php echo $_SESSION['role']?>)
-    </div>
-    <div><button type="button" id="logout" class="btn button light">Logout</button></div>
-    </div>
-    </div> -->
+
     <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
@@ -157,7 +151,7 @@
                     <?php echo $_SESSION['userFullName']?>
                     (<?php echo $_SESSION['role']?>)
                 </div>
-                <div><button type="button" id="logout" class="btn button light">Logout</button></div>
+                <div><button type="button" id="logout" class="btn button light" onclick="logout()">Logout</button></div>
             </div>
         </div>
     </nav>
@@ -497,6 +491,7 @@
         } ?>'
         if (roleId) roleId = parseFloat(roleId);
     </script>
+    <script src="./src/common.js?v=<?= time() ?>"></script>
     <script src="./src/app.js?v=<?= time() ?>"></script>
     <!-- scripts end -->
 </body>
