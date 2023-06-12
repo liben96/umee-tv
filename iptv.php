@@ -28,7 +28,7 @@
                 aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="#"><img src="./assets/images/umee_smile_allwhite.png" class="umee-logo"
+            <a class="navbar-brand" href="./"><img src="./assets/images/umee_smile_allwhite.png" class="umee-logo"
                     alt="umee-logo"></a>
             <div class="collapse navbar-collapse" id="navbarScroll">
             </div>
