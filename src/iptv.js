@@ -101,7 +101,7 @@ const initTable = (data) => {
 };
 
 const copyToClipboard = (text, elem) => {
-  navigator.clipboard.writeText(text);
+  copyClipboard(text);
   $(elem).children('.copied-text').toggleClass('d-none');
   setTimeout(() => {
     $(elem).children('.copied-text').toggleClass('d-none');
