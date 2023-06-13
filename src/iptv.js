@@ -56,7 +56,14 @@ const initTable = (data) => {
         {data: 'channelName', title: 'Channel', className: ''},
         {data: 'category', title: 'Category', className: ''},
         {data: 'providerName', title: 'Source', className: ''},
-        {data: 'urlFlussonic', title: 'URL', className: ''},
+        {
+          data: 'urlFlussonic',
+          title: 'URL',
+          className: '',
+          render: (data, type, row) =>
+            `<div class="" onmouseenter="toggleCopyIcon(true, this)" onmouseleave="toggleCopyIcon(false,this)"><span>${row.urlFlussonic}</span>&nbsp;&nbsp;<a class="copy-button position-absolute d-none" href="javascript:void(0)" onclick="copyToClipboard('${row.urlFlussonic}', this)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Copy" data-bs-placement="top"><i class="fa-solid fa-clone"></i><span class="copied-text text-success d-none">&nbsp;&nbsp;Copeid</span></a>
+          <div>`,
+        },
         {
           data: null,
           title: 'Actions',
@@ -66,7 +73,7 @@ const initTable = (data) => {
           responsivePriority: 1,
           width: '20px',
           render: (data, type, row) =>
-            `<div class="text-center"><a href="javascript:void(0)" onclick="generateVLC('${row.channelName}', '${row.url}')" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Play"><img class="table-action-image-small" src="./assets/images/vlc.png" /></a>
+            `<div class="text-center"><a href="javascript:void(0)" onclick="generateVLC('${row.channelName}', '${row.url}')" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Play" data-bs-placement="top"><img class="table-action-image-small" src="./assets/images/vlc.png" /></a>
             <div>`,
         },
       ],
@@ -91,6 +98,19 @@ const initTable = (data) => {
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
+};
+
+const copyToClipboard = (text, elem) => {
+  navigator.clipboard.writeText(text);
+  $(elem).children('.copied-text').toggleClass('d-none');
+  setTimeout(() => {
+    $(elem).children('.copied-text').toggleClass('d-none');
+  }, 1000);
+};
+
+const toggleCopyIcon = (isShow, elem) => {
+  if (isShow) $(elem).children('.copy-button').removeClass('d-none');
+  else $(elem).children('.copy-button').addClass('d-none');
 };
 
 filterTable = (text) => {

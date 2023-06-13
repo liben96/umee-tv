@@ -86,7 +86,7 @@ const initTable = (data) => {
           render: (data, type, row) =>
             `<div><div> ${row.name}</div>${`<div>${row.channelName}</div>`}${
               roleId === 1 && row.hibox && !row.hiboxSynced
-                ? `<div><span class="text-danger fst-italic">Hibox name: ${row.hibox.name}</span>&nbsp;&nbsp;<a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('sync', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Sync in Hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
+                ? `<div><span class="text-danger fst-italic">Hibox name: ${row.hibox.name}</span>&nbsp;&nbsp;<a class="me-3" href="javascript:void(0)" onclick="toggleConfirmModal('sync', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="Sync in Hibox"><i class="fa-solid fa-arrows-rotate"></i></a><div>`
                 : ''
             }${roleId === 1 && row.hiboxNotFound ? `<div><span class="text-danger fst-italic">Not found in Hibox</span><div>` : ''}<div>`,
         },
@@ -205,7 +205,7 @@ const initTable = (data) => {
               row.flusonicBlackoutFound
                 ? `<a style="text-decoration: initial;" class="me-2" href="javascript:void(0)" onclick="toggleConfirmModal('blackout', ${
                     row.id
-                  })" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${
+                  })" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="${
                     row.flusonicBlackoutEnabled ? 'Disable' : 'Enable'
                   } blackout">${
                     row.flusonicBlackoutEnabled
@@ -216,27 +216,27 @@ const initTable = (data) => {
             }
             ${
               !row.disabled
-                ? `<a class="me-2" href="javascript:void(0)" onclick="toggleConfirmModal('restart', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Restart"><i class="fa-solid fa-arrows-rotate"></i></a>`
+                ? `<a class="me-2" href="javascript:void(0)" onclick="toggleConfirmModal('restart', ${row.id})" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="Restart"><i class="fa-solid fa-arrows-rotate"></i></a>`
                 : ''
             }
             ${
               roleId === 1
-                ? `<a href="javascript:void(0)" onclick="toggleEditModal(${row.id})" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit"><i class="fa-solid fa-pen"></i></a>`
+                ? `<a href="javascript:void(0)" onclick="toggleEditModal(${row.id})" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Edit"><i class="fa-solid fa-pen"></i></a>`
                 : ''
             }
             ${
               row.flusonicStatus && roleId === 1
-                ? `<a class="ms-2" href="${row.flusonicUrl}/admin/#/streams/${row.name}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Flusonic"><img class="table-action-image-small" src="./assets/images/flusonic.webp" /></a>`
+                ? `<a class="ms-2" href="${row.flusonicUrl}/admin/#/streams/${row.name}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="Edit on Flusonic"><img class="table-action-image-small" src="./assets/images/flusonic.webp" /></a>`
                 : ''
             }
             ${
               row.hibox && roleId === 1
-                ? `<a class="ms-2" href="${hiboxBaseURL}/hiboxadmin/ChannelAdmin?action=edit&channel_id=${row.hibox.id}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Edit on Hibox"><img class="table-action-image-small" src="./assets/images/hibox.png" /></a>`
+                ? `<a class="ms-2" href="${hiboxBaseURL}/hiboxadmin/ChannelAdmin?action=edit&channel_id=${row.hibox.id}" target="_blank" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="Edit on Hibox"><img class="table-action-image-small" src="./assets/images/hibox.png" /></a>`
                 : ''
             }
             ${
               roleId === 1
-                ? `<a class="ms-2" href="javascript:void(0)" onclick="toggleDeleteModal(${row.id}, true)" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Delete"><i class="fa-solid fa-trash"></i></a>`
+                ? `<a class="ms-2" href="javascript:void(0)" onclick="toggleDeleteModal(${row.id}, true)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-content="Delete"><i class="fa-solid fa-trash"></i></a>`
                 : ''
             }
             <div>`,
@@ -501,7 +501,7 @@ const fetchChannelList = async (isRefresh) => {
         }
       }
 
-      let channelStatsCount = {online: 0, disabled: 0, error: 0};
+      let channelStatsCount = {online: 0, disabled: 0, error: 0, delay: 0};
 
       let finalArray = res.data.map((item) => {
         let finalItem = {...item};
@@ -529,8 +529,7 @@ const fetchChannelList = async (isRefresh) => {
         if (foundSonicChannel) {
           let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
           if (foundSonicChannel.disabled) channelStatsCount.disabled += 1;
-          else if (foundSonicChannel.stats.status === 'running')
-            channelStatsCount.online += 1;
+          else if (foundSonicChannel.stats.status === 'running') channelStatsCount.online += 1;
           else channelStatsCount.error += 1;
           let flusonicInputs = foundSonicChannel.inputs.map((item) => ({
             active: (item.stats && item.stats.active) || false,
@@ -540,21 +539,23 @@ const fetchChannelList = async (isRefresh) => {
 
           // Error string for source timeout and delay. Add more here if you want
           let flusonicStatusError = '';
+          // Source error
           if (foundSonicChannel.stats.source_error) flusonicStatusError += foundSonicChannel.stats.source_error + ', ';
+          // Delay
           if (
             foundSonicChannel.stats.ts_delay &&
+            foundSonicChannel.stats.ts_delay > 1000 * 60 && // We only show delay if more than 1 min
             calculateUptime(foundSonicChannel.stats.ts_delay, true)
-          )
+          ) {
+            channelStatsCount.delay += 1;
             flusonicStatusError += `${calculateUptime(foundSonicChannel.stats.ts_delay, true)} delay, `;
+          }
+          // Remove last comma from error string
           if (flusonicStatusError) flusonicStatusError = flusonicStatusError.slice(0, -2);
 
           finalItem = {
             ...finalItem,
-            flusonicStatus: foundSonicChannel.disabled
-              ? 'Disabled'
-              : foundSonicChannel.stats.status === 'running'
-              ? 'Online'
-              : 'Error',
+            flusonicStatus: foundSonicChannel.disabled ? 'Disabled' : foundSonicChannel.stats.status === 'running' ? 'Online' : 'Error',
             flusonicStatusError: flusonicStatusError || undefined,
             flusonicUptime: calculateUptime(foundSonicChannel.stats.opened_at),
             flusonicInputs: flusonicInputs,
@@ -589,6 +590,12 @@ const fetchChannelList = async (isRefresh) => {
       $('#channels-stats #channels-online').html(`Online (${channelStatsCount.online})`);
       $('#channels-stats #channels-disabled').html(`Disabled (${channelStatsCount.disabled})`);
       $('#channels-stats #channels-error').html(`Error (${channelStatsCount.error})`);
+      $('#channels-stats #channels-delay').html(`Delay (${channelStatsCount.delay})`);
+      if (channelStatsCount.delay > 0) {
+        // Change navbar color if there are channels with delay
+        $('#navbar').removeClass('bg-dark');
+        $('#navbar').addClass('bg-flusonic');
+      }
       if ($('#channels-stats').hasClass('d-none')) $('#channels-stats').removeClass('d-none');
 
       // Setup refresh function
