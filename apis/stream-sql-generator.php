@@ -1,7 +1,7 @@
 <?php
 
 // Open the text file
-$file = fopen("streams.txt", "r");
+$file = fopen("streams/kingsman.txt", "r");
 
 // Initialize variables
 $query = '';

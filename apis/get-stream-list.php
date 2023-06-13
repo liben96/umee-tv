@@ -13,7 +13,7 @@ $response = array(
   );
 
 // Your SQL query
-$query = "SELECT s.id, s.url, s.channelName, s.iptvProviderId, ip.description as providerName  FROM streams s LEFT JOIN iptvProviders ip ON ip.id = s.iptvProviderId";
+$query = "SELECT s.id, s.url, CONCAT('ts', s.url) as urlFlussonic, s.channelName, s.iptvProviderId, s.category, ip.description as providerName  FROM streams s LEFT JOIN iptvProviders ip ON ip.id = s.iptvProviderId";
 
 // Execute the query
 $result = $conn->query($query);

@@ -54,7 +54,9 @@ const initTable = (data) => {
       },
       columns: [
         {data: 'channelName', title: 'Channel', className: ''},
+        {data: 'category', title: 'Category', className: ''},
         {data: 'providerName', title: 'Source', className: ''},
+        {data: 'urlFlussonic', title: 'URL', className: ''},
         {
           data: null,
           title: 'Actions',
