@@ -529,7 +529,7 @@ const fetchChannelList = async (isRefresh) => {
         if (foundSonicChannel) {
           let blackoutFound = foundSonicChannel.config_on_disk.inputs.find((item) => item.url.includes('blackout/'));
           if (foundSonicChannel.disabled) channelStatsCount.disabled += 1;
-          else if (foundSonicChannel.stats.status === 'running' && foundSonicChannel.stats.transcoder_overloaded !== true)
+          else if (foundSonicChannel.stats.status === 'running')
             channelStatsCount.online += 1;
           else channelStatsCount.error += 1;
           let flusonicInputs = foundSonicChannel.inputs.map((item) => ({
@@ -542,7 +542,6 @@ const fetchChannelList = async (isRefresh) => {
           let flusonicStatusError = '';
           if (foundSonicChannel.stats.source_error) flusonicStatusError += foundSonicChannel.stats.source_error + ', ';
           if (
-            foundSonicChannel.stats.transcoder_overloaded &&
             foundSonicChannel.stats.ts_delay &&
             calculateUptime(foundSonicChannel.stats.ts_delay, true)
           )
@@ -553,7 +552,7 @@ const fetchChannelList = async (isRefresh) => {
             ...finalItem,
             flusonicStatus: foundSonicChannel.disabled
               ? 'Disabled'
-              : foundSonicChannel.stats.status === 'running' && foundSonicChannel.stats.transcoder_overloaded !== true
+              : foundSonicChannel.stats.status === 'running'
               ? 'Online'
               : 'Error',
             flusonicStatusError: flusonicStatusError || undefined,
