@@ -1,4 +1,7 @@
-<?php session_start(); ?>
+<?php
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', 'true');
+session_start();  ?>
 <!doctype html>
 <html lang="en">
 
@@ -69,6 +72,10 @@
                                 <a id="search-clear" href="javascript:void(0)" class="input-icon d-none text-dark"><i
                                         class="fa-solid fa-xmark"></i></i></a>
                             </div>
+                            <!-- <div class="">
+                                <button type="button" id="import-button" class="btn btn-sm btn-dark ms-2"
+                                    onclick="toggleImportModal()">Import</button>
+                            </div> -->
                         </div>
                     </div>
                     <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">
@@ -83,6 +90,67 @@
                     </div>
                 </div>
             </footer>
+        </div>
+
+        <!-- Modal for channel edit -->
+        <div id="import-modal" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 745px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 id="form-title" class="modal-title fs-5" id="staticBackdropLabel">Import Stream</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="import-form" onsubmit="submitImportForm(event)">
+                        <div class="modal-body">
+                            <div class="row mb-1">
+                                <label for="input_import_file" class="col-sm-3 col-form-label text-end">Stream
+                                    file</label>
+                                <div class="col-sm-9 d-flex align-items-center">
+                                    <button type="button" id="file_clear"
+                                        class="btn btn-light btn-sm btn-filter border me-2 d-none"><i
+                                            class="fa-solid fa-xmark"></i></button>
+                                    <input id="input_import_file" class="form-control" type="file"
+                                        name="input_import_file" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label for="input_name" class="col-sm-3 col-form-label text-end">Category</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="input_category" name="input_category">
+                                    <span id="input_name_error" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <label for="input_iptvProviderId"
+                                    class="col-sm-3 col-form-label text-end">Provider</label>
+                                <div class="col-sm-9">
+                                    <select id="input_iptvProviderId" class="form-select" aria-label="Source">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-center my-2">or</div>
+                            <div class="row mb-3">
+                                <label for="input_iptvProviderName" class="col-sm-3 col-form-label text-end">New
+                                    Provider</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="input_iptvProviderName"
+                                        name="input_iptvProviderName">
+                                </div>
+                            </div>
+                            <div id="import-alert" class="alert alert-success fade show mb-0 mt-2 d-none" role="alert">
+                                <span id="import-alert-text"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="import-submit-button"><span
+                                    class="loader d-none">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </span>Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <?php endif; ?>

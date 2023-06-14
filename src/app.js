@@ -836,13 +836,6 @@ const deleteChannel = async () => {
   }
 };
 
-const toggleButtonLoader = (selector, isStart) => {
-  var submitBtn = $(selector);
-  submitBtn.prop('disabled', isStart);
-  if (isStart) submitBtn.children('.loader').removeClass('d-none');
-  else submitBtn.children('.loader').addClass('d-none');
-};
-
 const getEmptyChannel = () => {
   return {
     id: null,

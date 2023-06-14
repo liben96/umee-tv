@@ -2,7 +2,9 @@
 
 let channelList = [],
   typesLists,
-  dataTable;
+  dataTable,
+  formValidator,
+  providerList = [];
 
 const initTable = (data) => {
   if (dataTable) {
@@ -201,10 +203,101 @@ const fetchChannelList = async (isRefresh) => {
     // Load the menu after types are loaded
     loadMenu();
   }
+  let resProvider = await callAPI('GET', './apis/get-provider-list.php');
+  if (res && res.success) providerList = resProvider.data;
+  initImportForm();
   mainLoader(false);
+};
+
+const getEmptyForm = () => {
+  return {
+    iptvProviderId: null,
+    iptvProviderName: null,
+    category: null,
+  };
+};
+
+const setImportForm = (selectedChannel, key) => {
+  if (key === 'input_import_file') {
+    $('#import-form #input_import_file').val('');
+  } else {
+    $(`#import-form #input_${key}`).val(selectedChannel[key]);
+  }
+};
+
+const toggleImportModal = () => {
+  toggleButtonLoader('#import-submit-button', false);
+  showInPageAlert('import-alert', 'warning', null);
+  let emptyChannel = getEmptyForm();
+  selectedChannel = emptyChannel;
+  Object.keys(emptyChannel).forEach((key) => {
+    setImportForm(emptyChannel, key);
+  });
+  // toggleInputError(false, '#input_name');
+
+  formValidator.resetForm();
+  const myModalAlternative = new bootstrap.Modal('#import-modal', {keyboard: false});
+  myModalAlternative.toggle();
+};
+
+const initImportForm = () => {
+  $(`#import-form #input_iptvProviderId`).html('');
+  $(`#import-form #input_iptvProviderId`).append($('<option></option>').attr('value', '').text('Select an option'));
+  providerList.forEach((item) => {
+    $(`#import-form #input_iptvProviderId`).append($('<option></option>').attr('value', item.id).text(item.description));
+  });
+  $('#import-form #file_clear').on('click', () => {
+    $('#import-form #input_import_file').val('');
+    $('#import-form #file_clear').addClass('d-none');
+  });
+};
+
+const submitImportForm = async (e) => {
+  e.preventDefault();
+  showInPageAlert('import-alert', 'warning', null);
+  let fileInput = $('#input_import_file');
+  let selectedFile = fileInput[0].files[0];
+  let category = $('#import-form #input_category').val();
+  let iptvProviderId = $('#import-form #input_iptvProviderId').val();
+  let iptvProviderName = $('#import-form #input_iptvProviderName').val();
+  if (iptvProviderId && iptvProviderName) {
+    showInPageAlert('import-alert', 'warning', 'You have selected existing provider and entered a new one. Please enter only one of them.');
+    return false;
+  }
+  if (!iptvProviderId && !iptvProviderName) {
+    showInPageAlert('import-alert', 'warning', 'Please select or enter provider');
+    return false;
+  }
+  if (selectedFile) {
+    toggleButtonLoader('#import-submit-button', true);
+    var formData = new FormData();
+    formData.append('file', selectedFile);
+    if (category) formData.append('category', category);
+    if (iptvProviderId) formData.append('iptvProviderId', iptvProviderId);
+    if (iptvProviderName) formData.append('iptvProviderName', iptvProviderName);
+    const res = await callAPI('POST', './apis/import-streams.php', formData);
+    if (res && res.success) {
+      showToast(true, (res && res.message) || 'Strems imported successfully');
+    } else {
+      showToast(false, (res && res.message) || 'Error while importing');
+    }
+    toggleButtonLoader('#import-submit-button', false);
+  } else {
+    showInPageAlert('import-alert', 'warning', 'Please select a file to import');
+  }
 };
 
 $(() => {
   // Loading channel list on init
   fetchChannelList();
+  // form validation init
+  formValidator = $('#import-form').validate({
+    errorClass: 'd-none',
+    highlight: function (element) {
+      $(element).addClass('border border-danger');
+    },
+    unhighlight: function (element) {
+      $(element).removeClass('border border-danger');
+    },
+  });
 });

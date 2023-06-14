@@ -1,4 +1,3 @@
-<?php session_start(); ?>
 <!doctype html>
 <html lang="en">
 
@@ -20,7 +19,11 @@
     <link href="./assets/css/style.css?v=<?= time() ?>"
         rel="stylesheet">
     </link>
-    <?php if(!isset($_SESSION['userId'])) : ?>
+    <?php
+        ini_set('session.cookie_samesite', 'None');
+    ini_set('session.cookie_secure', 'true');
+    session_start();
+    if(!isset($_SESSION['userId'])) : ?>
     <style>
         body {
             display: flex;
