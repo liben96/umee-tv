@@ -277,6 +277,8 @@ const submitImportForm = async (e) => {
     if (iptvProviderName) formData.append('iptvProviderName', iptvProviderName);
     const res = await callAPI('POST', './apis/import-streams.php', formData);
     if (res && res.success) {
+      $('#import-modal').modal('hide');
+      fetchChannelList();
       showToast(true, (res && res.message) || 'Strems imported successfully');
     } else {
       showToast(false, (res && res.message) || 'Error while importing');

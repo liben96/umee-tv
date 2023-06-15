@@ -72,10 +72,10 @@ session_start();  ?>
                                 <a id="search-clear" href="javascript:void(0)" class="input-icon d-none text-dark"><i
                                         class="fa-solid fa-xmark"></i></i></a>
                             </div>
-                            <!-- <div class="">
+                            <div class="">
                                 <button type="button" id="import-button" class="btn btn-sm btn-dark ms-2"
                                     onclick="toggleImportModal()">Import</button>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                     <table class="table nowrap table-striped dt-responsive" id="tv-list" style="width:100%">

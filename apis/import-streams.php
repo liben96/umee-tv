@@ -5,6 +5,8 @@ $allowedRoleIds = [1];
 require_once 'common/authentication.php';
 // Include the database connection file
 require_once 'common/db_connection.php';
+// Include the database logger file
+require_once 'common/logger.php';
 // Create the response object
 $response = array(
     'success' => false,
@@ -12,9 +14,18 @@ $response = array(
   );
 
 try {
-    if(isset($_FILES['file'])) {
+    if(isset($_FILES['file']) && (isset($_FILES['iptvProviderName']) || isset($_FILES['iptvProviderId']))) {
         if(isset($_POST['iptvProviderName'])) {
             // Insert provider if name is provided
+            $iptvProviderName = mysqli_real_escape_string($conn, $_POST['iptvProviderName']);
+            $queryProvider = "INSERT INTO iptvProviders (description) VALUES ('$iptvProviderName')";
+
+            // Execute the query
+            $resultProvider = $conn->query($queryProvider);
+            if($resultProvider) {
+                $iptvProviderId = $conn->insert_id;
+                add_log($conn, "inserted new provider '".$_POST['iptvProviderName']."'");
+            }
         } else {
             $iptvProviderId = $_POST['iptvProviderId'];
         }
@@ -54,19 +65,26 @@ try {
         }
 
         // Execute the query
-        $result = $conn->query($query);
+        $result = $conn->multi_query($query);
 
         if($result) {
+            while ($conn->next_result()) {
+                ;
+            } // flush multi_queries
+            add_log($conn, "imported new stream list with providerId: ".$iptvProviderId);
             $response['success'] = true;
             $response['message'] = 'Success! File imported successfully.';
-            $response['data'] = $file_name;
         } else {
             $response['success'] = false;
             $response['message'] = 'Error while importing';
         }
     } else {
         $response['success'] = false;
-        $response['message'] = 'No file selected for import';
+        if(!isset($_FILES['file'])) {
+            $response['message'] = 'No file selected for import';
+        } else {
+            $response['message'] = 'Please select or enter provider';
+        }
     }
 } catch (Exception $e) {
     // Handle the exception and return an error message
