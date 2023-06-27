@@ -595,6 +595,9 @@ const fetchChannelList = async (isRefresh) => {
         // Change navbar color if there are channels with delay
         $('#navbar').removeClass('bg-dark');
         $('#navbar').addClass('bg-flusonic');
+      } else {
+        $('#navbar').removeClass('bg-flusonic');
+        $('#navbar').addClass('bg-dark');
       }
       if ($('#channels-stats').hasClass('d-none')) $('#channels-stats').removeClass('d-none');
 
