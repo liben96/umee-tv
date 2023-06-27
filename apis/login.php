@@ -1,5 +1,13 @@
 <?php
 
+require_once __DIR__. '/../vendor/autoload.php'; // Include the Composer autoloader
+
+// Load the environment file
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../');
+$dotenv->load();
+
+ini_set('session.gc_maxlifetime', $_ENV['SESSION_TIMEOUT']);
+session_set_cookie_params($_ENV['SESSION_TIMEOUT']);
 session_start();
 // Include the database connection file
 require_once 'common/db_connection.php';
