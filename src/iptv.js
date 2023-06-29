@@ -199,7 +199,7 @@ const fetchChannelList = async (isRefresh) => {
     resChannelTypes = await callAPI('GET', './apis/get-channel-types.php');
   }
   if (!typesLists) typesLists = resChannelTypes && resChannelTypes.data;
-  if (roleId === 1 && resChannelTypes && resChannelTypes.data) {
+  if (resChannelTypes && resChannelTypes.data) {
     // Load the menu after types are loaded
     loadMenu();
   }

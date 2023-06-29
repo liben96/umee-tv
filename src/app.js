@@ -475,7 +475,7 @@ const fetchChannelList = async (isRefresh) => {
     }
     if (typesLists || (resChannelTypes && resChannelTypes.success)) {
       if (!typesLists) typesLists = resChannelTypes && resChannelTypes.data;
-      if (roleId === 1 && resChannelTypes && resChannelTypes.data) {
+      if (resChannelTypes && resChannelTypes.data) {
         // Load the menu after types are loaded
         loadMenu();
       }

@@ -77,21 +77,26 @@ const loadMenu = async () => {
   if (res && res.success) {
     let finalMenu = [];
     res.data.forEach((item) => {
-      if (item.parentId) {
-        // find parent by id and push to it
+      if (item.parentId) { //child items -> find parent by id and push to it
         let parentIndex = finalMenu.findIndex((itemParent) => parseFloat(itemParent.id) === parseFloat(item.parentId));
-        if (!finalMenu[parentIndex].child) finalMenu[parentIndex].child = [];
-        finalMenu[parentIndex].child.push(item);
+        //check if parent is there (some items dont have permission)
+        if (finalMenu[parentIndex]){
+          if (!finalMenu[parentIndex].child) finalMenu[parentIndex].child = [];
+          finalMenu[parentIndex].child.push(item);
+        }        
       } else if (item.childsTable) {
-        let childTable = JSON.parse(item.childsTable);
-        // Get child items from typesLists object
-        let finalItem = {...item};
-        finalItem.child = childTable.type
-          ? typesLists[childTable.table].filter((typ) => parseFloat(typ.type) === childTable.type)
-          : typesLists[childTable.table];
-        finalMenu.push(finalItem);
-      } else {
-        finalMenu.push(item);
+        //check if role is allowed to see
+        if (item.rolesIdAllowed.includes(roleId)){ 
+          let childTable = JSON.parse(item.childsTable);
+          // Get child items from typesLists object
+          let finalItem = {...item};
+          finalItem.child = childTable.type
+            ? typesLists[childTable.table].filter((typ) => parseFloat(typ.type) === childTable.type)
+            : typesLists[childTable.table];
+          finalMenu.push(finalItem);
+        }        
+      } else { //parent item -> check if role is allowed to see
+        if (item.rolesIdAllowed.includes(roleId)) finalMenu.push(item);
       }
     });
     let menuHTML = '<ul class="navbar-nav me-auto mb-2 mb-lg-0">';
