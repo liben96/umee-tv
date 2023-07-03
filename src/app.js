@@ -108,6 +108,10 @@ const initTable = (data) => {
                               index + 1
                             }</u></a>: ${item.provider} ${
                               item.active ? `<span class="text-success"><i class="fa-solid fa-circle"></i></span>` : ''
+                            }${
+                              item.skypeId === '1'
+                                ? `<a class="text-primary" href="javascript:void(0)" onclick="openSkype('${item.url}', this)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Open Skype" data-bs-placement="top"><i class="fa-brands fa-skype"></i></a>`
+                                : ''
                             }`,
                         )
                         .join('')
@@ -290,6 +294,10 @@ const initTable = (data) => {
 const copyToClipboard = (text, elem) => {
   copyClipboard(text.replace('tshttp', 'http'));
   showToast(true, 'URL copied');
+};
+
+const openSkype = (text, elem) => {
+  window.location = 'skype:liben96?chat';
 };
 
 filterTable = (text) => {
@@ -575,7 +583,7 @@ const fetchChannelList = async (isRefresh) => {
                 return iptv.urlPattern.find((urlItem) => inputItem.url.includes(urlItem));
               });
               if (foundIPTVProvider) {
-                iptvArray.push({...inputItem, provider: foundIPTVProvider.description});
+                iptvArray.push({...inputItem, provider: foundIPTVProvider.description, skypeId: foundIPTVProvider.skypeId});
               }
               return iptvArray;
             }, []),
