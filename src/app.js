@@ -109,7 +109,7 @@ const initTable = (data) => {
                             }</u></a>: ${item.provider} ${
                               item.active
                                 ? `<span class="text-success"><i class="fa-solid fa-circle"></i> ${
-                                    item.skypeId === '1' ? '&nbsp;&nbsp;' : ''
+                                    item.skypeId === '1' ? '&nbsp;' : ''
                                   }</span>`
                                 : ''
                             }${
