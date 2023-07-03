@@ -98,7 +98,7 @@ const initTable = (data) => {
           render: (data, type, row) =>
             row.typeSource
               ? `<div><div> ${row.typeSource}</div>${
-                  row.iptvProviders && roleId === 1
+                  row.iptvProviders
                     ? row.iptvProviders
                         .map(
                           (item, index) =>
