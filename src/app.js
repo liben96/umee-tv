@@ -106,15 +106,15 @@ const initTable = (data) => {
                               item.url
                             }', this)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Copy" data-bs-placement="top"><u>URL ${
                               index + 1
-                            }</u></a>: ${item.provider} ${
+                            }</u></a>: <span>${item.provider}</span> ${
                               item.active ? `<span class="text-success"><i class="fa-solid fa-circle"></i></span>` : ''
                             }${
                               item.skypeId === '1'
                                 ? `<a class="text-primary" href="javascript:void(0)" onclick="openSkype('${
                                     item.url
-                                  }', this)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Open Skype" data-bs-placement="top" style="font-size:14px;margin-top:1px;${
+                                  }', this)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Open Skype" data-bs-placement="top" style="font-size:14px;margin-top:1px;position:relative;${
                                     item.active ? 'margin-left:5px;' : ''
-                                  }"><i class="fa-brands fa-skype"></i></a>`
+                                  }"><i class="fa-brands fa-skype" style="position:absolute;top:1px;"></i></a>`
                                 : ''
                             }`,
                         )
