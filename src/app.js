@@ -102,7 +102,11 @@ const initTable = (data) => {
                     ? row.iptvProviders
                         .map(
                           (item, index) =>
-                            `<div><u>URL ${index + 1}</u>: ${item.provider} ${
+                            `<div><a href="javascript:void(0)" onclick="copyToClipboard('${
+                              item.url
+                            }', this)" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Copy" data-bs-placement="top"><u>URL ${
+                              index + 1
+                            }</u></a>: ${item.provider} ${
                               item.active ? `<span class="text-success"><i class="fa-solid fa-circle"></i></span>` : ''
                             }`,
                         )
@@ -281,6 +285,11 @@ const initTable = (data) => {
   }
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
   const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
+};
+
+const copyToClipboard = (text, elem) => {
+  copyClipboard(text.replace('tshttp', 'http'));
+  showToast(true, 'URL copied');
 };
 
 filterTable = (text) => {
