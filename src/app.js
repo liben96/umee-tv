@@ -94,7 +94,7 @@ const initTable = (data) => {
           data: 'typeSource',
           title: 'Source',
           className: 'align-middle',
-          width: '50px',
+          width: '110px',
           render: (data, type, row) =>
             row.typeSource
               ? `<div><div> ${row.typeSource}</div>${
