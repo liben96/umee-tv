@@ -186,7 +186,7 @@ const initTable = (data) => {
           data: null,
           title: 'OTT Status',
           className: 'text-center align-middle all',
-          width: '100px',
+          width: '120px',
           render: (data, type, row) =>
             row.flusonicStatus !== undefined
               ? `<div class="text-center"><div class="${
