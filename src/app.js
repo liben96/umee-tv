@@ -94,7 +94,7 @@ const initTable = (data) => {
           data: 'typeSource',
           title: 'Source',
           className: 'align-middle',
-          width: '110px',
+          width: '120px',
           render: (data, type, row) =>
             row.typeSource
               ? `<div><div> ${row.typeSource}</div>${
@@ -186,6 +186,7 @@ const initTable = (data) => {
           data: null,
           title: 'OTT Status',
           className: 'text-center align-middle all',
+          width: '100px',
           render: (data, type, row) =>
             row.flusonicStatus !== undefined
               ? `<div class="text-center"><div class="${
