@@ -94,7 +94,7 @@ const initTable = (data) => {
           data: 'typeSource',
           title: 'Source',
           className: 'align-middle',
-          width: '120px',
+          width: roleId == 1 ? '120px' : '160px',
           render: (data, type, row) =>
             row.typeSource
               ? `<div><div> ${row.typeSource}</div>${
@@ -207,7 +207,7 @@ const initTable = (data) => {
           searchable: false,
           className: 'text-center align-middle hide-in-details actions-col',
           responsivePriority: 1,
-          width: '63px',
+          width: roleId == 1 ? '63px' : '80px',
           render: (data, type, row) =>
             `<div class="text-center">
             ${
