@@ -132,7 +132,7 @@ const initTable = (data) => {
         {
           data: 'typePDU',
           title: 'PDU',
-          width: '35px',
+          width: roleId == 1 ? '35px' : '60px',
           render: (data, type, row) =>
             `<div><div> ${row.typePDU || ''}</div>${row.pduPort ? `<div><u>Port</u>: ${row.pduPort}</div>` : ''}<div>`,
           className: 'align-middle',
@@ -151,7 +151,7 @@ const initTable = (data) => {
           data: 'typeEscalation',
           title: 'Escalation',
           className: 'text-center align-middle',
-          width: '62px',
+          width: roleId == 1 ? '62px' : '75px',
           render: (data, type, row) =>
             `<div><div> ${row.typeEscalation || ''}</div>${
               row.wikiUrl ? `<div><a href="${row.wikiUrl}" target="_blank">Wiki</a></div>` : ''
@@ -161,7 +161,7 @@ const initTable = (data) => {
           data: 'priority',
           title: 'Priority',
           className: 'text-center align-middle',
-          width: '44px',
+          width: roleId == 1 ? '44px' : '65px',
           render: (data, type, row) =>
             `<div class="text-center" style="font-size:13px; color:#404040;">${
               parseInt(row.priority)
@@ -186,7 +186,7 @@ const initTable = (data) => {
           data: null,
           title: 'OTT Status',
           className: 'text-center align-middle all',
-          width: '120px',
+          width: roleId == 1 ? '120px' : '150px',
           render: (data, type, row) =>
             row.flusonicStatus !== undefined
               ? `<div class="text-center"><div class="${
