@@ -193,9 +193,6 @@
                             </div>
                         </div>
                         <div id="channels-stats" class="text-small d-flex align-items-center d-none">
-                            <button id="filter-showall" onclick="filterTable('showall')"
-                                class="btn btn-light btn-sm btn-filter btn-dark border me-2">All
-                            </button>
                             <button id="filter-online" onclick="filterTable('online')"
                                 class="btn btn-light btn-sm btn-filter border me-2"><i
                                     class="fa-solid fa-circle text-success"></i> <span id="channels-online"></span>
