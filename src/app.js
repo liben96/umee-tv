@@ -253,10 +253,10 @@ const initTable = (data) => {
       ],
       order: [[2, 'asc']],
       aLengthMenu: [
-        [25, 50, 100, 200, -1],
-        [25, 50, 100, 200, 'All'],
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, 'All'],
       ],
-      pageLength: 50,
+      pageLength: -1,
     });
 
     // This is a good place to put all jquery events because this part executes only once
