@@ -6,9 +6,200 @@
     {
       "config_on_disk": {
         "disabled": false,
+        "inputs": [{"url": "udp://ens35@239.0.1.19:12345"}],
+        "name": "401",
+        "position": 1,
+        "title": "Sky Sports",
+        "transcoder": {
+          "decoder": {"deinterlace": false, "deinterlace_rate": "frame"},
+          "global": {"deviceid": "auto", "external": true, "fps": 25, "hw": "nvenc"},
+          "tracks": [
+            {"bitrate": 192000, "codec": "aac", "content": "audio", "input_track": 2, "sample_rate": 44100},
+            {"bitrate": 192000, "codec": "aac", "content": "audio", "input_track": 3, "sample_rate": 44100},
+            {"bitrate": 192000, "codec": "aac", "content": "audio", "input_track": 1, "sample_rate": 44100}
+          ],
+          "video": [
+            {
+              "bitrate": 5000000,
+              "codec": "h264",
+              "preset": "veryfast",
+              "sar": {"x": 1, "y": 1},
+              "size": {"background": "#000000", "height": 1080, "strategy": "fit", "width": 1920},
+              "track": 1
+            },
+            {
+              "bitrate": 700000,
+              "codec": "h264",
+              "open_gop": false,
+              "preset": "veryfast",
+              "profile": "main",
+              "size": {"background": "#000000", "height": 360, "strategy": "fit", "width": -1},
+              "track": 2
+            }
+          ]
+        }
+      },
+      "disabled": false,
+      "inputs": [
+        {
+          "mixer_strategy": "first_video_audio",
+          "scte35": true,
+          "stats": {
+            "active": true,
+            "bytes": 0,
+            "id": "6475aa39-453f-4d70-8401-5649c9b07145",
+            "last_dts_at": 1685432888729,
+            "opened_at": 1685432889276
+          },
+          "sync": "dts",
+          "url": "udp://ens35@239.0.1.19:12345"
+        }
+      ],
+      "name": "401",
+      "named_by": "config",
+      "position": 1,
+      "pushes": [],
+      "static": true,
+      "stats": {
+        "status": "error",
+        "transcoder_sd_bitrate": 0,
+        "transcoder_uhd_pixels": 0,
+        "playback_total_sessions": 4,
+        "client_count": 0,
+        "transcoder_hd_duration": 0,
+        "vision_gpu_ram_bytes": 0,
+        "last_dts_at": 1685432767910,
+        "cpu_units": 0,
+        "transcoder_fhd_pixelrate": 0,
+        "running": true,
+        "vision_pixelrate": 0,
+        "opened_at": 1685100298590,
+        "transcoder_uhd_bytes": 0,
+        "dvr_storage_bytes": 0,
+        "transcoder_fhd_bytes": 0,
+        "transcoder_overloaded": false,
+        "transcoder_fhd_bitrate": 0,
+        "transcoder_uhd_pixelrate": 0,
+        "lifetime": 332464627,
+        "push_duration": 0,
+        "retry_count": 2,
+        "input_error_rate": 0,
+        "dvr_storage_io_read": 0,
+        "alive": false,
+        "transcoder_uhd_bitrate": 0,
+        "transcoder_hd_pixelrate": 0,
+        "transcoder_sd_duration": 0,
+        "transcoder_hd_bitrate": 0,
+        "transcoder_hd_pixels": 0,
+        "inputs_bytes": 130005187779,
+        "transcoder_sd_pixelrate": 0,
+        "dvr_played_bytes": 0,
+        "url": "udp://ens35@239.0.1.19:1234",
+        "transcoded_streams": 0,
+        "vision_units": 0,
+        "playback_opened_sessions": 0,
+        "ts_delay": 140356,
+        "output_bandwidth": 0,
+        "ram_bytes": 0,
+        "playback_duration": 0,
+        "playback_bytes": 0,
+        "transcoder_uhd_duration": 0,
+        "last_dts": 1685432770093.0667,
+        "transcoder_sd_pixels": 0,
+        "transcoder_total_output_bitrate": 0,
+        "running_transcoder": false,
+        "transcoder_total_pixelrate": 0,
+        "dvr_storage_io_write": 0,
+        "dvr_enabled": false,
+        "remote": false,
+        "id": "6470970a-9399-48a6-95e0-1d150fdfb880",
+        "bytes_out": 13389959,
+        "inputs_duration": 332607,
+        "transcoder_sd_bytes": 0,
+        "dvr_recorded_bytes": 0,
+        "inputs_bandwidth": 0,
+        "dvr_played_duration": 0,
+        "transcoder_fhd_duration": 0,
+        "transcoder_hd_bytes": 0,
+        "transcoder_fhd_pixels": 0,
+        "dvr_recorded_duration": 0,
+        "bytes_in": 249437040940,
+        "dvr_storage_duration": 0,
+        "last_access_at": 1685432769530,
+        "coder_error": false,
+        "source_error": "source_timeout",
+        "push_bytes": 0,
+        "dvr_replication_running": false,
+        "dvr_only": false,
+        "out_bandwidth": 0
+      },
+      "title": "Sky Sports",
+      "transcoder": {
+        "audio": {},
+        "decoder": {"deinterlace": false, "deinterlace_rate": "frame"},
+        "global": {"deviceid": "auto", "external": true, "fps": 25, "hw": "nvenc"},
+        "tracks": [
+          {
+            "bitrate": 192000,
+            "codec": "aac",
+            "content": "audio",
+            "input_track": 2,
+            "open_gop": false,
+            "preset": "veryfast",
+            "sample_rate": 44100,
+            "split_channels": false
+          },
+          {
+            "bitrate": 192000,
+            "codec": "aac",
+            "content": "audio",
+            "input_track": 3,
+            "open_gop": false,
+            "preset": "veryfast",
+            "sample_rate": 44100,
+            "split_channels": false
+          },
+          {
+            "bitrate": 192000,
+            "codec": "aac",
+            "content": "audio",
+            "input_track": 1,
+            "open_gop": false,
+            "preset": "veryfast",
+            "sample_rate": 44100,
+            "split_channels": false
+          }
+        ],
+        "video": [
+          {
+            "bitrate": 5000000,
+            "codec": "h264",
+            "open_gop": false,
+            "preset": "veryfast",
+            "sar": {"x": 1, "y": 1},
+            "size": {"background": "#000000", "height": 1080, "strategy": "fit", "width": 1920},
+            "track": 1
+          },
+          {
+            "bitrate": 700000,
+            "codec": "h264",
+            "open_gop": false,
+            "preset": "veryfast",
+            "profile": "main",
+            "size": {"background": "#000000", "height": 360, "strategy": "fit", "width": -1},
+            "track": 2
+          }
+        ]
+      }
+    },
+    {
+      "config_on_disk": {
+        "disabled": false,
         "inputs": [
           {"priority": 1, "url": "udp://ens35@239.0.2.1:1234"},
-          {"priority": 10, "url": "file://blackout/laliga_screen.mp4"}
+          {"priority": 10, "url": "file://blackout/laliga_screen.mp4"},
+          {"priority": 2, "url": "m4f://fdc-ams-1.ipweb.site:8080/UK_E"},
+          {"priority": 3, "url": "m4f://kingsmaniptv.ipweb.site:8080/UK_E"}
         ],
         "name": "101",
         "position": 0,
@@ -49,7 +240,7 @@
           "priority": 1,
           "scte35": true,
           "stats": {
-            "active": true,
+            "active": false,
             "bytes": 206646892,
             "id": "64675eb5-cedf-4695-abc4-f543d732f121",
             "last_dts_at": 1684496288829,
@@ -158,7 +349,7 @@
         },
         {
           "mixer_strategy": "first_video_audio",
-          "priority": 2,
+          "priority": 10,
           "scte35": true,
           "stats": {
             "active": false,
@@ -195,6 +386,86 @@
           },
           "sync": "dts",
           "url": "file://blackout/laliga_screen.mp4"
+        },
+        {
+          "mixer_strategy": "first_video_audio",
+          "priority": 2,
+          "scte35": true,
+          "stats": {
+            "active": true,
+            "bytes": 1073303,
+            "last_dts_at": 1684496055209,
+            "media_info": {
+              "flow_type": "stream",
+              "stream_id": 0,
+              "tracks": [
+                {
+                  "bitrate": 455,
+                  "closed_captions": [],
+                  "codec": "h264",
+                  "content": "video",
+                  "fps": 25.0,
+                  "height": 1080,
+                  "is_progressive": true,
+                  "length_size": 4,
+                  "level": "4.0",
+                  "num_refs_frames": 4,
+                  "pix_fmt": "yuv420p",
+                  "pixel_height": 1080,
+                  "pixel_width": 1920,
+                  "profile": "High",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "v1",
+                  "width": 1920
+                }
+              ]
+            },
+            "opened_at": 1684496037680,
+            "started_at": 1684496037684
+          },
+          "sync": "dts",
+          "url": "m4f://fdc-ams-1.ipweb.site:8080/UK_E"
+        },
+        {
+          "mixer_strategy": "first_video_audio",
+          "priority": 3,
+          "scte35": true,
+          "stats": {
+            "active": false,
+            "bytes": 1073303,
+            "last_dts_at": 1684496055209,
+            "media_info": {
+              "flow_type": "stream",
+              "stream_id": 0,
+              "tracks": [
+                {
+                  "bitrate": 455,
+                  "closed_captions": [],
+                  "codec": "h264",
+                  "content": "video",
+                  "fps": 25.0,
+                  "height": 1080,
+                  "is_progressive": true,
+                  "length_size": 4,
+                  "level": "4.0",
+                  "num_refs_frames": 4,
+                  "pix_fmt": "yuv420p",
+                  "pixel_height": 1080,
+                  "pixel_width": 1920,
+                  "profile": "High",
+                  "sar_height": 1,
+                  "sar_width": 1,
+                  "track_id": "v1",
+                  "width": 1920
+                }
+              ]
+            },
+            "opened_at": 1684496037680,
+            "started_at": 1684496037684
+          },
+          "sync": "dts",
+          "url": "m4f://kingsmaniptv.ipweb.site:8080/UK_E"
         }
       ],
       "name": "101",
@@ -218,7 +489,7 @@
         "transcoder_sd_duration": 89757,
         "cpu_units": 0,
         "transcoded_streams": 0,
-        "opened_at": 1684250223549,
+        "opened_at": 1685688460947,
         "transcoder_hd_bitrate": 0,
         "transcoder_overloaded": true,
         "bytes_in": 170708313092,
@@ -472,7 +743,7 @@
         "disabled": false,
         "inputs": [
           {"priority": 1, "url": "udp://ens35@239.0.2.1:1234"},
-          {"priority": 2, "url": "file://blackout/laliga_screen.mp4"}
+          {"priority": 0, "url": "file://blackout/laliga_screen.mp4"}
         ],
         "name": "102",
         "position": 0,
@@ -622,7 +893,6 @@
         },
         {
           "mixer_strategy": "first_video_audio",
-          "priority": 2,
           "scte35": true,
           "stats": {
             "active": false,
@@ -705,7 +975,7 @@
         "inputs_bytes": 136267999174,
         "dvr_replication_running": false,
         "bytes_out": 26167489490,
-        "ts_delay": 790,
+        "ts_delay": 5772514,
         "playback_opened_sessions": 2,
         "dvr_played_duration": 0,
         "dvr_storage_io_write": 0,
@@ -1006,7 +1276,7 @@
           "mixer_strategy": "first_video_audio",
           "scte35": true,
           "stats": {
-            "active": false,
+            "active": true,
             "bytes": 15085469,
             "last_dts_at": 1684301087172,
             "media_info": {

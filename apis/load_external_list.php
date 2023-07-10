@@ -22,7 +22,7 @@ try {
 
         $finalUrl = $url. '/streamer/api/v3/streams?limit=1000';
         // Create a cURL handle
-        $ch = curl_init($finalUrl);
+        $ch = curl_init($url);
 
         // Set the basic authentication header
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

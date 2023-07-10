@@ -310,16 +310,18 @@ filterTable = (text) => {
     $(`#channels-stats .btn-dark`).removeClass('btn-dark');
     $(`#channels-stats #filter-${text}`).addClass('btn-dark');
   }
-  searchTable(null, true);
   if (text) {
     searchTable(text, !isFilter);
     $('#filter-clear').removeClass('d-none');
   } else {
+    searchTable(null, true);
     $('#filter-clear').addClass('d-none');
   }
 };
 
 searchTable = (text, isClear) => {
+  let hasFilter = $(`#channels-stats .btn-filter`).hasClass('btn-dark');
+  if (text === 'showall') text = '';
   // Clear search
   if (isClear) {
     // Need to keep status filters if already applied
